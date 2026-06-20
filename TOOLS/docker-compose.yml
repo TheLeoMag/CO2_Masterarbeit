@@ -1,0 +1,35 @@
+services:
+  nominatim:
+    image: mediagis/nominatim:5.3
+    container_name: co2-nominatim
+    restart: unless-stopped
+    shm_size: 1gb
+    ports:
+      - "8080:8080"
+    environment:
+      PBF_PATH: /nominatim/data/austria-latest.osm.pbf
+      NOMINATIM_PASSWORD: local-nominatim-password
+      IMPORT_WIKIPEDIA: "false"
+      UPDATE_MODE: none
+    volumes:
+      - ./osm-data:/nominatim/data:ro
+      - nominatim-data:/var/lib/postgresql/16/main
+
+  valhalla:
+    image: ghcr.io/valhalla/valhalla-scripted:latest
+    container_name: co2-valhalla
+    restart: unless-stopped
+    ports:
+      - "8002:8002"
+    environment:
+      build_admins: "True"
+      build_time_zones: "True"
+      build_tar: "True"
+      serve_tiles: "True"
+    volumes:
+      - valhalla-data:/custom_files
+      - ./osm-data/austria-latest.osm.pbf:/custom_files/austria-latest.osm.pbf:ro
+
+volumes:
+  nominatim-data:
+  valhalla-data:

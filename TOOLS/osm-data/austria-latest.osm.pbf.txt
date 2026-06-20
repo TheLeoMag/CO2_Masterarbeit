@@ -1,0 +1,10 @@
+Placeholder for the Austrian OpenStreetMap extract.
+
+Download the actual file as:
+
+    TOOLS/osm-data/austria-latest.osm.pbf
+
+Source:
+https://download.geofabrik.de/europe/austria-latest.osm.pbf
+
+The real .pbf file is intentionally excluded from Git because it is large.
