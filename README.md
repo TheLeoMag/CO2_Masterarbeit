@@ -10,6 +10,23 @@ The analysis links company-level data from the Styrian Chamber of Commerce with 
 
 The empirical work is planned as a descriptive and inferential spatial analysis. 
 
+## Data
+
+The following source and reference data are required for the analysis. Large geodata files are excluded from Git and must be obtained separately.
+
+| Dataset | Purpose | Provider / source | Reference URL |
+|---|---|---|---|
+| Austrian OpenStreetMap extract | Building footprints, local geocoding, routing, and accessibility calculations | OpenStreetMap contributors via Geofabrik | [Geofabrik Austria](https://download.geofabrik.de/europe/austria.html) · [Direct PBF download](https://download.geofabrik.de/europe/austria-latest.osm.pbf) |
+| Austrian 100 m population grid (POPREG) | High-resolution population distribution and population-density measures | Statistics Austria / Austrian Open Government Data | [Statistics Austria Open Data](https://data.statistik.gv.at/) |
+| Styrian municipal population 2002-2025 (`STMK_POP_2002_2025.csv`) | Annual municipal population counts for backcasting the 2025 100 m population grid | Land Steiermark Open Government Data | [OGD search portal](https://app.sterz.stmk.gv.at/at.gv.stmk.aews.ext-p/p1/r/32/otogd/OGD-suche) |
+| Municipality boundaries (`Gemeindegrenzen`) | Delimitation of Styria, spatial clipping, and municipality-level aggregation | Austrian Open Government Data | [Austrian Open Data Portal](https://www.data.gv.at/) *(replace with the exact dataset URL)* |
+| 2025 Fachorganisation membership distribution | Reference categories and sampling weights for synthetic company data | WKO / source to be documented |  |
+
+The GeoParquet files in `OGD/` are processed derivatives rather than separate external sources:
+
+- `pd_popreg_100m_7767c33f-302c-11e3-beb4-0000c1ab0db6.geoparquet` is extracted from the downloaded POPREG GML using [`OGD/extract_glm.py`](OGD/extract_glm.py).
+- `population_grid_styria.geoparquet` contains the population grid clipped to Styria.
+
 ## Synthetic Data
 
 The [`SDG`](SDG/) directory contains the synthetic data generation workflow. It creates artificial company records with the same structure as the confidential source data, but does not reproduce real companies.
@@ -54,4 +71,3 @@ After the import, Nominatim is available at `http://localhost:8080` and Valhalla
 ## License
 
 This repository is licensed under the MIT License. See [LICENSE](LICENSE).
-
