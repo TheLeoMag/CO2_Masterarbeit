@@ -1,2 +1,14 @@
 *.gml
 *.pbf
+TOOLS/osm-data/*-pois.geoparquet
+*.log
+*.tmp
+*.temp
+*.bak
+*.part
+*.partial
+__pycache__/
+.ipynb_checkpoints/
+ANAL/data/routing/**/*.partial.parquet
+ANAL/data/routing/**/*_sample.parquet
+ANAL/data/routing/**/*_sample_parts/

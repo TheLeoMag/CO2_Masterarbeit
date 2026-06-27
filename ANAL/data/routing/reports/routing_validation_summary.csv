@@ -1,0 +1,67 @@
+year,product,check,status
+2015,pois,POI file has rows,OK
+2015,pois,POI file has poi_type,OK
+2015,pois,POI types are expected,OK
+2015,pois,all routed POI types are present,OK
+2015,pois,POI file has static_destination flag,OK
+2015,pois,POI geometries are present,OK
+2016,pois,POI file has rows,OK
+2016,pois,POI file has poi_type,OK
+2016,pois,POI types are expected,OK
+2016,pois,all routed POI types are present,OK
+2016,pois,POI file has static_destination flag,OK
+2016,pois,POI geometries are present,OK
+2017,pois,POI file has rows,OK
+2017,pois,POI file has poi_type,OK
+2017,pois,POI types are expected,OK
+2017,pois,all routed POI types are present,OK
+2017,pois,POI file has static_destination flag,OK
+2017,pois,POI geometries are present,OK
+2018,pois,POI file has rows,OK
+2018,pois,POI file has poi_type,OK
+2018,pois,POI types are expected,OK
+2018,pois,all routed POI types are present,OK
+2018,pois,POI file has static_destination flag,OK
+2018,pois,POI geometries are present,OK
+2019,pois,POI file has rows,OK
+2019,pois,POI file has poi_type,OK
+2019,pois,POI types are expected,OK
+2019,pois,all routed POI types are present,OK
+2019,pois,POI file has static_destination flag,OK
+2019,pois,POI geometries are present,OK
+2020,pois,POI file has rows,OK
+2020,pois,POI file has poi_type,OK
+2020,pois,POI types are expected,OK
+2020,pois,all routed POI types are present,OK
+2020,pois,POI file has static_destination flag,OK
+2020,pois,POI geometries are present,OK
+2021,pois,POI file has rows,OK
+2021,pois,POI file has poi_type,OK
+2021,pois,POI types are expected,OK
+2021,pois,all routed POI types are present,OK
+2021,pois,POI file has static_destination flag,OK
+2021,pois,POI geometries are present,OK
+2022,pois,POI file has rows,OK
+2022,pois,POI file has poi_type,OK
+2022,pois,POI types are expected,OK
+2022,pois,all routed POI types are present,OK
+2022,pois,POI file has static_destination flag,OK
+2022,pois,POI geometries are present,OK
+2023,pois,POI file has rows,OK
+2023,pois,POI file has poi_type,OK
+2023,pois,POI types are expected,OK
+2023,pois,all routed POI types are present,OK
+2023,pois,POI file has static_destination flag,OK
+2023,pois,POI geometries are present,OK
+2024,pois,POI file has rows,OK
+2024,pois,POI file has poi_type,OK
+2024,pois,POI types are expected,OK
+2024,pois,all routed POI types are present,OK
+2024,pois,POI file has static_destination flag,OK
+2024,pois,POI geometries are present,OK
+2025,pois,POI file has rows,OK
+2025,pois,POI file has poi_type,OK
+2025,pois,POI types are expected,OK
+2025,pois,all routed POI types are present,OK
+2025,pois,POI file has static_destination flag,OK
+2025,pois,POI geometries are present,OK
