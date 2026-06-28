@@ -34,6 +34,7 @@ The following source and reference data are required for the analysis. Large geo
 | Austrian 100 m population grid (POPREG) | High-resolution population distribution and population-density measures | Statistics Austria / Austrian Open Government Data | [Statistics Austria Open Data](https://data.statistik.gv.at/) |
 | Styrian municipal population 2002-2025 (`Bevoelkerungsentwicklung seit 2002 in der Steiermark`) | Annual municipal population counts for backcasting the 2025 100 m population grid | Land Steiermark Open Government Data | [OGD search portal](https://app.sterz.stmk.gv.at/at.gv.stmk.aews.ext-p/p1/r/32/otogd/OGD-suche) |
 | Education locations (`Bildungsstandorte`) | Higher education destinations for routing-based accessibility measures | Land Steiermark Open Government Data | [OGD search portal](https://app.sterz.stmk.gv.at/at.gv.stmk.aews.ext-p/p1/r/32/otogd/OGD-suche) |
+| Public transport stops (`Haltestellen des Verkehrsverbundes Steiermark`) | Public-transport stop locations and service-frequency attributes for transit accessibility measures | Land Steiermark Open Government Data | [OGD search portal](https://app.sterz.stmk.gv.at/at.gv.stmk.aews.ext-p/p1/r/32/otogd/OGD-suche) |
 | Municipality boundaries (`Gemeindegrenzen`) | Delimitation of Styria, spatial clipping, and municipality-level aggregation | Austrian Open Government Data | [OGD search portal](https://app.sterz.stmk.gv.at/at.gv.stmk.aews.ext-p/p1/r/32/otogd/OGD-suche) |
 | 2025 Fachorganisation membership distribution | Reference categories and sampling weights for synthetic company data | WKO Steiermark | [Mitgliederstatistik der gewerblichen Wirtschaft Steiermark](https://www.wko.at/stmk/wirtschaft/mitgliederstatistik-der-gewerblichen-wirtschaft-steiermark) |
 
@@ -86,7 +87,7 @@ The analysis uses:
 
 The service configuration is located in [`TOOLS/docker-compose.yml`](TOOLS/docker-compose.yml).
 Before starting the Docker Compose services, download the current Austrian OpenStreetMap
-extract from [Geofabrik](https://download.geofabrik.de/europe/austria-latest.osm.pbf)
+extract from [Geofabrik](https://download.geofabrik.de)
 and save it as `TOOLS/osm-data/austria-latest.osm.pbf`. For the historical routing
 pipeline, also populate `TOOLS/osm-data/` with the yearly Austria PBF snapshots used by
 the notebooks:

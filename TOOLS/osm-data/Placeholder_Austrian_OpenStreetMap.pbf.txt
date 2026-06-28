@@ -1,0 +1,26 @@
+Placeholder for Austrian OpenStreetMap PBF extracts.
+
+For the Docker Compose Nominatim/dev service, download the current Geofabrik Austria
+extract as:
+
+    TOOLS/osm-data/austria-latest.osm.pbf
+
+Source:
+https://download.geofabrik.de/europe/austria-latest.osm.pbf
+
+For the historical routing pipeline, also place the yearly Austria snapshots in this
+folder with these filenames:
+
+    TOOLS/osm-data/austria-150101.osm.pbf
+    TOOLS/osm-data/austria-160101.osm.pbf
+    TOOLS/osm-data/austria-170101.osm.pbf
+    TOOLS/osm-data/austria-180101.osm.pbf
+    TOOLS/osm-data/austria-190101.osm.pbf
+    TOOLS/osm-data/austria-200101.osm.pbf
+    TOOLS/osm-data/austria-210101.osm.pbf
+    TOOLS/osm-data/austria-220101.osm.pbf
+    TOOLS/osm-data/austria-230101.osm.pbf
+    TOOLS/osm-data/austria-240101.osm.pbf
+    TOOLS/osm-data/austria-250101.osm.pbf
+
+The real .pbf files are intentionally excluded from Git because they are large.

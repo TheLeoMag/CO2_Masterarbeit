@@ -14,3 +14,10 @@ year,product,status,started_at,finished_at,output_path,error_message
 2025,routing_generation_sample,failed,2026-06-27T07:34:39,2026-06-27T07:35:05,,"ConnectionError(ProtocolError('Connection aborted.', RemoteDisconnected('Remote end closed connection without response')))"
 2025,nearest_infrastructure_100m_sample,done,2026-06-27T07:37:18,2026-06-27T07:38:53,C:\Users\leopo\Documents\CO2_Master_Code\CO2_Masterarbeit\ANAL\data\routing\features\2025\nearest_infrastructure_100m_sample.parquet,
 2025,W_local_drive_1km_hl500m_edges_sample,done,2026-06-27T07:38:53,2026-06-27T07:38:58,C:\Users\leopo\Documents\CO2_Master_Code\CO2_Masterarbeit\ANAL\data\routing\matrices\2025\W_local_drive_1km_hl500m_edges_sample.parquet,
+2025,routing_generation_sample,failed,2026-06-27T17:00:32,2026-06-27T17:00:32,,FileNotFoundError('Missing graph manifest in WSL: $HOME/gruendungsanalyse/data/routing/valhalla_graphs/2025/build_manifest.json')
+2025,nearest_infrastructure_100m_sample,done,2026-06-27T17:25:56,2026-06-27T17:27:11,D:\CO2_Masterarbeit\CO2_Masterarbeit\ANAL\data\routing\features\2025\nearest_infrastructure_100m_sample.parquet,
+2025,W_local_drive_1km_hl500m_edges_sample,done,2026-06-27T17:27:11,2026-06-27T17:27:13,D:\CO2_Masterarbeit\CO2_Masterarbeit\ANAL\data\routing\matrices\2025\W_local_drive_1km_hl500m_edges_sample.parquet,
+2025,nearest_infrastructure_100m_sample,done,2026-06-27T18:09:59,2026-06-27T18:10:36,D:\CO2_Masterarbeit\CO2_Masterarbeit\ANAL\data\routing\features\2025\nearest_infrastructure_100m_sample.parquet,
+2025,W_local_drive_1km_hl500m_edges_sample,done,2026-06-27T18:10:36,2026-06-27T18:10:37,D:\CO2_Masterarbeit\CO2_Masterarbeit\ANAL\data\routing\matrices\2025\W_local_drive_1km_hl500m_edges_sample.parquet,
+2025,nearest_infrastructure_100m,done,2026-06-27T18:36:32,2026-06-27T20:31:32,D:\CO2_Masterarbeit\CO2_Masterarbeit\ANAL\data\routing\features\2025\nearest_infrastructure_100m.parquet,
+2025,W_local_drive_1km_hl500m_edges,done,2026-06-27T20:31:32,2026-06-27T21:44:38,D:\CO2_Masterarbeit\CO2_Masterarbeit\ANAL\data\routing\matrices\2025\W_local_drive_1km_hl500m_edges.parquet,
