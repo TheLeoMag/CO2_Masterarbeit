@@ -22,4 +22,20 @@ The OSM extraction follows the feature classes documented in `TOOLS/osm-data/geo
 Static destinations appended to every yearly file:
 
 - higher education locations from `OGD/Bildungsstandorte.zip`
+- public transport stops from `OGD/Haltestellen.zip`
 - regional and urban centres from `TOOLS/routing/static_routing_destinations.csv`
+
+Notebook `04_generate_routing_features.ipynb` writes the nearest-infrastructure output and now also adds pedestrian public-transport accessibility columns to `ANAL/data/routing/features/<year>/nearest_infrastructure_100m.parquet`:
+
+- `has_pt_stop_5min_walk`
+- `pt_departures_5min_walk`
+
+The same notebook also writes yearly isochrone-based market-potential outputs to `ANAL/data/routing/features/<year>/accessibility_potentials_100m.parquet`. This stage is independent from the SLX edge list and uses:
+
+- `ANAL/data/population_backcast_100m_quarterly.parquet` for yearly backcast population values
+- `ANAL/data/raster_100m_styria.geoparquet` for the 100 m grid geometry and centroid-based inclusion checks
+
+The yearly accessibility output contains:
+
+- `pop_access_15min`
+- `pop_access_30min`
