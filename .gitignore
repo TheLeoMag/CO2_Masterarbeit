@@ -12,4 +12,4 @@ __pycache__/
 ANAL/data/routing/**/*.partial.parquet
 ANAL/data/routing/**/*_sample.parquet
 ANAL/data/routing/**/*_sample_parts/
-ANAL/data/routing/**/accessibility_potentials_100m_parts/
+ANAL/data/routing/**/accessibility_*_parts/

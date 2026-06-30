@@ -30,12 +30,26 @@ Notebook `04_generate_routing_features.ipynb` writes the nearest-infrastructure 
 - `has_pt_stop_5min_walk`
 - `pt_departures_5min_walk`
 
-The same notebook also writes yearly isochrone-based market-potential outputs to `ANAL/data/routing/features/<year>/accessibility_potentials_100m.parquet`. This stage is independent from the SLX edge list and uses:
+The same notebook also writes isochrone-based market-potential outputs that are independent from the SLX edge list:
 
-- `ANAL/data/population_backcast_100m_quarterly.parquet` for yearly backcast population values
+- `ANAL/data/routing/features/<year>/accessibility_potentials_100m.parquet`
+- `ANAL/data/routing/features/<year>/firm_accessibility_quarter_100m.parquet`
+
+These stages use:
+
+- `ANAL/data/raster_quarter_panel_100m.parquet` for quarter-specific population and lagged firm stocks by 100 m cell
+- `ANAL/data/firms_assigned_100m.geoparquet` for the model-ready firm-quarter join
 - `ANAL/data/raster_100m_styria.geoparquet` for the 100 m grid geometry and centroid-based inclusion checks
 
-The yearly accessibility output contains:
+`accessibility_potentials_100m.parquet` now has one row per `grid_id`, `year`, and `quarter`, with:
 
-- `pop_access_15min`
-- `pop_access_30min`
+- `pop_access_15min` and `pop_access_30min`
+- `existing_firms_access_15min` and `existing_firms_access_30min`
+- `sparte_<Sparte_ID>_access_15min` and `sparte_<Sparte_ID>_access_30min` for `Sparte_ID` 1 through 7
+
+`firm_accessibility_quarter_100m.parquet` contains the same population and total-firm accessibility measures joined to firm-quarter rows, plus:
+
+- `same_sector_firms_access_15min`
+- `same_sector_firms_access_30min`
+
+Self-exclusion is only applied in the firm-level file, and only when the focal firm is part of the lagged quarter stock.
