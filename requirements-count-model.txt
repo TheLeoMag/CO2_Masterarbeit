@@ -1,0 +1,6 @@
+duckdb>=1.0
+statsmodels>=0.14
+libpysal>=4.12
+esda>=2.7
+PyYAML>=6.0
+pytest>=8.0
