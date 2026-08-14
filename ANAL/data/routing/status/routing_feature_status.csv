@@ -31,3 +31,7 @@ year,product,status,started_at,finished_at,output_path,error_message
 2025,accessibility_potentials_100m,done,2026-06-30T00:49:26,2026-06-30T04:53:54,D:\CO2_Masterarbeit\CO2_Masterarbeit\ANAL\data\routing\features\2025\accessibility_potentials_100m.parquet,
 2025,firm_accessibility_quarter_100m,done,2026-06-30T04:53:54,2026-06-30T04:53:54,D:\CO2_Masterarbeit\CO2_Masterarbeit\ANAL\data\routing\features\2025\firm_accessibility_quarter_100m.parquet,
 2025,W_local_drive_1km_hl500m_edges,done,2026-06-30T04:53:54,2026-06-30T04:54:46,D:\CO2_Masterarbeit\CO2_Masterarbeit\ANAL\data\routing\matrices\2025\W_local_drive_1km_hl500m_edges.parquet,
+2015,nearest_infrastructure_100m,done,2026-08-10T22:36:32,2026-08-10T23:26:38,D:\CO2_Masterarbeit\CO2_Masterarbeit\ANAL\data\routing\features\2015\nearest_infrastructure_100m.parquet,
+2016,nearest_infrastructure_100m,done,2026-08-10T23:26:41,2026-08-11T00:24:21,D:\CO2_Masterarbeit\CO2_Masterarbeit\ANAL\data\routing\features\2016\nearest_infrastructure_100m.parquet,
+2017,nearest_infrastructure_100m,done,2026-08-11T00:24:24,2026-08-11T01:49:04,D:\CO2_Masterarbeit\CO2_Masterarbeit\ANAL\data\routing\features\2017\nearest_infrastructure_100m.parquet,
+2018,routing_generation,failed,2026-08-11T01:49:06,2026-08-11T02:40:01,,"ReadTimeout(ReadTimeoutError(""HTTPConnectionPool(host='localhost', port=8002): Read timed out. (read timeout=180)""))"

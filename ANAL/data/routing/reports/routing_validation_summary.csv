@@ -1,67 +1,38 @@
 year,product,check,status
-2015,pois,POI file has rows,OK
-2015,pois,POI file has poi_type,OK
-2015,pois,POI types are expected,OK
-2015,pois,all routed POI types are present,OK
-2015,pois,POI file has static_destination flag,OK
-2015,pois,POI geometries are present,OK
-2016,pois,POI file has rows,OK
-2016,pois,POI file has poi_type,OK
-2016,pois,POI types are expected,OK
-2016,pois,all routed POI types are present,OK
-2016,pois,POI file has static_destination flag,OK
-2016,pois,POI geometries are present,OK
-2017,pois,POI file has rows,OK
-2017,pois,POI file has poi_type,OK
-2017,pois,POI types are expected,OK
-2017,pois,all routed POI types are present,OK
-2017,pois,POI file has static_destination flag,OK
-2017,pois,POI geometries are present,OK
-2018,pois,POI file has rows,OK
-2018,pois,POI file has poi_type,OK
-2018,pois,POI types are expected,OK
-2018,pois,all routed POI types are present,OK
-2018,pois,POI file has static_destination flag,OK
-2018,pois,POI geometries are present,OK
-2019,pois,POI file has rows,OK
-2019,pois,POI file has poi_type,OK
-2019,pois,POI types are expected,OK
-2019,pois,all routed POI types are present,OK
-2019,pois,POI file has static_destination flag,OK
-2019,pois,POI geometries are present,OK
-2020,pois,POI file has rows,OK
-2020,pois,POI file has poi_type,OK
-2020,pois,POI types are expected,OK
-2020,pois,all routed POI types are present,OK
-2020,pois,POI file has static_destination flag,OK
-2020,pois,POI geometries are present,OK
-2021,pois,POI file has rows,OK
-2021,pois,POI file has poi_type,OK
-2021,pois,POI types are expected,OK
-2021,pois,all routed POI types are present,OK
-2021,pois,POI file has static_destination flag,OK
-2021,pois,POI geometries are present,OK
-2022,pois,POI file has rows,OK
-2022,pois,POI file has poi_type,OK
-2022,pois,POI types are expected,OK
-2022,pois,all routed POI types are present,OK
-2022,pois,POI file has static_destination flag,OK
-2022,pois,POI geometries are present,OK
-2023,pois,POI file has rows,OK
-2023,pois,POI file has poi_type,OK
-2023,pois,POI types are expected,OK
-2023,pois,all routed POI types are present,OK
-2023,pois,POI file has static_destination flag,OK
-2023,pois,POI geometries are present,OK
-2024,pois,POI file has rows,OK
-2024,pois,POI file has poi_type,OK
-2024,pois,POI types are expected,OK
-2024,pois,all routed POI types are present,OK
-2024,pois,POI file has static_destination flag,OK
-2024,pois,POI geometries are present,OK
-2025,pois,POI file has rows,OK
-2025,pois,POI file has poi_type,OK
-2025,pois,POI types are expected,OK
-2025,pois,all routed POI types are present,OK
-2025,pois,POI file has static_destination flag,OK
-2025,pois,POI geometries are present,OK
+all,source,raster_quarter_panel_100m.parquet exists,OK
+all,source,active_routing_cells_100m.parquet exists,OK
+all,source,firms_assigned_100m.geoparquet exists,OK
+2015,source,yearly destinations exist,OK
+2015,nearest,one row per active cell,OK
+2015,nearest,grid_id unique,OK
+2016,source,yearly destinations exist,OK
+2016,nearest,one row per active cell,OK
+2016,nearest,grid_id unique,OK
+2017,source,yearly destinations exist,OK
+2017,nearest,one row per active cell,OK
+2017,nearest,grid_id unique,OK
+2018,source,yearly destinations exist,OK
+2019,source,yearly destinations exist,OK
+2020,source,yearly destinations exist,OK
+2021,source,yearly destinations exist,OK
+2022,source,yearly destinations exist,OK
+2023,source,yearly destinations exist,OK
+2024,source,yearly destinations exist,OK
+2025,source,yearly destinations exist,OK
+2025,nearest,one row per active cell,OK
+2025,nearest,grid_id unique,OK
+2025,grid-quarter,required schema,OK
+2025,grid-quarter,year and four quarters complete,OK
+2025,grid-quarter,no contemporaneous or Sparte fields,CHECK
+2025,grid-quarter,pop_access_15min numeric,OK
+2025,grid-quarter,pop_access_15min non-negative,OK
+2025,grid-quarter,pop_access_30min numeric,OK
+2025,grid-quarter,pop_access_30min non-negative,OK
+2025,grid-quarter,existing_firms_access_15min numeric,OK
+2025,grid-quarter,existing_firms_access_15min non-negative,OK
+2025,grid-quarter,existing_firms_access_30min numeric,OK
+2025,grid-quarter,existing_firms_access_30min non-negative,OK
+2025,grid-quarter,pop_access_15min <= pop_access_30min,OK
+2025,grid-quarter,existing_firms_access_15min <= existing_firms_access_30min,OK
+all,manifest,model products use lagged firm stock,CHECK
+all,graphs,successful graph manifests recorded for 2015-2025,OK

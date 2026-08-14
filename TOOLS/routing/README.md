@@ -1,55 +1,21 @@
-# Historical Valhalla Routing Workflow
+# Historical Valhalla routing workflow
 
-This folder contains notebook-based operational workflows for the historical Valhalla routing pipeline.
+Run these notebooks in order:
 
-Run order:
+1. `01_prepare_routing_inputs.ipynb` creates the active 100 m cell table.
+2. `02_verify_yearly_routing_destinations.ipynb` checks the 2015–2025 destination files generated in `TOOLS/pois`.
+3. `03_build_valhalla_graphs.ipynb` builds and smoke-tests one historical GIP graph per year.
+4. `04_generate_routing_features.ipynb` generates the supported routing features.
+5. `05_validate_routing_outputs.ipynb` writes `ANAL/data/routing/reports/routing_validation_summary.csv`.
 
-1. `01_prepare_routing_inputs.ipynb`
-2. `02_extract_yearly_osm_pois.ipynb`
-3. `03_build_valhalla_graphs.ipynb`
-4. `04_generate_routing_features.ipynb`
-5. `05_validate_routing_outputs.ipynb`
+All notebooks use the fixed project root `D:\CO2_Masterarbeit\CO2_Masterarbeit`. Routing destinations are `TOOLS/pois/austria-<year>-pois.geoparquet`; rail-station candidate files under `OGD/Public_Transport/Rail stations/` are diagnostic only. Destination inputs are GIP motorway exits, public-transport stops/stations, higher education, and curated centres—not OSM POIs.
 
-The notebooks use the existing 100 m analytical foundation in `ANAL/data/` and the historical OSM PBF snapshots in `TOOLS/osm-data/`.
+## Supported outputs
 
-Generated yearly routing-destination files are written to `TOOLS/osm-data/austria-20xx-pois.geoparquet`. They combine historical OSM-derived POIs with static external destinations that are repeated into each year so the per-year Valhalla graphs can route them consistently. They are ignored by Git because they are derived data.
-
-The OSM extraction follows the feature classes documented in `TOOLS/osm-data/geofabrik-osm-gis-standard-0.7.pdf`:
-
-- motorway exits: `highway=motorway_junction`
-- railway stations: `railway=station` and `railway=halt`
-
-Static destinations appended to every yearly file:
-
-- higher education locations from `OGD/Bildungsstandorte.zip`
-- public transport stops from `OGD/Haltestellen.zip`
-- regional and urban centres from `TOOLS/routing/static_routing_destinations.csv`
-
-Notebook `04_generate_routing_features.ipynb` writes the nearest-infrastructure output and now also adds pedestrian public-transport accessibility columns to `ANAL/data/routing/features/<year>/nearest_infrastructure_100m.parquet`:
-
-- `has_pt_stop_5min_walk`
-- `pt_departures_5min_walk`
-
-The same notebook also writes isochrone-based market-potential outputs that are independent from the SLX edge list:
-
-- `ANAL/data/routing/features/<year>/accessibility_potentials_100m.parquet`
+- `ANAL/data/routing/inputs/active_routing_cells_100m.parquet`
+- `ANAL/data/routing/features/<year>/nearest_infrastructure_100m.parquet`
+- `ANAL/data/routing/features/<year>/accessibility_potentials_100m.parquet` (narrow grid-quarter population and total-firm fields)
+- `ANAL/data/routing/features/<year>/fachgruppe_accessibility_quarter_100m.parquet` (long grid/year/quarter/Fachgruppe table for all 95 groups)
 - `ANAL/data/routing/features/<year>/firm_accessibility_quarter_100m.parquet`
 
-These stages use:
-
-- `ANAL/data/raster_quarter_panel_100m.parquet` for quarter-specific population and lagged firm stocks by 100 m cell
-- `ANAL/data/firms_assigned_100m.geoparquet` for the model-ready firm-quarter join
-- `ANAL/data/raster_100m_styria.geoparquet` for the 100 m grid geometry and centroid-based inclusion checks
-
-`accessibility_potentials_100m.parquet` now has one row per `grid_id`, `year`, and `quarter`, with:
-
-- `pop_access_15min` and `pop_access_30min`
-- `existing_firms_access_15min` and `existing_firms_access_30min`
-- `sparte_<Sparte_ID>_access_15min` and `sparte_<Sparte_ID>_access_30min` for `Sparte_ID` 1 through 7
-
-`firm_accessibility_quarter_100m.parquet` contains the same population and total-firm accessibility measures joined to firm-quarter rows, plus:
-
-- `same_sector_firms_access_15min`
-- `same_sector_firms_access_30min`
-
-Self-exclusion is only applied in the firm-level file, and only when the focal firm is part of the lagged quarter stock.
+The analytical panel may retain contemporaneous `active_firms_t` for description. Model-ready routing features use only `active_firms_tminus1`; firm-level same-Fachgruppe measures apply conditional self-exclusion when the focal firm belongs to that lagged stock. Sample files, SLX edge lists, and part files are internal/legacy artifacts rather than supported outputs.

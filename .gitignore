@@ -1,6 +1,8 @@
 *.gml
 *.pbf
 TOOLS/osm-data/*-pois.geoparquet
+OGD/Public_Transport/Verbund_Daten/*
+OGD/Public_Transport/Verbund_Daten_work/*
 *.log
 *.tmp
 *.temp
@@ -13,3 +15,5 @@ ANAL/data/routing/**/*.partial.parquet
 ANAL/data/routing/**/*_sample.parquet
 ANAL/data/routing/**/*_sample_parts/
 ANAL/data/routing/**/accessibility_*_parts/
+
+
