@@ -9,7 +9,7 @@ import pyarrow.parquet as pq
 
 
 FACHGRUPPE_LAG_PATTERN = re.compile(r"^fachgruppe_(.+)_active_firms_tminus1$")
-ACCESS_MINUTES = (15, 30)
+ACCESS_MINUTES = (5, 10, 15, 30)
 
 
 def fachgruppe_ids(panel_path: Path) -> list[str]:
@@ -36,8 +36,7 @@ def fachgruppe_access_columns(ids: list[str]) -> list[str]:
 
 def main_access_columns() -> list[str]:
     return [
-        "pop_access_15min",
-        "pop_access_30min",
-        "existing_firms_access_15min",
-        "existing_firms_access_30min",
+        column
+        for minutes in ACCESS_MINUTES
+        for column in (f"pop_access_{minutes}min", f"existing_firms_access_{minutes}min")
     ]

@@ -1,0 +1,7 @@
+year,grid_id,lat,lon,reason
+2020,AT_CRS3035RES100mN2655400E4708200,46.8931028030086,15.081509252261178,Valhalla 30-minute isochrone hangs deterministically in 2020 and 2021; remote cell excluded consistently for 2020-2025
+2021,AT_CRS3035RES100mN2655400E4708200,46.8931028030086,15.081509252261178,Valhalla 30-minute isochrone hangs deterministically in 2020 and 2021; remote cell excluded consistently for 2020-2025
+2022,AT_CRS3035RES100mN2655400E4708200,46.8931028030086,15.081509252261178,Valhalla 30-minute isochrone hangs deterministically in 2020 and 2021; remote cell excluded consistently for 2020-2025
+2023,AT_CRS3035RES100mN2655400E4708200,46.8931028030086,15.081509252261178,Valhalla 30-minute isochrone hangs deterministically in 2020 and 2021; remote cell excluded consistently for 2020-2025
+2024,AT_CRS3035RES100mN2655400E4708200,46.8931028030086,15.081509252261178,Valhalla 30-minute isochrone hangs deterministically in 2020 and 2021; remote cell excluded consistently for 2020-2025
+2025,AT_CRS3035RES100mN2655400E4708200,46.8931028030086,15.081509252261178,Valhalla 30-minute isochrone hangs deterministically in 2020 and 2021; remote cell excluded consistently for 2020-2025

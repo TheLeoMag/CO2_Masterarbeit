@@ -12,8 +12,9 @@ OGD/Public_Transport/Verbund_Daten_work/*
 __pycache__/
 .ipynb_checkpoints/
 ANAL/data/routing/**/*.partial.parquet
+ANAL/data/routing/**/*.slice*.parquet
 ANAL/data/routing/**/*_sample.parquet
 ANAL/data/routing/**/*_sample_parts/
-ANAL/data/routing/**/accessibility_*_parts/
-
-
+**/*accessibility_parts*/
+ANAL/data/routing/work/
+ANAL/data/routing/features/*/fachgruppe_accessibility_quarter_100m.parquet/

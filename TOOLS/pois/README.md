@@ -46,3 +46,5 @@ GeoParquet-capable `pyarrow` installation.
 All files contain a point `geometry` column in EPSG:3035 plus identifiers,
 name/tag fields, `year`, `poi_type`, `poi_id`, source/provenance fields,
 `static_destination`, and type-specific transport/station/ramp metadata.
+Public-transport stop rows also carry pipe-delimited `pt_route_ids`, allowing
+distinct routes to be deduplicated across multiple reachable parent stations.

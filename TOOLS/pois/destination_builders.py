@@ -40,7 +40,7 @@ def _read_observed_transport(project_dir: Path, year: int) -> gpd.GeoDataFrame:
     if not path.exists():
         raise FileNotFoundError(f"Missing public-transport GeoParquet: {path}")
     stops = gpd.read_parquet(path).to_crs(CRS_ROUTING)
-    required = {"station_id", "station_name", "weekday_school_departures", "weekday_holiday_departures", "geometry"}
+    required = {"station_id", "station_name", "weekday_school_departures", "weekday_holiday_departures", "weekday_route_ids", "geometry"}
     missing = sorted(required - set(stops.columns))
     if missing:
         raise ValueError(f"{path.name} is missing columns: {missing}")
@@ -51,6 +51,16 @@ def _read_observed_transport(project_dir: Path, year: int) -> gpd.GeoDataFrame:
 
 def _join_values(values: pd.Series) -> str:
     return "|".join(sorted({str(value) for value in values.dropna() if str(value)}))
+
+
+def _join_pipe_delimited_values(values: pd.Series) -> str:
+    items = {
+        item.strip()
+        for value in values.dropna()
+        for item in str(value).split("|")
+        if item.strip()
+    }
+    return "|".join(sorted(items))
 
 
 def yearly_transport_stops(project_dir: Path, year: int) -> gpd.GeoDataFrame:
@@ -80,6 +90,7 @@ def yearly_transport_stops(project_dir: Path, year: int) -> gpd.GeoDataFrame:
             row["weekday_school_departures"] = pd.to_numeric(group["weekday_school_departures"], errors="coerce").mean()
             row["weekday_holiday_departures"] = pd.to_numeric(group["weekday_holiday_departures"], errors="coerce").mean()
             row["weekday_avg_departures"] = (row["weekday_school_departures"] + row["weekday_holiday_departures"]) / 2
+            row["weekday_route_ids"] = _join_pipe_delimited_values(group["weekday_route_ids"])
             row["source_years"] = _join_values(group["pt_source_year"])
             row["source_stop_ids"] = _join_values(group.apply(lambda r: f"{r.pt_source_year}:{r.station_id}", axis=1))
             row["imputation_method"] = "mean_2020_2022_matching_station_id" if len(group) == 2 else "2021_one_sided_stop_retained"
@@ -166,6 +177,7 @@ def pt_stop_destinations(stops: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
     output["source_note"] = "public_transport_stop"
     output["provenance"] = "public_transport_assigned_year"
     output["pt_departures_weekday"] = output["weekday_avg_departures"].astype(float)
+    output["pt_route_ids"] = output["weekday_route_ids"].astype("string")
     output["static_destination"] = True
     return output
 
