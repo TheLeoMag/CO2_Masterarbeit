@@ -1,6 +1,5 @@
 *.gml
 *.pbf
-TOOLS/osm-data/*-pois.geoparquet
 OGD/Public_Transport/Verbund_Daten/*
 OGD/Public_Transport/Verbund_Daten_work/*
 *.log
@@ -10,6 +9,9 @@ OGD/Public_Transport/Verbund_Daten_work/*
 *.part
 *.partial
 __pycache__/
+.pytest_cache/
+.runlogs/
+.venv/
 .ipynb_checkpoints/
 ANAL/data/routing/**/*.partial.parquet
 ANAL/data/routing/**/*.slice*.parquet

@@ -1,134 +1,80 @@
 # CO2 Master Thesis
 
-This repository contains code for my Master's thesis on regional business dynamics in Styria.
+This repository contains the reproducible analysis for a Master's thesis on how spatial location factors affect business formation and survival in Styria. It combines company-level data, open geodata, a 100 m population grid, and GIP-based travel-time and accessibility measures.
 
-The thesis investigates how spatial location factors influence business formation and business survival. The central research question is:
-
-> Which spatial location factors influence the settlement and survival of companies in Styria?
-
-The analysis links company-level data from the Styrian Chamber of Commerce with open geodata, high-resolution population grids, and routing-based accessibility measures.
-
-The empirical work is planned as a descriptive and inferential spatial analysis. 
-
-## Repository Structure
-
-This is a thesis analysis repository, not a standalone software package. The main folders separate source data, generated analysis data, figures, synthetic-data generation, and operational tools:
+## Repository structure
 
 | Path | Contents |
 |---|---|
-| `OGD/` | Public open-government input data and processed geodata derivatives. |
-| `SDG/` | Synthetic company-data generation used for the public reproducible workflow. |
-| `ANAL/` | Analytical notebooks and derived 100 m panel/routing datasets. |
-| `FIG/` | Figure notebooks, plotting scripts, and exported thesis figures. |
-| `TOOLS/` | Local service configuration and routing support workflows. |
-| `TOOLS/routing/` | Historical Valhalla routing notebooks and routing-specific documentation. |
-| `TOOLS/osm-data/` | Placeholder documentation for local OpenStreetMap PBF files and derived POI catalogs. |
+| `OGD/` | External open-data inputs and source-specific preparation workflows. |
+| `SDG/` | Synthetic company-data generation for the public workflow. |
+| `ANAL/` | The ordered analytical workflow and generated model data. |
+| `ANAL/routing/` | Routing notebooks 02–07, shared helpers, and routing documentation. |
+| `ANAL/data/` | Derived 100 m panels, routing products, status files, and model outputs. |
+| `FIG/` | Descriptive and model-result figure notebooks plus exported figures. |
+| `tests/` | Focused tests for routing feature construction. |
 
-## Data
+`TOOLS/` is no longer used. Routing, destination construction, and validation are one workflow under `ANAL/`; all external geodata now lives under `OGD/`.
 
-The following source and reference data are required for the analysis. Large geodata files are excluded from Git and must be obtained separately.
+## Data sources
 
-| Dataset | Purpose | Provider / source | Reference URL |
-|---|---|---|---|
-| Austrian OpenStreetMap extract | Building footprints, local geocoding, routing, and accessibility calculations | OpenStreetMap contributors via Geofabrik | [Geofabrik Austria](https://download.geofabrik.de/europe/austria.html) |
-| Austrian 100 m population grid (POPREG) | High-resolution population distribution and population-density measures | Statistics Austria / Austrian Open Government Data | [Statistics Austria Open Data](https://data.statistik.gv.at/) |
-| Styrian municipal population 2002-2025 (`Bevoelkerungsentwicklung seit 2002 in der Steiermark`) | Annual municipal population counts for backcasting the 2025 100 m population grid | Land Steiermark Open Government Data | [OGD search portal](https://app.sterz.stmk.gv.at/at.gv.stmk.aews.ext-p/p1/r/32/otogd/OGD-suche) |
-| Education locations (`Bildungsstandorte`) | Higher education destinations for routing-based accessibility measures | Land Steiermark Open Government Data | [OGD search portal](https://app.sterz.stmk.gv.at/at.gv.stmk.aews.ext-p/p1/r/32/otogd/OGD-suche) |
-| Public transport stops (`Haltestellen des Verkehrsverbundes Steiermark`) | Public-transport stop locations and service-frequency attributes for transit accessibility measures | Land Steiermark Open Government Data | [OGD search portal](https://app.sterz.stmk.gv.at/at.gv.stmk.aews.ext-p/p1/r/32/otogd/OGD-suche) |
-| Municipality boundaries (`Gemeindegrenzen`) | Delimitation of Styria, spatial clipping, and municipality-level aggregation | Austrian Open Government Data | [OGD search portal](https://app.sterz.stmk.gv.at/at.gv.stmk.aews.ext-p/p1/r/32/otogd/OGD-suche) |
-| 2025 Fachorganisation membership distribution | Reference categories and sampling weights for synthetic company data | WKO Steiermark | [Mitgliederstatistik der gewerblichen Wirtschaft Steiermark](https://www.wko.at/stmk/wirtschaft/mitgliederstatistik-der-gewerblichen-wirtschaft-steiermark) |
+Large source files are excluded from Git and must be obtained separately.
 
-The GeoParquet files in `OGD/` are processed derivatives rather than separate external sources:
+| Dataset | Purpose | Location |
+|---|---|---|
+| GIP road-network snapshots, 2015–2025 | Valhalla graphs, travel times, road-network figures, and motorway exits | `OGD/GIP/<year>.osm.pbf` |
+| Austrian OSM 2025 snapshot | Building footprints used only to generate synthetic firm locations | `OGD/OpenStreetMap/austria-2025.osm.pbf` |
+| Austrian 100 m population grid (POPREG) | High-resolution population distribution | `OGD/pd_popreg_100m_*.zip` |
+| Styrian municipal population, 2002–2025 | Backcasting the 2025 population grid | `OGD/STMK_POP_2002_2025.csv` |
+| Municipality boundaries | Study area, clipping, and aggregation | `OGD/Gemeindegrenzen.zip` |
+| Education locations | Higher-education routing destinations | `OGD/Bildungsstandorte.zip` |
+| Public-transport data | Stops, service frequencies, and rail-station destinations | `OGD/Public_Transport/` |
+| WKO membership totals | Sampling weights for synthetic companies | `SDG/fachorganisationen_total_members.csv` |
 
-- `pd_popreg_100m_7767c33f-302c-11e3-beb4-0000c1ab0db6.geoparquet` is extracted from the downloaded POPREG GML using [`OGD/extract_glm.py`](OGD/extract_glm.py).
-- `population_grid_styria.geoparquet` contains the population grid clipped to Styria.
+GIP files use the OSM PBF container format, but their contents come from GIP. Historical OpenStreetMap snapshots and OSM-derived routing POIs are not part of the routing pipeline. The only remaining OSM input supports the building-based synthetic-data generator; see [`OGD/OpenStreetMap/README.md`](OGD/OpenStreetMap/README.md).
 
-## Synthetic Data
+## Workflow
 
-The [`SDG`](SDG/) directory contains the synthetic data generation workflow. It creates artificial company records with the same structure as the confidential source data, but does not reproduce real companies.
+Prepare source-specific inputs first when they need to be regenerated:
 
-The generation process:
+- [`OGD/extract_glm.py`](OGD/extract_glm.py) converts the downloaded POPREG GML to GeoParquet.
+- [`OGD/Public_Transport/Public_Transport_preparation.ipynb`](OGD/Public_Transport/Public_Transport_preparation.ipynb) prepares annual stop-frequency products.
+- [`SDG/Generation.ipynb`](SDG/Generation.ipynb) creates the public synthetic company dataset.
 
-- assigns companies to economic divisions and professional groups according to the 2025 membership distribution;
-- generates founding and deletion dates while keeping their chronological order valid;
-- samples company locations from OpenStreetMap building footprints within Styria;
-- favors commercial, office, retail, and industrial buildings, while residential and single-family homes remain possible with lower probabilities; and
-- stores the resulting locations as points in EPSG:3035 and exports the dataset as GeoParquet.
+Then run the numbered analysis in order:
 
-Founding dates range from 1900 to 2025. Their distribution favors more recent dates while retaining a long tail of older companies. Building size also affects location selection, so larger suitable buildings can contain multiple companies.
+1. [`ANAL/01_build_data_foundation.ipynb`](ANAL/01_build_data_foundation.ipynb) creates the 100 m raster, assigns firms, backcasts population, and builds the quarterly panel.
+2. [`ANAL/routing/02_build_yearly_destinations.ipynb`](ANAL/routing/02_build_yearly_destinations.ipynb) combines GIP exits, public transport, higher education, and curated centres.
+3. [`ANAL/routing/03_prepare_inputs.ipynb`](ANAL/routing/03_prepare_inputs.ipynb) creates active routing origins.
+4. [`ANAL/routing/04_verify_destinations.ipynb`](ANAL/routing/04_verify_destinations.ipynb) validates annual destination catalogs.
+5. [`ANAL/routing/05_build_valhalla_graphs.ipynb`](ANAL/routing/05_build_valhalla_graphs.ipynb) builds annual Valhalla graphs from GIP.
+6. [`ANAL/routing/06_generate_features.ipynb`](ANAL/routing/06_generate_features.ipynb) generates travel-time and accessibility features.
+7. [`ANAL/routing/07_validate_outputs.ipynb`](ANAL/routing/07_validate_outputs.ipynb) checks routing products before modelling.
+8. [`ANAL/08_estimate_founding_model.ipynb`](ANAL/08_estimate_founding_model.ipynb) estimates the founding model.
+9. [`ANAL/09_estimate_survival_model.ipynb`](ANAL/09_estimate_survival_model.ipynb) estimates the survival model.
 
-The workflow is implemented in [`SDG/Generation.ipynb`](SDG/Generation.ipynb). It makes the public analysis reproducible without publishing sensitive company information. The final thesis analysis is performed locally using the real data.
+Detailed routing requirements, inputs, and outputs are documented in [`ANAL/routing/README.md`](ANAL/routing/README.md).
 
-## Notebook Order
+## Environment
 
-The analysis is notebook-based. The usual public workflow is:
-
-1. [`OGD/extract_glm.py`](OGD/extract_glm.py) converts the downloaded POPREG GML population grid to GeoParquet.
-2. [`FIG/Population_Density/Population_density_Styria.ipynb`](FIG/Population_Density/Population_density_Styria.ipynb) clips the population grid to Styria and exports population-density figures.
-3. [`SDG/Generation.ipynb`](SDG/Generation.ipynb) generates the synthetic company dataset.
-4. [`ANAL/100m_data_foundation.ipynb`](ANAL/100m_data_foundation.ipynb) builds the 100 m raster, assigns firms to grid cells, backcasts population, and creates the quarterly panel.
-5. [`TOOLS/routing/`](TOOLS/routing/) creates routing inputs, historical POI catalogs, yearly Valhalla graphs, routing features, and validation reports.
-6. [`ANAL/Cox.ipynb`](ANAL/Cox.ipynb) contains the survival-analysis model work.
-
-The routing sub-workflow has its own run order and operational notes in [`TOOLS/routing/README.md`](TOOLS/routing/README.md).
-
-## Tools
-
-The analysis uses:
-
-- **Python** for data preparation, spatial analysis, and reproducible workflows.
-- **Jupyter Notebook** for the main analysis steps.
-- **pandas**, **GeoPandas**, **Shapely**, **pyogrio**, **pyarrow**, and **requests** for tabular data handling, geodata processing, Parquet/GeoParquet IO, OSM extraction, and local routing API calls.
-- **matplotlib** for figure generation.
-- **Nominatim** for local forward and reverse geocoding.
-- **Valhalla** for local routing and accessibility calculations.
-- **Docker Compose** to run the Nominatim and Valhalla services.
-- **WSL2** with Docker available inside the configured Linux distribution for the historical Valhalla routing notebooks.
-
-The service configuration is located in [`TOOLS/docker-compose.yml`](TOOLS/docker-compose.yml).
-Before starting the Docker Compose services, download the current Austrian OpenStreetMap
-extract from [Geofabrik](https://download.geofabrik.de)
-and save it as `TOOLS/osm-data/austria-latest.osm.pbf`. For the historical routing
-pipeline, also populate `TOOLS/osm-data/` with the yearly Austria PBF snapshots used by
-the notebooks:
-
-```text
-austria-150101.osm.pbf
-austria-160101.osm.pbf
-austria-170101.osm.pbf
-austria-180101.osm.pbf
-austria-190101.osm.pbf
-austria-200101.osm.pbf
-austria-210101.osm.pbf
-austria-220101.osm.pbf
-austria-230101.osm.pbf
-austria-240101.osm.pbf
-austria-250101.osm.pbf
-```
-
-A placeholder file in `TOOLS/osm-data/` documents the expected filenames; `.pbf` files
-are excluded from Git.
-
-Start both services from the repository root:
+Create a Python environment and install the shared dependencies:
 
 ```bash
-docker compose -f TOOLS/docker-compose.yml up -d
+python -m venv .venv
+python -m pip install -r requirements.txt
 ```
 
-The first startup imports the OSM data and can take a considerable amount of time.
-After the import, Nominatim is available at `http://localhost:8080` and Valhalla at
-`http://localhost:8002`.
+The routing graph and feature notebooks additionally require WSL2, Docker inside the configured WSL distribution, and the pinned Valhalla image documented in the notebooks. They start year-specific Valhalla containers themselves; no repository-level Docker Compose service is required.
 
-## Routing
+Run the focused test suite from the repository root:
 
-Historical routing is implemented in [`TOOLS/routing`](TOOLS/routing/). See
-[`TOOLS/routing/README.md`](TOOLS/routing/README.md) for the detailed notebook order,
-inputs, and output conventions. The workflow first creates active 100 m routing cells,
-then builds yearly routing-destination catalogs
-from historical OSM PBF snapshots plus static OGD destinations. A separate notebook builds
-one Valhalla graph per year inside WSL2/Docker, and the feature-generation notebook starts
-the matching yearly graph to compute nearest-destination travel times and local SLX edge
-lists. Lightweight validation writes routing checks to `ANAL/data/routing/reports/`.
+```bash
+python -m pytest tests/test_routing_features_notebook.py
+```
+
+## Outputs and version control
+
+Generated analytical products are stored below `ANAL/data/`; exported figures are stored below `FIG/`. Raw `.pbf` and `.gml` files, temporary routing slices, checkpoints, virtual environments, and caches are ignored. Keep confidential company data outside Git; the tracked synthetic dataset is provided for public reproducibility.
 
 ## License
 

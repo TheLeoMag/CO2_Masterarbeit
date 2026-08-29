@@ -1,36 +1,59 @@
-# Historical Valhalla routing workflow (air-gapped)
+# GIP-based historical routing workflow
 
-Run the five notebooks once, in order, from a clean kernel:
+This directory contains analysis steps 02–07. The pipeline uses annual GIP road snapshots for both Valhalla routing and motorway-exit extraction. It does not use historical OpenStreetMap snapshots or OSM-derived POI catalogs.
 
-1. `01_prepare_routing_inputs.ipynb`
-2. `02_verify_yearly_routing_destinations.ipynb`
-3. `03_build_valhalla_graphs.ipynb`
-4. `04_generate_routing_features.ipynb`
-5. `05_validate_routing_outputs.ipynb`
+## Run order
 
-The notebooks discover the project root by locating `ANAL/` and `TOOLS/`. No environment variables, notebook rewriting, or orchestration scripts are required. `routing_utils.py` is the only standalone module and contains pure schema helpers.
+Run each notebook once, in order, from a clean kernel:
 
-## One-time offline setup
+1. `02_build_yearly_destinations.ipynb`
+2. `03_prepare_inputs.ipynb`
+3. `04_verify_destinations.ipynb`
+4. `05_build_valhalla_graphs.ipynb`
+5. `06_generate_features.ipynb`
+6. `07_validate_outputs.ipynb`
 
-Transfer the source PBFs, POI files, analytical inputs, Python wheels, and the Docker image before disconnecting the PC. Import and tag the pinned image:
+The notebooks locate the project root by looking for `ANAL/` and `OGD/`, so they can be launched from the repository root or a subdirectory. `destination_builders.py` contains destination-construction helpers; `routing_utils.py` contains shared output-schema helpers.
+
+## Required inputs
+
+- `OGD/GIP/2015.osm.pbf` through `OGD/GIP/2025.osm.pbf`
+- `OGD/Public_Transport/public_transport_weekday_stop_frequency_<year>.geoparquet`
+- `OGD/Gemeindegrenzen.zip`
+- `OGD/Bildungsstandorte.zip`
+- `SDG/companies_styria_syn.geoparquet` or the confidential local equivalent used by step 01
+- outputs from `ANAL/01_build_data_foundation.ipynb`
+- `ANAL/routing/static_routing_destinations.csv`
+
+The annual destination catalogs are written to `ANAL/data/routing/destinations/`. They combine public-transport stops and rail stations, GIP-derived motorway exits, higher-education sites, and curated regional/urban centres.
+
+## Valhalla setup
+
+Steps 05 and 06 require WSL2 and Docker in the configured WSL distribution (`Ubuntu` by default). Import and tag the pinned Valhalla image before disconnecting an air-gapped machine:
 
 ```text
 docker load -i valhalla-scripted-3.8.3.tar
 docker tag <loaded-image-id> valhalla-scripted:3.8.3
 ```
 
-WSL2, Docker, and the configured WSL distribution (`Ubuntu` by default) are required. The notebooks verify image ID `sha256:1e9f511e061eefde3ebab3b860517f06e14c31a24e88403a86365e64ce6adab4`; they never pull or download anything.
+The exact expected image name and SHA-256 ID are defined in each notebook. The notebooks create and manage year-specific containers and graphs; the removed Compose configuration is not part of this workflow.
 
-Notebook 04 processes 2015–2025 sequentially with four slices and one Valhalla service. Checkpoints live only under `ANAL/data/routing/work/routing_features/<year>/`, resume after interruption, and are deleted only after successful validation. Exhausted retries leave `failed_origins.json` and prevent publication.
+Step 06 processes 2015–2025 with resumable checkpoints below `ANAL/data/routing/work/routing_features/<year>/`. Checkpoints are removed only after successful publication and validation. Exhausted retries leave a failure record and prevent silent publication.
 
 ## Canonical outputs
 
 - `ANAL/data/routing/inputs/active_routing_cells_100m.parquet`
+- `ANAL/data/routing/destinations/austria-<year>-pois.geoparquet`
 - `ANAL/data/routing/features/<year>/nearest_infrastructure_100m.parquet`
 - `ANAL/data/routing/features/<year>/accessibility_potentials_100m.parquet`
 - `ANAL/data/routing/features/<year>/pedestrian_accessibility_quarter_100m.parquet`
-- `ANAL/data/routing/features/<year>/fachgruppe_accessibility_quarter_100m.parquet/` (Hive-partitioned dataset by `Fachgruppe_ID`)
+- `ANAL/data/routing/features/<year>/fachgruppe_accessibility_quarter_100m.parquet/`
 - `ANAL/data/routing/features/<year>/firm_accessibility_quarter_100m.parquet`
-- `ANAL/data/routing/status/accessibility_skipped_origins.csv` (explicit exceptional origins whose routed potentials are `NaN`)
+- `ANAL/data/routing/status/graph_build_status.csv`
+- `ANAL/data/routing/status/routing_feature_status.csv`
+- `ANAL/data/routing/status/accessibility_skipped_origins.csv`
+- `ANAL/data/routing/reports/routing_validation_summary.csv`
 
-Model-ready routing features use only `active_firms_tminus1`. Car accessibility is cumulative at 5, 10, 15, and 30 minutes; pedestrian accessibility is cumulative at 5 and 10 minutes. Both retain explicit own-cell mass and reachable-cell counts. The pedestrian product stores parent-station-deduplicated PT stop counts, weekday departures, distinct normalized route IDs, and `pt_ohne_haltestelle` based on the 10-minute stop count. PT stops are no longer part of nearest-infrastructure routing. Explicitly documented car-isochrone exceptions retain their own-cell masses and pedestrian results but publish `NaN` for car-routed potentials. Notebook 05 writes `ANAL/data/routing/reports/routing_validation_summary.csv` and fails loudly if any check is not `OK`.
+Car accessibility is cumulative at 5, 10, 15, and 30 minutes. Pedestrian accessibility is cumulative at 5 and 10 minutes and includes parent-station-deduplicated stops, weekday departures, and route counts. Public-transport stops are handled by pedestrian isochrones and are not included in nearest-infrastructure routing.
+
+Do not start model estimation until step 07 completes without a `CHECK` result.

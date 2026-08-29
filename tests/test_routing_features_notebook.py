@@ -21,7 +21,7 @@ import requests
 from shapely.geometry import Point, box, shape
 from tqdm.auto import tqdm
 
-from TOOLS.routing.routing_utils import (
+from ANAL.routing.routing_utils import (
     ACCESS_MINUTES,
     fachgruppe_access_columns,
     fachgruppe_ids,
@@ -30,7 +30,7 @@ from TOOLS.routing.routing_utils import (
 )
 
 
-NOTEBOOK_PATH = Path(__file__).parents[1] / "TOOLS" / "routing" / "04_generate_routing_features.ipynb"
+NOTEBOOK_PATH = Path(__file__).parents[1] / "ANAL" / "routing" / "06_generate_features.ipynb"
 
 
 def notebook_namespace(fachgruppe_ids_for_test: list[str] | None = None) -> dict:
