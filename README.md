@@ -19,18 +19,6 @@ Generated analytical products stored below `ANAL/data/`; exported figures stored
 
 Large source files are excluded from Git and must be obtained separately.
 
-<<<<<<< HEAD
-| Dataset | Purpose | Location |
-|---|---|---|
-| GIP road-network snapshots, 2015–2025 | Valhalla graphs, travel times, road-network figures, and motorway exits | `OGD/GIP/<year>.osm.pbf` |
-| Austrian OSM 2025 snapshot | Building footprints used only to generate synthetic firm locations | `OGD/OpenStreetMap/austria-2025.osm.pbf` |
-| Austrian 100 m population grid (POPREG) | High-resolution population distribution | `OGD/pd_popreg_100m_*.zip` |
-| Styrian municipal population, 2002–2025 | Backcasting the 2025 population grid | `OGD/STMK_POP_2002_2025.csv` |
-| Municipality boundaries | Study area, clipping, and aggregation | `OGD/Gemeindegrenzen.zip` |
-| Education locations | Higher-education routing destinations | `OGD/Bildungsstandorte.zip` |
-| Public-transport data | Stops and service frequencies | `OGD/Public_Transport/` |
-| WKO membership totals | Sampling weights for synthetic companies | `SDG/fachorganisationen_total_members.csv` |
-=======
 | Dataset | Year | Purpose | Location | Source |
 |---|---|---|---|---|
 | GIP road-network snapshots | 2015–2025 | Valhalla graphs, travel times, road-network figures, and motorway exits | `OGD/GIP/<year>.osm.pbf` | [GIP](https://www.gip.gv.at/) *|
@@ -41,7 +29,6 @@ Large source files are excluded from Git and must be obtained separately.
 | Education locations | 2025 | Higher-education routing destinations | `OGD/Bildungsstandorte.zip` | [Land Steiermark](https://data.steiermark.at/)|
 | Public-transport data | 2015–2025 | Stops, service frequencies, and rail-station destinations | `OGD/Public_Transport/` | [VERBUND Linie](https://www.verbundlinie.at/de/)|
 | WKO membership totals | 2025 | Sampling weights for synthetic companies | `SDG/fachorganisationen_total_members.csv` | [WKO](https://www.wko.at/stmk/wirtschaft/aktuelle-publikationen-und-statistische-daten) ***|
->>>>>>> de93961a88ff5dad64c2c70bf5155bfb6cc0a778
 
 *GIP files for the use in this pipline need to be in the OSM PBF container format, cenverted using GIP2OSM package with the source files from GIP. 
 
