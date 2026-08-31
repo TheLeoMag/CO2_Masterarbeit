@@ -10,13 +10,13 @@ from matplotlib.colors import BoundaryNorm, ListedColormap
 from matplotlib.patches import Patch
 
 
-PROJECT_DIR = Path(__file__).resolve().parents[1]
+PROJECT_DIR = Path(__file__).resolve().parents[2]
 OGD_DIR = PROJECT_DIR / "OGD"
 FIG_DIR = PROJECT_DIR / "FIG"
 
 DEFAULT_POPULATION = OGD_DIR / "pd_popreg_100m_7767c33f-302c-11e3-beb4-0000c1ab0db6.geoparquet"
 DEFAULT_BOUNDARIES = OGD_DIR / "Gemeindegrenzen.zip"
-DEFAULT_OUTPUT = FIG_DIR / "population_density_styria.png"
+DEFAULT_OUTPUT = FIG_DIR / "Population_Density" / "population_density_styria.png"
 
 BOUNDARY_LAYER = "Gemeindegrenzen.shp"
 BOUNDARY_COLUMNS = ["BEZNR6", "GEMNR", "GEMNAM"]
@@ -100,24 +100,27 @@ def add_north_arrow(ax: plt.Axes) -> None:
     )
 
 
+def reserve_lower_left_legend_space(ax: plt.Axes, fraction: float = 0.30) -> None:
+    minx, maxx = ax.get_xlim()
+    ax.set_xlim(minx - (maxx - minx) * fraction, maxx)
+
+
 def add_patch_legend(ax: plt.Axes, colors, labels, title: str) -> None:
     handles = [Patch(facecolor=color, edgecolor="#4d4d4d", linewidth=0.3) for color in colors]
     legend = ax.legend(
         handles,
         labels,
         title=title,
-        loc="upper right",
-        frameon=True,
-        framealpha=0.95,
-        borderpad=0.6,
+        loc="lower left",
+        bbox_to_anchor=(0.015, 0.025),
+        frameon=False,
+        borderpad=0.2,
         labelspacing=0.35,
         handlelength=1.0,
         handleheight=1.0,
-        fontsize=8,
-        title_fontsize=8,
+        fontsize=7,
+        title_fontsize=7,
     )
-    legend.get_frame().set_linewidth(0.4)
-    legend.get_frame().set_edgecolor("#808080")
 
 
 def plot_population_density(
@@ -161,9 +164,11 @@ def plot_population_density(
     population_bin_labels = []
     for lower, upper in zip(population_bin_edges[:-1], population_bin_edges[1:]):
         if upper == max_population + 1 and lower >= 1_000:
-            population_bin_labels.append(f"{lower:,}+")
+            population_bin_labels.append(f"{lower:,}+".replace(",", "."))
         else:
-            population_bin_labels.append(f"{max(1, lower):,}-{upper - 1:,}")
+            population_bin_labels.append(
+                f"{max(1, lower):,}–{upper - 1:,}".replace(",", ".")
+            )
     population_legend_colors = population_cmap.colors
 
     population.plot(
@@ -178,10 +183,15 @@ def plot_population_density(
     municipalities.boundary.plot(ax=ax, color="#ffffff", linewidth=0.18, alpha=0.75)
     styria_boundary.boundary.plot(ax=ax, color="#1f1f1f", linewidth=0.7)
 
-    ax.set_title("Population Distribution in Styria", fontsize=11, pad=8)
     ax.set_axis_off()
     ax.set_aspect("equal")
-    add_patch_legend(ax, population_legend_colors, population_bin_labels, "Population per 100 m^2")
+    reserve_lower_left_legend_space(ax)
+    add_patch_legend(
+        ax,
+        population_legend_colors,
+        population_bin_labels,
+        "Bevölkerung je 100-m-Zelle",
+    )
     add_north_arrow(ax)
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -192,7 +202,7 @@ def plot_population_density(
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Create a publication-ready heat map of population in Styria."
+        description="Erstellt eine publikationsreife Bevölkerungskarte der Steiermark."
     )
     parser.add_argument(
         "--population",

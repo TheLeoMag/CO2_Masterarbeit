@@ -70,5 +70,20 @@ def new_map_figure(width=DEFAULT_WIDTH, height=MAP_HEIGHT):
     ax.set_axis_off()
     return fig, ax
 
+def add_north_arrow(ax, x=0.95, y=0.07, length=0.09):
+    """Add the compact north arrow used throughout the Styria maps."""
+    ax.annotate(
+        "N",
+        xy=(x, y + length),
+        xytext=(x, y),
+        xycoords="axes fraction",
+        ha="center",
+        va="center",
+        fontsize=9,
+        zorder=20,
+        annotation_clip=False,
+        arrowprops={"arrowstyle": "-|>", "linewidth": 1.1, "color": "black"},
+    )
+
 def save_apa7(fig, filename, dpi=600):
     fig.savefig(Path(filename), dpi=dpi, bbox_inches="tight", facecolor="white")

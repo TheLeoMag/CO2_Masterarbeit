@@ -1,7 +1,8 @@
-year,frequency_stops,coordinate_matches,unmatched_coordinates,school_source_rows_omitted_zero_departures,holiday_source_rows_omitted_zero_departures
-2016,4880,4785,95,2338,72
-2017,7630,7562,68,111,2776
-2018,7469,7444,25,68,2796
-2019,7454,7426,28,55,2791
-2020,7166,7117,49,88,2422
-2022,7093,7081,12,28,2427
+year,frequency_source_year,imputation_method,frequency_stops,coordinate_matches,unmatched_coordinates,missing_station_names
+2016,2017,full_2017_proxy,7630,7562,68,0
+2017,2017,observed,7630,7562,68,0
+2018,2018,observed,7469,7444,25,0
+2019,2019,observed,7454,7426,28,0
+2020,2020,observed,7166,7117,49,0
+2022,2022,observed,7093,7081,12,0
+2025,2025,observed,8221,8221,0,0

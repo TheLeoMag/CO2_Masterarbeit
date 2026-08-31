@@ -25,7 +25,7 @@ The notebooks locate the project root by looking for `ANAL/` and `OGD/`, so they
 - outputs from `ANAL/01_build_data_foundation.ipynb`
 - `ANAL/routing/static_routing_destinations.csv`
 
-The annual destination catalogs are written to `ANAL/data/routing/destinations/`. They combine public-transport stops and rail stations, GIP-derived motorway exits, higher-education sites, and curated regional/urban centres.
+The annual destination catalogs are written to `ANAL/data/routing/destinations/`. They combine all generic public-transport stops, GIP-derived motorway exits, higher-education sites, and curated regional/urban centres. Railway stations are not extracted or routed as a separate destination type; stops located at railway stations remain available as ordinary `pt_stop` records.
 
 ## Valhalla setup
 

@@ -28,7 +28,7 @@ Large source files are excluded from Git and must be obtained separately.
 | Styrian municipal population, 2002–2025 | Backcasting the 2025 population grid | `OGD/STMK_POP_2002_2025.csv` |
 | Municipality boundaries | Study area, clipping, and aggregation | `OGD/Gemeindegrenzen.zip` |
 | Education locations | Higher-education routing destinations | `OGD/Bildungsstandorte.zip` |
-| Public-transport data | Stops, service frequencies, and rail-station destinations | `OGD/Public_Transport/` |
+| Public-transport data | Stops and service frequencies | `OGD/Public_Transport/` |
 | WKO membership totals | Sampling weights for synthetic companies | `SDG/fachorganisationen_total_members.csv` |
 
 GIP files use the OSM PBF container format, but their contents come from GIP. Historical OpenStreetMap snapshots and OSM-derived routing POIs are not part of the routing pipeline. The only remaining OSM input supports the building-based synthetic-data generator; see [`OGD/OpenStreetMap/README.md`](OGD/OpenStreetMap/README.md).

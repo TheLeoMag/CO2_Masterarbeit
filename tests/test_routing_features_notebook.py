@@ -28,6 +28,7 @@ from ANAL.routing.routing_utils import (
     fachgruppe_stock_columns,
     main_access_columns,
 )
+from ANAL.routing.destination_builders import PT_YEAR_SOURCES, pt_stop_destinations
 
 
 NOTEBOOK_PATH = Path(__file__).parents[1] / "ANAL" / "routing" / "06_generate_features.ipynb"
@@ -104,6 +105,30 @@ def empty_pt_destinations() -> gpd.GeoDataFrame:
         geometry=gpd.GeoSeries([], crs="EPSG:4326"),
         crs="EPSG:4326",
     )
+
+
+def test_station_named_stops_remain_in_generic_public_transport_pois() -> None:
+    stops = gpd.GeoDataFrame(
+        {
+            "station_id": [1, 2, 3, 4, 5],
+            "station_name": ["Graz Hbf", "Leoben Bahnhof", "Lendorf Bahnhst", "Graz WKO", "Graz Busbahnhof"],
+            "weekday_avg_departures": [100.0, 80.0, 30.0, 20.0, 50.0],
+            "weekday_route_ids": ["S1", "R9", "R5", "40", "X20"],
+        },
+        geometry=[Point(15.4, 47.1)] * 5,
+        crs="EPSG:4326",
+    )
+
+    destinations = pt_stop_destinations(stops)
+
+    assert destinations["station_id"].tolist() == [1, 2, 3, 4, 5]
+    assert set(destinations["poi_type"]) == {"pt_stop"}
+
+
+def test_incomplete_2016_transport_source_uses_2017_proxy() -> None:
+    assert PT_YEAR_SOURCES[2015] == (2017,)
+    assert PT_YEAR_SOURCES[2016] == (2017,)
+    assert PT_YEAR_SOURCES[2017] == (2017,)
 
 
 def test_fachgruppe_ids_are_strings(tmp_path: Path) -> None:
@@ -419,10 +444,15 @@ def test_published_nearest_output_is_recognized_for_resume(tmp_path: Path) -> No
     pd.DataFrame([row]).to_parquet(path, index=False)
     assert namespace["valid_nearest_output"](path, {"g1"}, 2015)
 
-    pd.DataFrame([{key: value for key, value in row.items() if key != "routing_status_rail_station"}]).to_parquet(path, index=False)
+    pd.DataFrame([{key: value for key, value in row.items() if key != "routing_status_motorway_exit"}]).to_parquet(path, index=False)
     assert not namespace["valid_nearest_output"](path, {"g1"}, 2015)
 
     row["routing_status_pt_stop"] = "ok"
+    pd.DataFrame([row]).to_parquet(path, index=False)
+    assert not namespace["valid_nearest_output"](path, {"g1"}, 2015)
+
+    row.pop("routing_status_pt_stop")
+    row["tt_rail_station_min"] = 1.0
     pd.DataFrame([row]).to_parquet(path, index=False)
     assert not namespace["valid_nearest_output"](path, {"g1"}, 2015)
 

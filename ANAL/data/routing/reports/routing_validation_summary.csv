@@ -1,0 +1,1474 @@
+year,product,check,status
+all,source,raster_quarter_panel_100m.parquet exists,OK
+all,source,active_routing_cells_100m.parquet exists,OK
+all,source,firms_assigned_100m.geoparquet exists,OK
+2015,source,yearly destinations exist,OK
+2015,nearest,canonical output exists,OK
+2015,grid-quarter,canonical output exists,OK
+2015,pedestrian-grid-quarter,canonical output exists,OK
+2015,Fachgruppe-long,canonical output exists,OK
+2015,firm-quarter,canonical output exists,OK
+2015,cleanup,no visible routing intermediates,OK
+2015,cleanup,no hidden checkpoint directory,OK
+2015,nearest,one row per active cell,OK
+2015,nearest,grid_id unique,OK
+2015,grid-quarter,required schema,OK
+2015,grid-quarter,year and four quarters complete,OK
+2015,grid-quarter,unique grid-year-quarter keys,OK
+2015,grid-quarter,no contemporaneous or Sparte fields,OK
+2015,grid-quarter,pop_access_5min numeric,OK
+2015,grid-quarter,pop_access_5min non-negative,OK
+2015,grid-quarter,existing_firms_access_5min numeric,OK
+2015,grid-quarter,existing_firms_access_5min non-negative,OK
+2015,grid-quarter,pop_access_10min numeric,OK
+2015,grid-quarter,pop_access_10min non-negative,OK
+2015,grid-quarter,existing_firms_access_10min numeric,OK
+2015,grid-quarter,existing_firms_access_10min non-negative,OK
+2015,grid-quarter,pop_access_15min numeric,OK
+2015,grid-quarter,pop_access_15min non-negative,OK
+2015,grid-quarter,existing_firms_access_15min numeric,OK
+2015,grid-quarter,existing_firms_access_15min non-negative,OK
+2015,grid-quarter,pop_access_30min numeric,OK
+2015,grid-quarter,pop_access_30min non-negative,OK
+2015,grid-quarter,existing_firms_access_30min numeric,OK
+2015,grid-quarter,existing_firms_access_30min non-negative,OK
+2015,grid-quarter,reachable_cells_5min numeric,OK
+2015,grid-quarter,reachable_cells_5min non-negative,OK
+2015,grid-quarter,reachable_cells_10min numeric,OK
+2015,grid-quarter,reachable_cells_10min non-negative,OK
+2015,grid-quarter,reachable_cells_15min numeric,OK
+2015,grid-quarter,reachable_cells_15min non-negative,OK
+2015,grid-quarter,reachable_cells_30min numeric,OK
+2015,grid-quarter,reachable_cells_30min non-negative,OK
+2015,grid-quarter,pop_access_5min <= pop_access_10min,OK
+2015,grid-quarter,pop_access_10min <= pop_access_15min,OK
+2015,grid-quarter,pop_access_15min <= pop_access_30min,OK
+2015,grid-quarter,existing_firms_access_5min <= existing_firms_access_10min,OK
+2015,grid-quarter,existing_firms_access_10min <= existing_firms_access_15min,OK
+2015,grid-quarter,existing_firms_access_15min <= existing_firms_access_30min,OK
+2015,grid-quarter,reachable_cells_5min <= reachable_cells_10min,OK
+2015,grid-quarter,reachable_cells_10min <= reachable_cells_15min,OK
+2015,grid-quarter,reachable_cells_15min <= reachable_cells_30min,OK
+2015,pedestrian-grid-quarter,required schema,OK
+2015,pedestrian-grid-quarter,year and four quarters complete,OK
+2015,pedestrian-grid-quarter,unique grid-year-quarter keys,OK
+2015,pedestrian-grid-quarter,zero-stop flag matches 10-minute stop count,OK
+2015,pedestrian-grid-quarter,walk_pop_5min numeric,OK
+2015,pedestrian-grid-quarter,walk_pop_5min non-negative,OK
+2015,pedestrian-grid-quarter,walk_firms_5min numeric,OK
+2015,pedestrian-grid-quarter,walk_firms_5min non-negative,OK
+2015,pedestrian-grid-quarter,walk_pt_stops_5min numeric,OK
+2015,pedestrian-grid-quarter,walk_pt_stops_5min non-negative,OK
+2015,pedestrian-grid-quarter,walk_pt_departures_5min numeric,OK
+2015,pedestrian-grid-quarter,walk_pt_departures_5min non-negative,OK
+2015,pedestrian-grid-quarter,walk_pt_routes_5min numeric,OK
+2015,pedestrian-grid-quarter,walk_pt_routes_5min non-negative,OK
+2015,pedestrian-grid-quarter,reachable_cells_walk_5min numeric,OK
+2015,pedestrian-grid-quarter,reachable_cells_walk_5min non-negative,OK
+2015,pedestrian-grid-quarter,walk_pop_10min numeric,OK
+2015,pedestrian-grid-quarter,walk_pop_10min non-negative,OK
+2015,pedestrian-grid-quarter,walk_firms_10min numeric,OK
+2015,pedestrian-grid-quarter,walk_firms_10min non-negative,OK
+2015,pedestrian-grid-quarter,walk_pt_stops_10min numeric,OK
+2015,pedestrian-grid-quarter,walk_pt_stops_10min non-negative,OK
+2015,pedestrian-grid-quarter,walk_pt_departures_10min numeric,OK
+2015,pedestrian-grid-quarter,walk_pt_departures_10min non-negative,OK
+2015,pedestrian-grid-quarter,walk_pt_routes_10min numeric,OK
+2015,pedestrian-grid-quarter,walk_pt_routes_10min non-negative,OK
+2015,pedestrian-grid-quarter,reachable_cells_walk_10min numeric,OK
+2015,pedestrian-grid-quarter,reachable_cells_walk_10min non-negative,OK
+2015,pedestrian-grid-quarter,walk_pop_5min <= walk_pop_10min,OK
+2015,pedestrian-grid-quarter,walk_firms_5min <= walk_firms_10min,OK
+2015,pedestrian-grid-quarter,walk_pt_stops_5min <= walk_pt_stops_10min,OK
+2015,pedestrian-grid-quarter,walk_pt_departures_5min <= walk_pt_departures_10min,OK
+2015,pedestrian-grid-quarter,walk_pt_routes_5min <= walk_pt_routes_10min,OK
+2015,pedestrian-grid-quarter,reachable_cells_walk_5min <= reachable_cells_walk_10min,CHECK
+2015,Fachgruppe-long,required schema,OK
+2015,Fachgruppe-long,all 95 Fachgruppen per grid-quarter,OK
+2015,Fachgruppe-long,unique keys,OK
+2015,Fachgruppe-long,same_fachgruppe_firms_access_5min numeric,OK
+2015,Fachgruppe-long,same_fachgruppe_firms_access_5min non-negative,OK
+2015,Fachgruppe-long,same_fachgruppe_firms_access_10min numeric,OK
+2015,Fachgruppe-long,same_fachgruppe_firms_access_10min non-negative,OK
+2015,Fachgruppe-long,same_fachgruppe_firms_access_15min numeric,OK
+2015,Fachgruppe-long,same_fachgruppe_firms_access_15min non-negative,OK
+2015,Fachgruppe-long,same_fachgruppe_firms_access_30min numeric,OK
+2015,Fachgruppe-long,same_fachgruppe_firms_access_30min non-negative,OK
+2015,Fachgruppe-long,walk_same_fachgruppe_firms_5min numeric,OK
+2015,Fachgruppe-long,walk_same_fachgruppe_firms_5min non-negative,OK
+2015,Fachgruppe-long,walk_same_fachgruppe_firms_10min numeric,OK
+2015,Fachgruppe-long,walk_same_fachgruppe_firms_10min non-negative,OK
+2015,Fachgruppe-long,same_fachgruppe_firms_access_5min <= same_fachgruppe_firms_access_10min,OK
+2015,Fachgruppe-long,same_fachgruppe_firms_access_10min <= same_fachgruppe_firms_access_15min,OK
+2015,Fachgruppe-long,same_fachgruppe_firms_access_15min <= same_fachgruppe_firms_access_30min,OK
+2015,Fachgruppe-long,walk_same_fachgruppe_firms_5min <= walk_same_fachgruppe_firms_10min,OK
+2015,firm-quarter,required schema,OK
+2015,firm-quarter,same-Fachgruppe 5min matches cumulative long table,OK
+2015,firm-quarter,lagged-total 5min matches cumulative grid table,OK
+2015,firm-quarter,same-Fachgruppe 10min matches cumulative long table,OK
+2015,firm-quarter,lagged-total 10min matches cumulative grid table,OK
+2015,firm-quarter,same-Fachgruppe 15min matches cumulative long table,OK
+2015,firm-quarter,lagged-total 15min matches cumulative grid table,OK
+2015,firm-quarter,same-Fachgruppe 30min matches cumulative long table,OK
+2015,firm-quarter,lagged-total 30min matches cumulative grid table,OK
+2015,firm-quarter,same_fachgruppe_firms_access_5min numeric,OK
+2015,firm-quarter,same_fachgruppe_firms_access_5min non-negative,OK
+2015,firm-quarter,same_fachgruppe_firms_access_10min numeric,OK
+2015,firm-quarter,same_fachgruppe_firms_access_10min non-negative,OK
+2015,firm-quarter,same_fachgruppe_firms_access_15min numeric,OK
+2015,firm-quarter,same_fachgruppe_firms_access_15min non-negative,OK
+2015,firm-quarter,same_fachgruppe_firms_access_30min numeric,OK
+2015,firm-quarter,same_fachgruppe_firms_access_30min non-negative,OK
+2015,firm-quarter,walk_same_fachgruppe_firms_5min numeric,OK
+2015,firm-quarter,walk_same_fachgruppe_firms_5min non-negative,OK
+2015,firm-quarter,walk_same_fachgruppe_firms_10min numeric,OK
+2015,firm-quarter,walk_same_fachgruppe_firms_10min non-negative,OK
+2015,firm-quarter,pop_access_5min <= pop_access_10min,OK
+2015,firm-quarter,pop_access_10min <= pop_access_15min,OK
+2015,firm-quarter,pop_access_15min <= pop_access_30min,OK
+2015,firm-quarter,existing_firms_access_5min <= existing_firms_access_10min,OK
+2015,firm-quarter,existing_firms_access_10min <= existing_firms_access_15min,OK
+2015,firm-quarter,existing_firms_access_15min <= existing_firms_access_30min,OK
+2015,firm-quarter,same_fachgruppe_firms_access_5min <= same_fachgruppe_firms_access_10min,OK
+2015,firm-quarter,same_fachgruppe_firms_access_10min <= same_fachgruppe_firms_access_15min,OK
+2015,firm-quarter,same_fachgruppe_firms_access_15min <= same_fachgruppe_firms_access_30min,OK
+2015,firm-quarter,walk_pop_5min <= walk_pop_10min,OK
+2015,firm-quarter,walk_firms_5min <= walk_firms_10min,OK
+2015,firm-quarter,walk_same_fachgruppe_firms_5min <= walk_same_fachgruppe_firms_10min,OK
+2016,source,yearly destinations exist,OK
+2016,nearest,canonical output exists,OK
+2016,grid-quarter,canonical output exists,OK
+2016,pedestrian-grid-quarter,canonical output exists,OK
+2016,Fachgruppe-long,canonical output exists,OK
+2016,firm-quarter,canonical output exists,OK
+2016,cleanup,no visible routing intermediates,OK
+2016,cleanup,no hidden checkpoint directory,OK
+2016,nearest,one row per active cell,OK
+2016,nearest,grid_id unique,OK
+2016,grid-quarter,required schema,OK
+2016,grid-quarter,year and four quarters complete,OK
+2016,grid-quarter,unique grid-year-quarter keys,OK
+2016,grid-quarter,no contemporaneous or Sparte fields,OK
+2016,grid-quarter,pop_access_5min numeric,OK
+2016,grid-quarter,pop_access_5min non-negative,OK
+2016,grid-quarter,existing_firms_access_5min numeric,OK
+2016,grid-quarter,existing_firms_access_5min non-negative,OK
+2016,grid-quarter,pop_access_10min numeric,OK
+2016,grid-quarter,pop_access_10min non-negative,OK
+2016,grid-quarter,existing_firms_access_10min numeric,OK
+2016,grid-quarter,existing_firms_access_10min non-negative,OK
+2016,grid-quarter,pop_access_15min numeric,OK
+2016,grid-quarter,pop_access_15min non-negative,OK
+2016,grid-quarter,existing_firms_access_15min numeric,OK
+2016,grid-quarter,existing_firms_access_15min non-negative,OK
+2016,grid-quarter,pop_access_30min numeric,OK
+2016,grid-quarter,pop_access_30min non-negative,OK
+2016,grid-quarter,existing_firms_access_30min numeric,OK
+2016,grid-quarter,existing_firms_access_30min non-negative,OK
+2016,grid-quarter,reachable_cells_5min numeric,OK
+2016,grid-quarter,reachable_cells_5min non-negative,OK
+2016,grid-quarter,reachable_cells_10min numeric,OK
+2016,grid-quarter,reachable_cells_10min non-negative,OK
+2016,grid-quarter,reachable_cells_15min numeric,OK
+2016,grid-quarter,reachable_cells_15min non-negative,OK
+2016,grid-quarter,reachable_cells_30min numeric,OK
+2016,grid-quarter,reachable_cells_30min non-negative,OK
+2016,grid-quarter,pop_access_5min <= pop_access_10min,OK
+2016,grid-quarter,pop_access_10min <= pop_access_15min,OK
+2016,grid-quarter,pop_access_15min <= pop_access_30min,OK
+2016,grid-quarter,existing_firms_access_5min <= existing_firms_access_10min,OK
+2016,grid-quarter,existing_firms_access_10min <= existing_firms_access_15min,OK
+2016,grid-quarter,existing_firms_access_15min <= existing_firms_access_30min,OK
+2016,grid-quarter,reachable_cells_5min <= reachable_cells_10min,OK
+2016,grid-quarter,reachable_cells_10min <= reachable_cells_15min,OK
+2016,grid-quarter,reachable_cells_15min <= reachable_cells_30min,OK
+2016,pedestrian-grid-quarter,required schema,OK
+2016,pedestrian-grid-quarter,year and four quarters complete,OK
+2016,pedestrian-grid-quarter,unique grid-year-quarter keys,OK
+2016,pedestrian-grid-quarter,zero-stop flag matches 10-minute stop count,OK
+2016,pedestrian-grid-quarter,walk_pop_5min numeric,OK
+2016,pedestrian-grid-quarter,walk_pop_5min non-negative,OK
+2016,pedestrian-grid-quarter,walk_firms_5min numeric,OK
+2016,pedestrian-grid-quarter,walk_firms_5min non-negative,OK
+2016,pedestrian-grid-quarter,walk_pt_stops_5min numeric,OK
+2016,pedestrian-grid-quarter,walk_pt_stops_5min non-negative,OK
+2016,pedestrian-grid-quarter,walk_pt_departures_5min numeric,OK
+2016,pedestrian-grid-quarter,walk_pt_departures_5min non-negative,OK
+2016,pedestrian-grid-quarter,walk_pt_routes_5min numeric,OK
+2016,pedestrian-grid-quarter,walk_pt_routes_5min non-negative,OK
+2016,pedestrian-grid-quarter,reachable_cells_walk_5min numeric,OK
+2016,pedestrian-grid-quarter,reachable_cells_walk_5min non-negative,OK
+2016,pedestrian-grid-quarter,walk_pop_10min numeric,OK
+2016,pedestrian-grid-quarter,walk_pop_10min non-negative,OK
+2016,pedestrian-grid-quarter,walk_firms_10min numeric,OK
+2016,pedestrian-grid-quarter,walk_firms_10min non-negative,OK
+2016,pedestrian-grid-quarter,walk_pt_stops_10min numeric,OK
+2016,pedestrian-grid-quarter,walk_pt_stops_10min non-negative,OK
+2016,pedestrian-grid-quarter,walk_pt_departures_10min numeric,OK
+2016,pedestrian-grid-quarter,walk_pt_departures_10min non-negative,OK
+2016,pedestrian-grid-quarter,walk_pt_routes_10min numeric,OK
+2016,pedestrian-grid-quarter,walk_pt_routes_10min non-negative,OK
+2016,pedestrian-grid-quarter,reachable_cells_walk_10min numeric,OK
+2016,pedestrian-grid-quarter,reachable_cells_walk_10min non-negative,OK
+2016,pedestrian-grid-quarter,walk_pop_5min <= walk_pop_10min,OK
+2016,pedestrian-grid-quarter,walk_firms_5min <= walk_firms_10min,OK
+2016,pedestrian-grid-quarter,walk_pt_stops_5min <= walk_pt_stops_10min,OK
+2016,pedestrian-grid-quarter,walk_pt_departures_5min <= walk_pt_departures_10min,OK
+2016,pedestrian-grid-quarter,walk_pt_routes_5min <= walk_pt_routes_10min,OK
+2016,pedestrian-grid-quarter,reachable_cells_walk_5min <= reachable_cells_walk_10min,CHECK
+2016,Fachgruppe-long,required schema,OK
+2016,Fachgruppe-long,all 95 Fachgruppen per grid-quarter,OK
+2016,Fachgruppe-long,unique keys,OK
+2016,Fachgruppe-long,same_fachgruppe_firms_access_5min numeric,OK
+2016,Fachgruppe-long,same_fachgruppe_firms_access_5min non-negative,OK
+2016,Fachgruppe-long,same_fachgruppe_firms_access_10min numeric,OK
+2016,Fachgruppe-long,same_fachgruppe_firms_access_10min non-negative,OK
+2016,Fachgruppe-long,same_fachgruppe_firms_access_15min numeric,OK
+2016,Fachgruppe-long,same_fachgruppe_firms_access_15min non-negative,OK
+2016,Fachgruppe-long,same_fachgruppe_firms_access_30min numeric,OK
+2016,Fachgruppe-long,same_fachgruppe_firms_access_30min non-negative,OK
+2016,Fachgruppe-long,walk_same_fachgruppe_firms_5min numeric,OK
+2016,Fachgruppe-long,walk_same_fachgruppe_firms_5min non-negative,OK
+2016,Fachgruppe-long,walk_same_fachgruppe_firms_10min numeric,OK
+2016,Fachgruppe-long,walk_same_fachgruppe_firms_10min non-negative,OK
+2016,Fachgruppe-long,same_fachgruppe_firms_access_5min <= same_fachgruppe_firms_access_10min,OK
+2016,Fachgruppe-long,same_fachgruppe_firms_access_10min <= same_fachgruppe_firms_access_15min,OK
+2016,Fachgruppe-long,same_fachgruppe_firms_access_15min <= same_fachgruppe_firms_access_30min,OK
+2016,Fachgruppe-long,walk_same_fachgruppe_firms_5min <= walk_same_fachgruppe_firms_10min,OK
+2016,firm-quarter,required schema,OK
+2016,firm-quarter,same-Fachgruppe 5min matches cumulative long table,OK
+2016,firm-quarter,lagged-total 5min matches cumulative grid table,OK
+2016,firm-quarter,same-Fachgruppe 10min matches cumulative long table,OK
+2016,firm-quarter,lagged-total 10min matches cumulative grid table,OK
+2016,firm-quarter,same-Fachgruppe 15min matches cumulative long table,OK
+2016,firm-quarter,lagged-total 15min matches cumulative grid table,OK
+2016,firm-quarter,same-Fachgruppe 30min matches cumulative long table,OK
+2016,firm-quarter,lagged-total 30min matches cumulative grid table,OK
+2016,firm-quarter,same_fachgruppe_firms_access_5min numeric,OK
+2016,firm-quarter,same_fachgruppe_firms_access_5min non-negative,OK
+2016,firm-quarter,same_fachgruppe_firms_access_10min numeric,OK
+2016,firm-quarter,same_fachgruppe_firms_access_10min non-negative,OK
+2016,firm-quarter,same_fachgruppe_firms_access_15min numeric,OK
+2016,firm-quarter,same_fachgruppe_firms_access_15min non-negative,OK
+2016,firm-quarter,same_fachgruppe_firms_access_30min numeric,OK
+2016,firm-quarter,same_fachgruppe_firms_access_30min non-negative,OK
+2016,firm-quarter,walk_same_fachgruppe_firms_5min numeric,OK
+2016,firm-quarter,walk_same_fachgruppe_firms_5min non-negative,OK
+2016,firm-quarter,walk_same_fachgruppe_firms_10min numeric,OK
+2016,firm-quarter,walk_same_fachgruppe_firms_10min non-negative,OK
+2016,firm-quarter,pop_access_5min <= pop_access_10min,OK
+2016,firm-quarter,pop_access_10min <= pop_access_15min,OK
+2016,firm-quarter,pop_access_15min <= pop_access_30min,OK
+2016,firm-quarter,existing_firms_access_5min <= existing_firms_access_10min,OK
+2016,firm-quarter,existing_firms_access_10min <= existing_firms_access_15min,OK
+2016,firm-quarter,existing_firms_access_15min <= existing_firms_access_30min,OK
+2016,firm-quarter,same_fachgruppe_firms_access_5min <= same_fachgruppe_firms_access_10min,OK
+2016,firm-quarter,same_fachgruppe_firms_access_10min <= same_fachgruppe_firms_access_15min,OK
+2016,firm-quarter,same_fachgruppe_firms_access_15min <= same_fachgruppe_firms_access_30min,OK
+2016,firm-quarter,walk_pop_5min <= walk_pop_10min,OK
+2016,firm-quarter,walk_firms_5min <= walk_firms_10min,OK
+2016,firm-quarter,walk_same_fachgruppe_firms_5min <= walk_same_fachgruppe_firms_10min,OK
+2017,source,yearly destinations exist,OK
+2017,nearest,canonical output exists,OK
+2017,grid-quarter,canonical output exists,OK
+2017,pedestrian-grid-quarter,canonical output exists,OK
+2017,Fachgruppe-long,canonical output exists,OK
+2017,firm-quarter,canonical output exists,OK
+2017,cleanup,no visible routing intermediates,OK
+2017,cleanup,no hidden checkpoint directory,OK
+2017,nearest,one row per active cell,OK
+2017,nearest,grid_id unique,OK
+2017,grid-quarter,required schema,OK
+2017,grid-quarter,year and four quarters complete,OK
+2017,grid-quarter,unique grid-year-quarter keys,OK
+2017,grid-quarter,no contemporaneous or Sparte fields,OK
+2017,grid-quarter,pop_access_5min numeric,OK
+2017,grid-quarter,pop_access_5min non-negative,OK
+2017,grid-quarter,existing_firms_access_5min numeric,OK
+2017,grid-quarter,existing_firms_access_5min non-negative,OK
+2017,grid-quarter,pop_access_10min numeric,OK
+2017,grid-quarter,pop_access_10min non-negative,OK
+2017,grid-quarter,existing_firms_access_10min numeric,OK
+2017,grid-quarter,existing_firms_access_10min non-negative,OK
+2017,grid-quarter,pop_access_15min numeric,OK
+2017,grid-quarter,pop_access_15min non-negative,OK
+2017,grid-quarter,existing_firms_access_15min numeric,OK
+2017,grid-quarter,existing_firms_access_15min non-negative,OK
+2017,grid-quarter,pop_access_30min numeric,OK
+2017,grid-quarter,pop_access_30min non-negative,OK
+2017,grid-quarter,existing_firms_access_30min numeric,OK
+2017,grid-quarter,existing_firms_access_30min non-negative,OK
+2017,grid-quarter,reachable_cells_5min numeric,OK
+2017,grid-quarter,reachable_cells_5min non-negative,OK
+2017,grid-quarter,reachable_cells_10min numeric,OK
+2017,grid-quarter,reachable_cells_10min non-negative,OK
+2017,grid-quarter,reachable_cells_15min numeric,OK
+2017,grid-quarter,reachable_cells_15min non-negative,OK
+2017,grid-quarter,reachable_cells_30min numeric,OK
+2017,grid-quarter,reachable_cells_30min non-negative,OK
+2017,grid-quarter,pop_access_5min <= pop_access_10min,OK
+2017,grid-quarter,pop_access_10min <= pop_access_15min,OK
+2017,grid-quarter,pop_access_15min <= pop_access_30min,OK
+2017,grid-quarter,existing_firms_access_5min <= existing_firms_access_10min,OK
+2017,grid-quarter,existing_firms_access_10min <= existing_firms_access_15min,OK
+2017,grid-quarter,existing_firms_access_15min <= existing_firms_access_30min,OK
+2017,grid-quarter,reachable_cells_5min <= reachable_cells_10min,OK
+2017,grid-quarter,reachable_cells_10min <= reachable_cells_15min,OK
+2017,grid-quarter,reachable_cells_15min <= reachable_cells_30min,OK
+2017,pedestrian-grid-quarter,required schema,OK
+2017,pedestrian-grid-quarter,year and four quarters complete,OK
+2017,pedestrian-grid-quarter,unique grid-year-quarter keys,OK
+2017,pedestrian-grid-quarter,zero-stop flag matches 10-minute stop count,OK
+2017,pedestrian-grid-quarter,walk_pop_5min numeric,OK
+2017,pedestrian-grid-quarter,walk_pop_5min non-negative,OK
+2017,pedestrian-grid-quarter,walk_firms_5min numeric,OK
+2017,pedestrian-grid-quarter,walk_firms_5min non-negative,OK
+2017,pedestrian-grid-quarter,walk_pt_stops_5min numeric,OK
+2017,pedestrian-grid-quarter,walk_pt_stops_5min non-negative,OK
+2017,pedestrian-grid-quarter,walk_pt_departures_5min numeric,OK
+2017,pedestrian-grid-quarter,walk_pt_departures_5min non-negative,OK
+2017,pedestrian-grid-quarter,walk_pt_routes_5min numeric,OK
+2017,pedestrian-grid-quarter,walk_pt_routes_5min non-negative,OK
+2017,pedestrian-grid-quarter,reachable_cells_walk_5min numeric,OK
+2017,pedestrian-grid-quarter,reachable_cells_walk_5min non-negative,OK
+2017,pedestrian-grid-quarter,walk_pop_10min numeric,OK
+2017,pedestrian-grid-quarter,walk_pop_10min non-negative,OK
+2017,pedestrian-grid-quarter,walk_firms_10min numeric,OK
+2017,pedestrian-grid-quarter,walk_firms_10min non-negative,OK
+2017,pedestrian-grid-quarter,walk_pt_stops_10min numeric,OK
+2017,pedestrian-grid-quarter,walk_pt_stops_10min non-negative,OK
+2017,pedestrian-grid-quarter,walk_pt_departures_10min numeric,OK
+2017,pedestrian-grid-quarter,walk_pt_departures_10min non-negative,OK
+2017,pedestrian-grid-quarter,walk_pt_routes_10min numeric,OK
+2017,pedestrian-grid-quarter,walk_pt_routes_10min non-negative,OK
+2017,pedestrian-grid-quarter,reachable_cells_walk_10min numeric,OK
+2017,pedestrian-grid-quarter,reachable_cells_walk_10min non-negative,OK
+2017,pedestrian-grid-quarter,walk_pop_5min <= walk_pop_10min,OK
+2017,pedestrian-grid-quarter,walk_firms_5min <= walk_firms_10min,OK
+2017,pedestrian-grid-quarter,walk_pt_stops_5min <= walk_pt_stops_10min,OK
+2017,pedestrian-grid-quarter,walk_pt_departures_5min <= walk_pt_departures_10min,OK
+2017,pedestrian-grid-quarter,walk_pt_routes_5min <= walk_pt_routes_10min,OK
+2017,pedestrian-grid-quarter,reachable_cells_walk_5min <= reachable_cells_walk_10min,CHECK
+2017,Fachgruppe-long,required schema,OK
+2017,Fachgruppe-long,all 95 Fachgruppen per grid-quarter,OK
+2017,Fachgruppe-long,unique keys,OK
+2017,Fachgruppe-long,same_fachgruppe_firms_access_5min numeric,OK
+2017,Fachgruppe-long,same_fachgruppe_firms_access_5min non-negative,OK
+2017,Fachgruppe-long,same_fachgruppe_firms_access_10min numeric,OK
+2017,Fachgruppe-long,same_fachgruppe_firms_access_10min non-negative,OK
+2017,Fachgruppe-long,same_fachgruppe_firms_access_15min numeric,OK
+2017,Fachgruppe-long,same_fachgruppe_firms_access_15min non-negative,OK
+2017,Fachgruppe-long,same_fachgruppe_firms_access_30min numeric,OK
+2017,Fachgruppe-long,same_fachgruppe_firms_access_30min non-negative,OK
+2017,Fachgruppe-long,walk_same_fachgruppe_firms_5min numeric,OK
+2017,Fachgruppe-long,walk_same_fachgruppe_firms_5min non-negative,OK
+2017,Fachgruppe-long,walk_same_fachgruppe_firms_10min numeric,OK
+2017,Fachgruppe-long,walk_same_fachgruppe_firms_10min non-negative,OK
+2017,Fachgruppe-long,same_fachgruppe_firms_access_5min <= same_fachgruppe_firms_access_10min,OK
+2017,Fachgruppe-long,same_fachgruppe_firms_access_10min <= same_fachgruppe_firms_access_15min,OK
+2017,Fachgruppe-long,same_fachgruppe_firms_access_15min <= same_fachgruppe_firms_access_30min,OK
+2017,Fachgruppe-long,walk_same_fachgruppe_firms_5min <= walk_same_fachgruppe_firms_10min,OK
+2017,firm-quarter,required schema,OK
+2017,firm-quarter,same-Fachgruppe 5min matches cumulative long table,OK
+2017,firm-quarter,lagged-total 5min matches cumulative grid table,OK
+2017,firm-quarter,same-Fachgruppe 10min matches cumulative long table,OK
+2017,firm-quarter,lagged-total 10min matches cumulative grid table,OK
+2017,firm-quarter,same-Fachgruppe 15min matches cumulative long table,OK
+2017,firm-quarter,lagged-total 15min matches cumulative grid table,OK
+2017,firm-quarter,same-Fachgruppe 30min matches cumulative long table,OK
+2017,firm-quarter,lagged-total 30min matches cumulative grid table,OK
+2017,firm-quarter,same_fachgruppe_firms_access_5min numeric,OK
+2017,firm-quarter,same_fachgruppe_firms_access_5min non-negative,OK
+2017,firm-quarter,same_fachgruppe_firms_access_10min numeric,OK
+2017,firm-quarter,same_fachgruppe_firms_access_10min non-negative,OK
+2017,firm-quarter,same_fachgruppe_firms_access_15min numeric,OK
+2017,firm-quarter,same_fachgruppe_firms_access_15min non-negative,OK
+2017,firm-quarter,same_fachgruppe_firms_access_30min numeric,OK
+2017,firm-quarter,same_fachgruppe_firms_access_30min non-negative,OK
+2017,firm-quarter,walk_same_fachgruppe_firms_5min numeric,OK
+2017,firm-quarter,walk_same_fachgruppe_firms_5min non-negative,OK
+2017,firm-quarter,walk_same_fachgruppe_firms_10min numeric,OK
+2017,firm-quarter,walk_same_fachgruppe_firms_10min non-negative,OK
+2017,firm-quarter,pop_access_5min <= pop_access_10min,OK
+2017,firm-quarter,pop_access_10min <= pop_access_15min,OK
+2017,firm-quarter,pop_access_15min <= pop_access_30min,OK
+2017,firm-quarter,existing_firms_access_5min <= existing_firms_access_10min,OK
+2017,firm-quarter,existing_firms_access_10min <= existing_firms_access_15min,OK
+2017,firm-quarter,existing_firms_access_15min <= existing_firms_access_30min,OK
+2017,firm-quarter,same_fachgruppe_firms_access_5min <= same_fachgruppe_firms_access_10min,OK
+2017,firm-quarter,same_fachgruppe_firms_access_10min <= same_fachgruppe_firms_access_15min,OK
+2017,firm-quarter,same_fachgruppe_firms_access_15min <= same_fachgruppe_firms_access_30min,OK
+2017,firm-quarter,walk_pop_5min <= walk_pop_10min,OK
+2017,firm-quarter,walk_firms_5min <= walk_firms_10min,OK
+2017,firm-quarter,walk_same_fachgruppe_firms_5min <= walk_same_fachgruppe_firms_10min,OK
+2018,source,yearly destinations exist,OK
+2018,nearest,canonical output exists,OK
+2018,grid-quarter,canonical output exists,OK
+2018,pedestrian-grid-quarter,canonical output exists,OK
+2018,Fachgruppe-long,canonical output exists,OK
+2018,firm-quarter,canonical output exists,OK
+2018,cleanup,no visible routing intermediates,OK
+2018,cleanup,no hidden checkpoint directory,OK
+2018,nearest,one row per active cell,OK
+2018,nearest,grid_id unique,OK
+2018,grid-quarter,required schema,OK
+2018,grid-quarter,year and four quarters complete,OK
+2018,grid-quarter,unique grid-year-quarter keys,OK
+2018,grid-quarter,no contemporaneous or Sparte fields,OK
+2018,grid-quarter,pop_access_5min numeric,OK
+2018,grid-quarter,pop_access_5min non-negative,OK
+2018,grid-quarter,existing_firms_access_5min numeric,OK
+2018,grid-quarter,existing_firms_access_5min non-negative,OK
+2018,grid-quarter,pop_access_10min numeric,OK
+2018,grid-quarter,pop_access_10min non-negative,OK
+2018,grid-quarter,existing_firms_access_10min numeric,OK
+2018,grid-quarter,existing_firms_access_10min non-negative,OK
+2018,grid-quarter,pop_access_15min numeric,OK
+2018,grid-quarter,pop_access_15min non-negative,OK
+2018,grid-quarter,existing_firms_access_15min numeric,OK
+2018,grid-quarter,existing_firms_access_15min non-negative,OK
+2018,grid-quarter,pop_access_30min numeric,OK
+2018,grid-quarter,pop_access_30min non-negative,OK
+2018,grid-quarter,existing_firms_access_30min numeric,OK
+2018,grid-quarter,existing_firms_access_30min non-negative,OK
+2018,grid-quarter,reachable_cells_5min numeric,OK
+2018,grid-quarter,reachable_cells_5min non-negative,OK
+2018,grid-quarter,reachable_cells_10min numeric,OK
+2018,grid-quarter,reachable_cells_10min non-negative,OK
+2018,grid-quarter,reachable_cells_15min numeric,OK
+2018,grid-quarter,reachable_cells_15min non-negative,OK
+2018,grid-quarter,reachable_cells_30min numeric,OK
+2018,grid-quarter,reachable_cells_30min non-negative,OK
+2018,grid-quarter,pop_access_5min <= pop_access_10min,OK
+2018,grid-quarter,pop_access_10min <= pop_access_15min,OK
+2018,grid-quarter,pop_access_15min <= pop_access_30min,OK
+2018,grid-quarter,existing_firms_access_5min <= existing_firms_access_10min,OK
+2018,grid-quarter,existing_firms_access_10min <= existing_firms_access_15min,OK
+2018,grid-quarter,existing_firms_access_15min <= existing_firms_access_30min,OK
+2018,grid-quarter,reachable_cells_5min <= reachable_cells_10min,OK
+2018,grid-quarter,reachable_cells_10min <= reachable_cells_15min,OK
+2018,grid-quarter,reachable_cells_15min <= reachable_cells_30min,OK
+2018,pedestrian-grid-quarter,required schema,OK
+2018,pedestrian-grid-quarter,year and four quarters complete,OK
+2018,pedestrian-grid-quarter,unique grid-year-quarter keys,OK
+2018,pedestrian-grid-quarter,zero-stop flag matches 10-minute stop count,OK
+2018,pedestrian-grid-quarter,walk_pop_5min numeric,OK
+2018,pedestrian-grid-quarter,walk_pop_5min non-negative,OK
+2018,pedestrian-grid-quarter,walk_firms_5min numeric,OK
+2018,pedestrian-grid-quarter,walk_firms_5min non-negative,OK
+2018,pedestrian-grid-quarter,walk_pt_stops_5min numeric,OK
+2018,pedestrian-grid-quarter,walk_pt_stops_5min non-negative,OK
+2018,pedestrian-grid-quarter,walk_pt_departures_5min numeric,OK
+2018,pedestrian-grid-quarter,walk_pt_departures_5min non-negative,OK
+2018,pedestrian-grid-quarter,walk_pt_routes_5min numeric,OK
+2018,pedestrian-grid-quarter,walk_pt_routes_5min non-negative,OK
+2018,pedestrian-grid-quarter,reachable_cells_walk_5min numeric,OK
+2018,pedestrian-grid-quarter,reachable_cells_walk_5min non-negative,OK
+2018,pedestrian-grid-quarter,walk_pop_10min numeric,OK
+2018,pedestrian-grid-quarter,walk_pop_10min non-negative,OK
+2018,pedestrian-grid-quarter,walk_firms_10min numeric,OK
+2018,pedestrian-grid-quarter,walk_firms_10min non-negative,OK
+2018,pedestrian-grid-quarter,walk_pt_stops_10min numeric,OK
+2018,pedestrian-grid-quarter,walk_pt_stops_10min non-negative,OK
+2018,pedestrian-grid-quarter,walk_pt_departures_10min numeric,OK
+2018,pedestrian-grid-quarter,walk_pt_departures_10min non-negative,OK
+2018,pedestrian-grid-quarter,walk_pt_routes_10min numeric,OK
+2018,pedestrian-grid-quarter,walk_pt_routes_10min non-negative,OK
+2018,pedestrian-grid-quarter,reachable_cells_walk_10min numeric,OK
+2018,pedestrian-grid-quarter,reachable_cells_walk_10min non-negative,OK
+2018,pedestrian-grid-quarter,walk_pop_5min <= walk_pop_10min,OK
+2018,pedestrian-grid-quarter,walk_firms_5min <= walk_firms_10min,OK
+2018,pedestrian-grid-quarter,walk_pt_stops_5min <= walk_pt_stops_10min,OK
+2018,pedestrian-grid-quarter,walk_pt_departures_5min <= walk_pt_departures_10min,OK
+2018,pedestrian-grid-quarter,walk_pt_routes_5min <= walk_pt_routes_10min,OK
+2018,pedestrian-grid-quarter,reachable_cells_walk_5min <= reachable_cells_walk_10min,CHECK
+2018,Fachgruppe-long,required schema,OK
+2018,Fachgruppe-long,all 95 Fachgruppen per grid-quarter,OK
+2018,Fachgruppe-long,unique keys,OK
+2018,Fachgruppe-long,same_fachgruppe_firms_access_5min numeric,OK
+2018,Fachgruppe-long,same_fachgruppe_firms_access_5min non-negative,OK
+2018,Fachgruppe-long,same_fachgruppe_firms_access_10min numeric,OK
+2018,Fachgruppe-long,same_fachgruppe_firms_access_10min non-negative,OK
+2018,Fachgruppe-long,same_fachgruppe_firms_access_15min numeric,OK
+2018,Fachgruppe-long,same_fachgruppe_firms_access_15min non-negative,OK
+2018,Fachgruppe-long,same_fachgruppe_firms_access_30min numeric,OK
+2018,Fachgruppe-long,same_fachgruppe_firms_access_30min non-negative,OK
+2018,Fachgruppe-long,walk_same_fachgruppe_firms_5min numeric,OK
+2018,Fachgruppe-long,walk_same_fachgruppe_firms_5min non-negative,OK
+2018,Fachgruppe-long,walk_same_fachgruppe_firms_10min numeric,OK
+2018,Fachgruppe-long,walk_same_fachgruppe_firms_10min non-negative,OK
+2018,Fachgruppe-long,same_fachgruppe_firms_access_5min <= same_fachgruppe_firms_access_10min,OK
+2018,Fachgruppe-long,same_fachgruppe_firms_access_10min <= same_fachgruppe_firms_access_15min,OK
+2018,Fachgruppe-long,same_fachgruppe_firms_access_15min <= same_fachgruppe_firms_access_30min,OK
+2018,Fachgruppe-long,walk_same_fachgruppe_firms_5min <= walk_same_fachgruppe_firms_10min,OK
+2018,firm-quarter,required schema,OK
+2018,firm-quarter,same-Fachgruppe 5min matches cumulative long table,OK
+2018,firm-quarter,lagged-total 5min matches cumulative grid table,OK
+2018,firm-quarter,same-Fachgruppe 10min matches cumulative long table,OK
+2018,firm-quarter,lagged-total 10min matches cumulative grid table,OK
+2018,firm-quarter,same-Fachgruppe 15min matches cumulative long table,OK
+2018,firm-quarter,lagged-total 15min matches cumulative grid table,OK
+2018,firm-quarter,same-Fachgruppe 30min matches cumulative long table,OK
+2018,firm-quarter,lagged-total 30min matches cumulative grid table,OK
+2018,firm-quarter,same_fachgruppe_firms_access_5min numeric,OK
+2018,firm-quarter,same_fachgruppe_firms_access_5min non-negative,OK
+2018,firm-quarter,same_fachgruppe_firms_access_10min numeric,OK
+2018,firm-quarter,same_fachgruppe_firms_access_10min non-negative,OK
+2018,firm-quarter,same_fachgruppe_firms_access_15min numeric,OK
+2018,firm-quarter,same_fachgruppe_firms_access_15min non-negative,OK
+2018,firm-quarter,same_fachgruppe_firms_access_30min numeric,OK
+2018,firm-quarter,same_fachgruppe_firms_access_30min non-negative,OK
+2018,firm-quarter,walk_same_fachgruppe_firms_5min numeric,OK
+2018,firm-quarter,walk_same_fachgruppe_firms_5min non-negative,OK
+2018,firm-quarter,walk_same_fachgruppe_firms_10min numeric,OK
+2018,firm-quarter,walk_same_fachgruppe_firms_10min non-negative,OK
+2018,firm-quarter,pop_access_5min <= pop_access_10min,OK
+2018,firm-quarter,pop_access_10min <= pop_access_15min,OK
+2018,firm-quarter,pop_access_15min <= pop_access_30min,OK
+2018,firm-quarter,existing_firms_access_5min <= existing_firms_access_10min,OK
+2018,firm-quarter,existing_firms_access_10min <= existing_firms_access_15min,OK
+2018,firm-quarter,existing_firms_access_15min <= existing_firms_access_30min,OK
+2018,firm-quarter,same_fachgruppe_firms_access_5min <= same_fachgruppe_firms_access_10min,OK
+2018,firm-quarter,same_fachgruppe_firms_access_10min <= same_fachgruppe_firms_access_15min,OK
+2018,firm-quarter,same_fachgruppe_firms_access_15min <= same_fachgruppe_firms_access_30min,OK
+2018,firm-quarter,walk_pop_5min <= walk_pop_10min,OK
+2018,firm-quarter,walk_firms_5min <= walk_firms_10min,OK
+2018,firm-quarter,walk_same_fachgruppe_firms_5min <= walk_same_fachgruppe_firms_10min,OK
+2019,source,yearly destinations exist,OK
+2019,nearest,canonical output exists,OK
+2019,grid-quarter,canonical output exists,OK
+2019,pedestrian-grid-quarter,canonical output exists,OK
+2019,Fachgruppe-long,canonical output exists,OK
+2019,firm-quarter,canonical output exists,OK
+2019,cleanup,no visible routing intermediates,OK
+2019,cleanup,no hidden checkpoint directory,OK
+2019,nearest,one row per active cell,OK
+2019,nearest,grid_id unique,OK
+2019,grid-quarter,required schema,OK
+2019,grid-quarter,year and four quarters complete,OK
+2019,grid-quarter,unique grid-year-quarter keys,OK
+2019,grid-quarter,no contemporaneous or Sparte fields,OK
+2019,grid-quarter,pop_access_5min numeric,OK
+2019,grid-quarter,pop_access_5min non-negative,OK
+2019,grid-quarter,existing_firms_access_5min numeric,OK
+2019,grid-quarter,existing_firms_access_5min non-negative,OK
+2019,grid-quarter,pop_access_10min numeric,OK
+2019,grid-quarter,pop_access_10min non-negative,OK
+2019,grid-quarter,existing_firms_access_10min numeric,OK
+2019,grid-quarter,existing_firms_access_10min non-negative,OK
+2019,grid-quarter,pop_access_15min numeric,OK
+2019,grid-quarter,pop_access_15min non-negative,OK
+2019,grid-quarter,existing_firms_access_15min numeric,OK
+2019,grid-quarter,existing_firms_access_15min non-negative,OK
+2019,grid-quarter,pop_access_30min numeric,OK
+2019,grid-quarter,pop_access_30min non-negative,OK
+2019,grid-quarter,existing_firms_access_30min numeric,OK
+2019,grid-quarter,existing_firms_access_30min non-negative,OK
+2019,grid-quarter,reachable_cells_5min numeric,OK
+2019,grid-quarter,reachable_cells_5min non-negative,OK
+2019,grid-quarter,reachable_cells_10min numeric,OK
+2019,grid-quarter,reachable_cells_10min non-negative,OK
+2019,grid-quarter,reachable_cells_15min numeric,OK
+2019,grid-quarter,reachable_cells_15min non-negative,OK
+2019,grid-quarter,reachable_cells_30min numeric,OK
+2019,grid-quarter,reachable_cells_30min non-negative,OK
+2019,grid-quarter,pop_access_5min <= pop_access_10min,OK
+2019,grid-quarter,pop_access_10min <= pop_access_15min,OK
+2019,grid-quarter,pop_access_15min <= pop_access_30min,OK
+2019,grid-quarter,existing_firms_access_5min <= existing_firms_access_10min,OK
+2019,grid-quarter,existing_firms_access_10min <= existing_firms_access_15min,OK
+2019,grid-quarter,existing_firms_access_15min <= existing_firms_access_30min,OK
+2019,grid-quarter,reachable_cells_5min <= reachable_cells_10min,OK
+2019,grid-quarter,reachable_cells_10min <= reachable_cells_15min,OK
+2019,grid-quarter,reachable_cells_15min <= reachable_cells_30min,OK
+2019,pedestrian-grid-quarter,required schema,OK
+2019,pedestrian-grid-quarter,year and four quarters complete,OK
+2019,pedestrian-grid-quarter,unique grid-year-quarter keys,OK
+2019,pedestrian-grid-quarter,zero-stop flag matches 10-minute stop count,OK
+2019,pedestrian-grid-quarter,walk_pop_5min numeric,OK
+2019,pedestrian-grid-quarter,walk_pop_5min non-negative,OK
+2019,pedestrian-grid-quarter,walk_firms_5min numeric,OK
+2019,pedestrian-grid-quarter,walk_firms_5min non-negative,OK
+2019,pedestrian-grid-quarter,walk_pt_stops_5min numeric,OK
+2019,pedestrian-grid-quarter,walk_pt_stops_5min non-negative,OK
+2019,pedestrian-grid-quarter,walk_pt_departures_5min numeric,OK
+2019,pedestrian-grid-quarter,walk_pt_departures_5min non-negative,OK
+2019,pedestrian-grid-quarter,walk_pt_routes_5min numeric,OK
+2019,pedestrian-grid-quarter,walk_pt_routes_5min non-negative,OK
+2019,pedestrian-grid-quarter,reachable_cells_walk_5min numeric,OK
+2019,pedestrian-grid-quarter,reachable_cells_walk_5min non-negative,OK
+2019,pedestrian-grid-quarter,walk_pop_10min numeric,OK
+2019,pedestrian-grid-quarter,walk_pop_10min non-negative,OK
+2019,pedestrian-grid-quarter,walk_firms_10min numeric,OK
+2019,pedestrian-grid-quarter,walk_firms_10min non-negative,OK
+2019,pedestrian-grid-quarter,walk_pt_stops_10min numeric,OK
+2019,pedestrian-grid-quarter,walk_pt_stops_10min non-negative,OK
+2019,pedestrian-grid-quarter,walk_pt_departures_10min numeric,OK
+2019,pedestrian-grid-quarter,walk_pt_departures_10min non-negative,OK
+2019,pedestrian-grid-quarter,walk_pt_routes_10min numeric,OK
+2019,pedestrian-grid-quarter,walk_pt_routes_10min non-negative,OK
+2019,pedestrian-grid-quarter,reachable_cells_walk_10min numeric,OK
+2019,pedestrian-grid-quarter,reachable_cells_walk_10min non-negative,OK
+2019,pedestrian-grid-quarter,walk_pop_5min <= walk_pop_10min,OK
+2019,pedestrian-grid-quarter,walk_firms_5min <= walk_firms_10min,OK
+2019,pedestrian-grid-quarter,walk_pt_stops_5min <= walk_pt_stops_10min,OK
+2019,pedestrian-grid-quarter,walk_pt_departures_5min <= walk_pt_departures_10min,OK
+2019,pedestrian-grid-quarter,walk_pt_routes_5min <= walk_pt_routes_10min,OK
+2019,pedestrian-grid-quarter,reachable_cells_walk_5min <= reachable_cells_walk_10min,CHECK
+2019,Fachgruppe-long,required schema,OK
+2019,Fachgruppe-long,all 95 Fachgruppen per grid-quarter,OK
+2019,Fachgruppe-long,unique keys,OK
+2019,Fachgruppe-long,same_fachgruppe_firms_access_5min numeric,OK
+2019,Fachgruppe-long,same_fachgruppe_firms_access_5min non-negative,OK
+2019,Fachgruppe-long,same_fachgruppe_firms_access_10min numeric,OK
+2019,Fachgruppe-long,same_fachgruppe_firms_access_10min non-negative,OK
+2019,Fachgruppe-long,same_fachgruppe_firms_access_15min numeric,OK
+2019,Fachgruppe-long,same_fachgruppe_firms_access_15min non-negative,OK
+2019,Fachgruppe-long,same_fachgruppe_firms_access_30min numeric,OK
+2019,Fachgruppe-long,same_fachgruppe_firms_access_30min non-negative,OK
+2019,Fachgruppe-long,walk_same_fachgruppe_firms_5min numeric,OK
+2019,Fachgruppe-long,walk_same_fachgruppe_firms_5min non-negative,OK
+2019,Fachgruppe-long,walk_same_fachgruppe_firms_10min numeric,OK
+2019,Fachgruppe-long,walk_same_fachgruppe_firms_10min non-negative,OK
+2019,Fachgruppe-long,same_fachgruppe_firms_access_5min <= same_fachgruppe_firms_access_10min,OK
+2019,Fachgruppe-long,same_fachgruppe_firms_access_10min <= same_fachgruppe_firms_access_15min,OK
+2019,Fachgruppe-long,same_fachgruppe_firms_access_15min <= same_fachgruppe_firms_access_30min,OK
+2019,Fachgruppe-long,walk_same_fachgruppe_firms_5min <= walk_same_fachgruppe_firms_10min,OK
+2019,firm-quarter,required schema,OK
+2019,firm-quarter,same-Fachgruppe 5min matches cumulative long table,OK
+2019,firm-quarter,lagged-total 5min matches cumulative grid table,OK
+2019,firm-quarter,same-Fachgruppe 10min matches cumulative long table,OK
+2019,firm-quarter,lagged-total 10min matches cumulative grid table,OK
+2019,firm-quarter,same-Fachgruppe 15min matches cumulative long table,OK
+2019,firm-quarter,lagged-total 15min matches cumulative grid table,OK
+2019,firm-quarter,same-Fachgruppe 30min matches cumulative long table,OK
+2019,firm-quarter,lagged-total 30min matches cumulative grid table,OK
+2019,firm-quarter,same_fachgruppe_firms_access_5min numeric,OK
+2019,firm-quarter,same_fachgruppe_firms_access_5min non-negative,OK
+2019,firm-quarter,same_fachgruppe_firms_access_10min numeric,OK
+2019,firm-quarter,same_fachgruppe_firms_access_10min non-negative,OK
+2019,firm-quarter,same_fachgruppe_firms_access_15min numeric,OK
+2019,firm-quarter,same_fachgruppe_firms_access_15min non-negative,OK
+2019,firm-quarter,same_fachgruppe_firms_access_30min numeric,OK
+2019,firm-quarter,same_fachgruppe_firms_access_30min non-negative,OK
+2019,firm-quarter,walk_same_fachgruppe_firms_5min numeric,OK
+2019,firm-quarter,walk_same_fachgruppe_firms_5min non-negative,OK
+2019,firm-quarter,walk_same_fachgruppe_firms_10min numeric,OK
+2019,firm-quarter,walk_same_fachgruppe_firms_10min non-negative,OK
+2019,firm-quarter,pop_access_5min <= pop_access_10min,OK
+2019,firm-quarter,pop_access_10min <= pop_access_15min,OK
+2019,firm-quarter,pop_access_15min <= pop_access_30min,OK
+2019,firm-quarter,existing_firms_access_5min <= existing_firms_access_10min,OK
+2019,firm-quarter,existing_firms_access_10min <= existing_firms_access_15min,OK
+2019,firm-quarter,existing_firms_access_15min <= existing_firms_access_30min,OK
+2019,firm-quarter,same_fachgruppe_firms_access_5min <= same_fachgruppe_firms_access_10min,OK
+2019,firm-quarter,same_fachgruppe_firms_access_10min <= same_fachgruppe_firms_access_15min,OK
+2019,firm-quarter,same_fachgruppe_firms_access_15min <= same_fachgruppe_firms_access_30min,OK
+2019,firm-quarter,walk_pop_5min <= walk_pop_10min,OK
+2019,firm-quarter,walk_firms_5min <= walk_firms_10min,OK
+2019,firm-quarter,walk_same_fachgruppe_firms_5min <= walk_same_fachgruppe_firms_10min,OK
+2020,source,yearly destinations exist,OK
+2020,nearest,canonical output exists,OK
+2020,grid-quarter,canonical output exists,OK
+2020,pedestrian-grid-quarter,canonical output exists,OK
+2020,Fachgruppe-long,canonical output exists,OK
+2020,firm-quarter,canonical output exists,OK
+2020,cleanup,no visible routing intermediates,OK
+2020,cleanup,no hidden checkpoint directory,OK
+2020,nearest,one row per active cell,OK
+2020,nearest,grid_id unique,OK
+2020,grid-quarter,required schema,OK
+2020,grid-quarter,year and four quarters complete,OK
+2020,grid-quarter,unique grid-year-quarter keys,OK
+2020,grid-quarter,no contemporaneous or Sparte fields,OK
+2020,grid-quarter,pop_access_5min numeric,OK
+2020,grid-quarter,pop_access_5min non-negative,OK
+2020,grid-quarter,existing_firms_access_5min numeric,OK
+2020,grid-quarter,existing_firms_access_5min non-negative,OK
+2020,grid-quarter,pop_access_10min numeric,OK
+2020,grid-quarter,pop_access_10min non-negative,OK
+2020,grid-quarter,existing_firms_access_10min numeric,OK
+2020,grid-quarter,existing_firms_access_10min non-negative,OK
+2020,grid-quarter,pop_access_15min numeric,OK
+2020,grid-quarter,pop_access_15min non-negative,OK
+2020,grid-quarter,existing_firms_access_15min numeric,OK
+2020,grid-quarter,existing_firms_access_15min non-negative,OK
+2020,grid-quarter,pop_access_30min numeric,OK
+2020,grid-quarter,pop_access_30min non-negative,OK
+2020,grid-quarter,existing_firms_access_30min numeric,OK
+2020,grid-quarter,existing_firms_access_30min non-negative,OK
+2020,grid-quarter,reachable_cells_5min numeric,OK
+2020,grid-quarter,reachable_cells_5min non-negative,OK
+2020,grid-quarter,reachable_cells_10min numeric,OK
+2020,grid-quarter,reachable_cells_10min non-negative,OK
+2020,grid-quarter,reachable_cells_15min numeric,OK
+2020,grid-quarter,reachable_cells_15min non-negative,OK
+2020,grid-quarter,reachable_cells_30min numeric,OK
+2020,grid-quarter,reachable_cells_30min non-negative,OK
+2020,grid-quarter,pop_access_5min <= pop_access_10min,OK
+2020,grid-quarter,pop_access_10min <= pop_access_15min,OK
+2020,grid-quarter,pop_access_15min <= pop_access_30min,OK
+2020,grid-quarter,existing_firms_access_5min <= existing_firms_access_10min,OK
+2020,grid-quarter,existing_firms_access_10min <= existing_firms_access_15min,OK
+2020,grid-quarter,existing_firms_access_15min <= existing_firms_access_30min,OK
+2020,grid-quarter,reachable_cells_5min <= reachable_cells_10min,OK
+2020,grid-quarter,reachable_cells_10min <= reachable_cells_15min,OK
+2020,grid-quarter,reachable_cells_15min <= reachable_cells_30min,OK
+2020,pedestrian-grid-quarter,required schema,OK
+2020,pedestrian-grid-quarter,year and four quarters complete,OK
+2020,pedestrian-grid-quarter,unique grid-year-quarter keys,OK
+2020,pedestrian-grid-quarter,zero-stop flag matches 10-minute stop count,OK
+2020,pedestrian-grid-quarter,walk_pop_5min numeric,OK
+2020,pedestrian-grid-quarter,walk_pop_5min non-negative,OK
+2020,pedestrian-grid-quarter,walk_firms_5min numeric,OK
+2020,pedestrian-grid-quarter,walk_firms_5min non-negative,OK
+2020,pedestrian-grid-quarter,walk_pt_stops_5min numeric,OK
+2020,pedestrian-grid-quarter,walk_pt_stops_5min non-negative,OK
+2020,pedestrian-grid-quarter,walk_pt_departures_5min numeric,OK
+2020,pedestrian-grid-quarter,walk_pt_departures_5min non-negative,OK
+2020,pedestrian-grid-quarter,walk_pt_routes_5min numeric,OK
+2020,pedestrian-grid-quarter,walk_pt_routes_5min non-negative,OK
+2020,pedestrian-grid-quarter,reachable_cells_walk_5min numeric,OK
+2020,pedestrian-grid-quarter,reachable_cells_walk_5min non-negative,OK
+2020,pedestrian-grid-quarter,walk_pop_10min numeric,OK
+2020,pedestrian-grid-quarter,walk_pop_10min non-negative,OK
+2020,pedestrian-grid-quarter,walk_firms_10min numeric,OK
+2020,pedestrian-grid-quarter,walk_firms_10min non-negative,OK
+2020,pedestrian-grid-quarter,walk_pt_stops_10min numeric,OK
+2020,pedestrian-grid-quarter,walk_pt_stops_10min non-negative,OK
+2020,pedestrian-grid-quarter,walk_pt_departures_10min numeric,OK
+2020,pedestrian-grid-quarter,walk_pt_departures_10min non-negative,OK
+2020,pedestrian-grid-quarter,walk_pt_routes_10min numeric,OK
+2020,pedestrian-grid-quarter,walk_pt_routes_10min non-negative,OK
+2020,pedestrian-grid-quarter,reachable_cells_walk_10min numeric,OK
+2020,pedestrian-grid-quarter,reachable_cells_walk_10min non-negative,OK
+2020,pedestrian-grid-quarter,walk_pop_5min <= walk_pop_10min,OK
+2020,pedestrian-grid-quarter,walk_firms_5min <= walk_firms_10min,OK
+2020,pedestrian-grid-quarter,walk_pt_stops_5min <= walk_pt_stops_10min,OK
+2020,pedestrian-grid-quarter,walk_pt_departures_5min <= walk_pt_departures_10min,OK
+2020,pedestrian-grid-quarter,walk_pt_routes_5min <= walk_pt_routes_10min,OK
+2020,pedestrian-grid-quarter,reachable_cells_walk_5min <= reachable_cells_walk_10min,CHECK
+2020,Fachgruppe-long,required schema,OK
+2020,Fachgruppe-long,all 95 Fachgruppen per grid-quarter,OK
+2020,Fachgruppe-long,unique keys,OK
+2020,Fachgruppe-long,same_fachgruppe_firms_access_5min numeric,OK
+2020,Fachgruppe-long,same_fachgruppe_firms_access_5min non-negative,OK
+2020,Fachgruppe-long,same_fachgruppe_firms_access_10min numeric,OK
+2020,Fachgruppe-long,same_fachgruppe_firms_access_10min non-negative,OK
+2020,Fachgruppe-long,same_fachgruppe_firms_access_15min numeric,OK
+2020,Fachgruppe-long,same_fachgruppe_firms_access_15min non-negative,OK
+2020,Fachgruppe-long,same_fachgruppe_firms_access_30min numeric,OK
+2020,Fachgruppe-long,same_fachgruppe_firms_access_30min non-negative,OK
+2020,Fachgruppe-long,walk_same_fachgruppe_firms_5min numeric,OK
+2020,Fachgruppe-long,walk_same_fachgruppe_firms_5min non-negative,OK
+2020,Fachgruppe-long,walk_same_fachgruppe_firms_10min numeric,OK
+2020,Fachgruppe-long,walk_same_fachgruppe_firms_10min non-negative,OK
+2020,Fachgruppe-long,same_fachgruppe_firms_access_5min <= same_fachgruppe_firms_access_10min,OK
+2020,Fachgruppe-long,same_fachgruppe_firms_access_10min <= same_fachgruppe_firms_access_15min,OK
+2020,Fachgruppe-long,same_fachgruppe_firms_access_15min <= same_fachgruppe_firms_access_30min,OK
+2020,Fachgruppe-long,walk_same_fachgruppe_firms_5min <= walk_same_fachgruppe_firms_10min,OK
+2020,firm-quarter,required schema,OK
+2020,firm-quarter,same-Fachgruppe 5min matches cumulative long table,OK
+2020,firm-quarter,lagged-total 5min matches cumulative grid table,OK
+2020,firm-quarter,same-Fachgruppe 10min matches cumulative long table,OK
+2020,firm-quarter,lagged-total 10min matches cumulative grid table,OK
+2020,firm-quarter,same-Fachgruppe 15min matches cumulative long table,OK
+2020,firm-quarter,lagged-total 15min matches cumulative grid table,OK
+2020,firm-quarter,same-Fachgruppe 30min matches cumulative long table,OK
+2020,firm-quarter,lagged-total 30min matches cumulative grid table,OK
+2020,firm-quarter,same_fachgruppe_firms_access_5min numeric,OK
+2020,firm-quarter,same_fachgruppe_firms_access_5min non-negative,OK
+2020,firm-quarter,same_fachgruppe_firms_access_10min numeric,OK
+2020,firm-quarter,same_fachgruppe_firms_access_10min non-negative,OK
+2020,firm-quarter,same_fachgruppe_firms_access_15min numeric,OK
+2020,firm-quarter,same_fachgruppe_firms_access_15min non-negative,OK
+2020,firm-quarter,same_fachgruppe_firms_access_30min numeric,OK
+2020,firm-quarter,same_fachgruppe_firms_access_30min non-negative,OK
+2020,firm-quarter,walk_same_fachgruppe_firms_5min numeric,OK
+2020,firm-quarter,walk_same_fachgruppe_firms_5min non-negative,OK
+2020,firm-quarter,walk_same_fachgruppe_firms_10min numeric,OK
+2020,firm-quarter,walk_same_fachgruppe_firms_10min non-negative,OK
+2020,firm-quarter,pop_access_5min <= pop_access_10min,OK
+2020,firm-quarter,pop_access_10min <= pop_access_15min,OK
+2020,firm-quarter,pop_access_15min <= pop_access_30min,OK
+2020,firm-quarter,existing_firms_access_5min <= existing_firms_access_10min,OK
+2020,firm-quarter,existing_firms_access_10min <= existing_firms_access_15min,OK
+2020,firm-quarter,existing_firms_access_15min <= existing_firms_access_30min,OK
+2020,firm-quarter,same_fachgruppe_firms_access_5min <= same_fachgruppe_firms_access_10min,OK
+2020,firm-quarter,same_fachgruppe_firms_access_10min <= same_fachgruppe_firms_access_15min,OK
+2020,firm-quarter,same_fachgruppe_firms_access_15min <= same_fachgruppe_firms_access_30min,OK
+2020,firm-quarter,walk_pop_5min <= walk_pop_10min,OK
+2020,firm-quarter,walk_firms_5min <= walk_firms_10min,OK
+2020,firm-quarter,walk_same_fachgruppe_firms_5min <= walk_same_fachgruppe_firms_10min,OK
+2021,source,yearly destinations exist,OK
+2021,nearest,canonical output exists,OK
+2021,grid-quarter,canonical output exists,OK
+2021,pedestrian-grid-quarter,canonical output exists,OK
+2021,Fachgruppe-long,canonical output exists,OK
+2021,firm-quarter,canonical output exists,OK
+2021,cleanup,no visible routing intermediates,OK
+2021,cleanup,no hidden checkpoint directory,OK
+2021,nearest,one row per active cell,OK
+2021,nearest,grid_id unique,OK
+2021,grid-quarter,required schema,OK
+2021,grid-quarter,year and four quarters complete,OK
+2021,grid-quarter,unique grid-year-quarter keys,OK
+2021,grid-quarter,no contemporaneous or Sparte fields,OK
+2021,grid-quarter,pop_access_5min numeric,OK
+2021,grid-quarter,pop_access_5min non-negative,OK
+2021,grid-quarter,existing_firms_access_5min numeric,OK
+2021,grid-quarter,existing_firms_access_5min non-negative,OK
+2021,grid-quarter,pop_access_10min numeric,OK
+2021,grid-quarter,pop_access_10min non-negative,OK
+2021,grid-quarter,existing_firms_access_10min numeric,OK
+2021,grid-quarter,existing_firms_access_10min non-negative,OK
+2021,grid-quarter,pop_access_15min numeric,OK
+2021,grid-quarter,pop_access_15min non-negative,OK
+2021,grid-quarter,existing_firms_access_15min numeric,OK
+2021,grid-quarter,existing_firms_access_15min non-negative,OK
+2021,grid-quarter,pop_access_30min numeric,OK
+2021,grid-quarter,pop_access_30min non-negative,OK
+2021,grid-quarter,existing_firms_access_30min numeric,OK
+2021,grid-quarter,existing_firms_access_30min non-negative,OK
+2021,grid-quarter,reachable_cells_5min numeric,OK
+2021,grid-quarter,reachable_cells_5min non-negative,OK
+2021,grid-quarter,reachable_cells_10min numeric,OK
+2021,grid-quarter,reachable_cells_10min non-negative,OK
+2021,grid-quarter,reachable_cells_15min numeric,OK
+2021,grid-quarter,reachable_cells_15min non-negative,OK
+2021,grid-quarter,reachable_cells_30min numeric,OK
+2021,grid-quarter,reachable_cells_30min non-negative,OK
+2021,grid-quarter,pop_access_5min <= pop_access_10min,OK
+2021,grid-quarter,pop_access_10min <= pop_access_15min,OK
+2021,grid-quarter,pop_access_15min <= pop_access_30min,OK
+2021,grid-quarter,existing_firms_access_5min <= existing_firms_access_10min,OK
+2021,grid-quarter,existing_firms_access_10min <= existing_firms_access_15min,OK
+2021,grid-quarter,existing_firms_access_15min <= existing_firms_access_30min,OK
+2021,grid-quarter,reachable_cells_5min <= reachable_cells_10min,OK
+2021,grid-quarter,reachable_cells_10min <= reachable_cells_15min,OK
+2021,grid-quarter,reachable_cells_15min <= reachable_cells_30min,OK
+2021,pedestrian-grid-quarter,required schema,OK
+2021,pedestrian-grid-quarter,year and four quarters complete,OK
+2021,pedestrian-grid-quarter,unique grid-year-quarter keys,OK
+2021,pedestrian-grid-quarter,zero-stop flag matches 10-minute stop count,OK
+2021,pedestrian-grid-quarter,walk_pop_5min numeric,OK
+2021,pedestrian-grid-quarter,walk_pop_5min non-negative,OK
+2021,pedestrian-grid-quarter,walk_firms_5min numeric,OK
+2021,pedestrian-grid-quarter,walk_firms_5min non-negative,OK
+2021,pedestrian-grid-quarter,walk_pt_stops_5min numeric,OK
+2021,pedestrian-grid-quarter,walk_pt_stops_5min non-negative,OK
+2021,pedestrian-grid-quarter,walk_pt_departures_5min numeric,OK
+2021,pedestrian-grid-quarter,walk_pt_departures_5min non-negative,OK
+2021,pedestrian-grid-quarter,walk_pt_routes_5min numeric,OK
+2021,pedestrian-grid-quarter,walk_pt_routes_5min non-negative,OK
+2021,pedestrian-grid-quarter,reachable_cells_walk_5min numeric,OK
+2021,pedestrian-grid-quarter,reachable_cells_walk_5min non-negative,OK
+2021,pedestrian-grid-quarter,walk_pop_10min numeric,OK
+2021,pedestrian-grid-quarter,walk_pop_10min non-negative,OK
+2021,pedestrian-grid-quarter,walk_firms_10min numeric,OK
+2021,pedestrian-grid-quarter,walk_firms_10min non-negative,OK
+2021,pedestrian-grid-quarter,walk_pt_stops_10min numeric,OK
+2021,pedestrian-grid-quarter,walk_pt_stops_10min non-negative,OK
+2021,pedestrian-grid-quarter,walk_pt_departures_10min numeric,OK
+2021,pedestrian-grid-quarter,walk_pt_departures_10min non-negative,OK
+2021,pedestrian-grid-quarter,walk_pt_routes_10min numeric,OK
+2021,pedestrian-grid-quarter,walk_pt_routes_10min non-negative,OK
+2021,pedestrian-grid-quarter,reachable_cells_walk_10min numeric,OK
+2021,pedestrian-grid-quarter,reachable_cells_walk_10min non-negative,OK
+2021,pedestrian-grid-quarter,walk_pop_5min <= walk_pop_10min,OK
+2021,pedestrian-grid-quarter,walk_firms_5min <= walk_firms_10min,OK
+2021,pedestrian-grid-quarter,walk_pt_stops_5min <= walk_pt_stops_10min,OK
+2021,pedestrian-grid-quarter,walk_pt_departures_5min <= walk_pt_departures_10min,OK
+2021,pedestrian-grid-quarter,walk_pt_routes_5min <= walk_pt_routes_10min,OK
+2021,pedestrian-grid-quarter,reachable_cells_walk_5min <= reachable_cells_walk_10min,CHECK
+2021,Fachgruppe-long,required schema,OK
+2021,Fachgruppe-long,all 95 Fachgruppen per grid-quarter,OK
+2021,Fachgruppe-long,unique keys,OK
+2021,Fachgruppe-long,same_fachgruppe_firms_access_5min numeric,OK
+2021,Fachgruppe-long,same_fachgruppe_firms_access_5min non-negative,OK
+2021,Fachgruppe-long,same_fachgruppe_firms_access_10min numeric,OK
+2021,Fachgruppe-long,same_fachgruppe_firms_access_10min non-negative,OK
+2021,Fachgruppe-long,same_fachgruppe_firms_access_15min numeric,OK
+2021,Fachgruppe-long,same_fachgruppe_firms_access_15min non-negative,OK
+2021,Fachgruppe-long,same_fachgruppe_firms_access_30min numeric,OK
+2021,Fachgruppe-long,same_fachgruppe_firms_access_30min non-negative,OK
+2021,Fachgruppe-long,walk_same_fachgruppe_firms_5min numeric,OK
+2021,Fachgruppe-long,walk_same_fachgruppe_firms_5min non-negative,OK
+2021,Fachgruppe-long,walk_same_fachgruppe_firms_10min numeric,OK
+2021,Fachgruppe-long,walk_same_fachgruppe_firms_10min non-negative,OK
+2021,Fachgruppe-long,same_fachgruppe_firms_access_5min <= same_fachgruppe_firms_access_10min,OK
+2021,Fachgruppe-long,same_fachgruppe_firms_access_10min <= same_fachgruppe_firms_access_15min,OK
+2021,Fachgruppe-long,same_fachgruppe_firms_access_15min <= same_fachgruppe_firms_access_30min,OK
+2021,Fachgruppe-long,walk_same_fachgruppe_firms_5min <= walk_same_fachgruppe_firms_10min,OK
+2021,firm-quarter,required schema,OK
+2021,firm-quarter,same-Fachgruppe 5min matches cumulative long table,OK
+2021,firm-quarter,lagged-total 5min matches cumulative grid table,OK
+2021,firm-quarter,same-Fachgruppe 10min matches cumulative long table,OK
+2021,firm-quarter,lagged-total 10min matches cumulative grid table,OK
+2021,firm-quarter,same-Fachgruppe 15min matches cumulative long table,OK
+2021,firm-quarter,lagged-total 15min matches cumulative grid table,OK
+2021,firm-quarter,same-Fachgruppe 30min matches cumulative long table,OK
+2021,firm-quarter,lagged-total 30min matches cumulative grid table,OK
+2021,firm-quarter,same_fachgruppe_firms_access_5min numeric,OK
+2021,firm-quarter,same_fachgruppe_firms_access_5min non-negative,OK
+2021,firm-quarter,same_fachgruppe_firms_access_10min numeric,OK
+2021,firm-quarter,same_fachgruppe_firms_access_10min non-negative,OK
+2021,firm-quarter,same_fachgruppe_firms_access_15min numeric,OK
+2021,firm-quarter,same_fachgruppe_firms_access_15min non-negative,OK
+2021,firm-quarter,same_fachgruppe_firms_access_30min numeric,OK
+2021,firm-quarter,same_fachgruppe_firms_access_30min non-negative,OK
+2021,firm-quarter,walk_same_fachgruppe_firms_5min numeric,OK
+2021,firm-quarter,walk_same_fachgruppe_firms_5min non-negative,OK
+2021,firm-quarter,walk_same_fachgruppe_firms_10min numeric,OK
+2021,firm-quarter,walk_same_fachgruppe_firms_10min non-negative,OK
+2021,firm-quarter,pop_access_5min <= pop_access_10min,OK
+2021,firm-quarter,pop_access_10min <= pop_access_15min,OK
+2021,firm-quarter,pop_access_15min <= pop_access_30min,OK
+2021,firm-quarter,existing_firms_access_5min <= existing_firms_access_10min,OK
+2021,firm-quarter,existing_firms_access_10min <= existing_firms_access_15min,OK
+2021,firm-quarter,existing_firms_access_15min <= existing_firms_access_30min,OK
+2021,firm-quarter,same_fachgruppe_firms_access_5min <= same_fachgruppe_firms_access_10min,OK
+2021,firm-quarter,same_fachgruppe_firms_access_10min <= same_fachgruppe_firms_access_15min,OK
+2021,firm-quarter,same_fachgruppe_firms_access_15min <= same_fachgruppe_firms_access_30min,OK
+2021,firm-quarter,walk_pop_5min <= walk_pop_10min,OK
+2021,firm-quarter,walk_firms_5min <= walk_firms_10min,OK
+2021,firm-quarter,walk_same_fachgruppe_firms_5min <= walk_same_fachgruppe_firms_10min,OK
+2022,source,yearly destinations exist,OK
+2022,nearest,canonical output exists,OK
+2022,grid-quarter,canonical output exists,OK
+2022,pedestrian-grid-quarter,canonical output exists,OK
+2022,Fachgruppe-long,canonical output exists,OK
+2022,firm-quarter,canonical output exists,OK
+2022,cleanup,no visible routing intermediates,OK
+2022,cleanup,no hidden checkpoint directory,OK
+2022,nearest,one row per active cell,OK
+2022,nearest,grid_id unique,OK
+2022,grid-quarter,required schema,OK
+2022,grid-quarter,year and four quarters complete,OK
+2022,grid-quarter,unique grid-year-quarter keys,OK
+2022,grid-quarter,no contemporaneous or Sparte fields,OK
+2022,grid-quarter,pop_access_5min numeric,OK
+2022,grid-quarter,pop_access_5min non-negative,OK
+2022,grid-quarter,existing_firms_access_5min numeric,OK
+2022,grid-quarter,existing_firms_access_5min non-negative,OK
+2022,grid-quarter,pop_access_10min numeric,OK
+2022,grid-quarter,pop_access_10min non-negative,OK
+2022,grid-quarter,existing_firms_access_10min numeric,OK
+2022,grid-quarter,existing_firms_access_10min non-negative,OK
+2022,grid-quarter,pop_access_15min numeric,OK
+2022,grid-quarter,pop_access_15min non-negative,OK
+2022,grid-quarter,existing_firms_access_15min numeric,OK
+2022,grid-quarter,existing_firms_access_15min non-negative,OK
+2022,grid-quarter,pop_access_30min numeric,OK
+2022,grid-quarter,pop_access_30min non-negative,OK
+2022,grid-quarter,existing_firms_access_30min numeric,OK
+2022,grid-quarter,existing_firms_access_30min non-negative,OK
+2022,grid-quarter,reachable_cells_5min numeric,OK
+2022,grid-quarter,reachable_cells_5min non-negative,OK
+2022,grid-quarter,reachable_cells_10min numeric,OK
+2022,grid-quarter,reachable_cells_10min non-negative,OK
+2022,grid-quarter,reachable_cells_15min numeric,OK
+2022,grid-quarter,reachable_cells_15min non-negative,OK
+2022,grid-quarter,reachable_cells_30min numeric,OK
+2022,grid-quarter,reachable_cells_30min non-negative,OK
+2022,grid-quarter,pop_access_5min <= pop_access_10min,OK
+2022,grid-quarter,pop_access_10min <= pop_access_15min,OK
+2022,grid-quarter,pop_access_15min <= pop_access_30min,OK
+2022,grid-quarter,existing_firms_access_5min <= existing_firms_access_10min,OK
+2022,grid-quarter,existing_firms_access_10min <= existing_firms_access_15min,OK
+2022,grid-quarter,existing_firms_access_15min <= existing_firms_access_30min,OK
+2022,grid-quarter,reachable_cells_5min <= reachable_cells_10min,OK
+2022,grid-quarter,reachable_cells_10min <= reachable_cells_15min,OK
+2022,grid-quarter,reachable_cells_15min <= reachable_cells_30min,OK
+2022,pedestrian-grid-quarter,required schema,OK
+2022,pedestrian-grid-quarter,year and four quarters complete,OK
+2022,pedestrian-grid-quarter,unique grid-year-quarter keys,OK
+2022,pedestrian-grid-quarter,zero-stop flag matches 10-minute stop count,OK
+2022,pedestrian-grid-quarter,walk_pop_5min numeric,OK
+2022,pedestrian-grid-quarter,walk_pop_5min non-negative,OK
+2022,pedestrian-grid-quarter,walk_firms_5min numeric,OK
+2022,pedestrian-grid-quarter,walk_firms_5min non-negative,OK
+2022,pedestrian-grid-quarter,walk_pt_stops_5min numeric,OK
+2022,pedestrian-grid-quarter,walk_pt_stops_5min non-negative,OK
+2022,pedestrian-grid-quarter,walk_pt_departures_5min numeric,OK
+2022,pedestrian-grid-quarter,walk_pt_departures_5min non-negative,OK
+2022,pedestrian-grid-quarter,walk_pt_routes_5min numeric,OK
+2022,pedestrian-grid-quarter,walk_pt_routes_5min non-negative,OK
+2022,pedestrian-grid-quarter,reachable_cells_walk_5min numeric,OK
+2022,pedestrian-grid-quarter,reachable_cells_walk_5min non-negative,OK
+2022,pedestrian-grid-quarter,walk_pop_10min numeric,OK
+2022,pedestrian-grid-quarter,walk_pop_10min non-negative,OK
+2022,pedestrian-grid-quarter,walk_firms_10min numeric,OK
+2022,pedestrian-grid-quarter,walk_firms_10min non-negative,OK
+2022,pedestrian-grid-quarter,walk_pt_stops_10min numeric,OK
+2022,pedestrian-grid-quarter,walk_pt_stops_10min non-negative,OK
+2022,pedestrian-grid-quarter,walk_pt_departures_10min numeric,OK
+2022,pedestrian-grid-quarter,walk_pt_departures_10min non-negative,OK
+2022,pedestrian-grid-quarter,walk_pt_routes_10min numeric,OK
+2022,pedestrian-grid-quarter,walk_pt_routes_10min non-negative,OK
+2022,pedestrian-grid-quarter,reachable_cells_walk_10min numeric,OK
+2022,pedestrian-grid-quarter,reachable_cells_walk_10min non-negative,OK
+2022,pedestrian-grid-quarter,walk_pop_5min <= walk_pop_10min,OK
+2022,pedestrian-grid-quarter,walk_firms_5min <= walk_firms_10min,OK
+2022,pedestrian-grid-quarter,walk_pt_stops_5min <= walk_pt_stops_10min,OK
+2022,pedestrian-grid-quarter,walk_pt_departures_5min <= walk_pt_departures_10min,OK
+2022,pedestrian-grid-quarter,walk_pt_routes_5min <= walk_pt_routes_10min,OK
+2022,pedestrian-grid-quarter,reachable_cells_walk_5min <= reachable_cells_walk_10min,CHECK
+2022,Fachgruppe-long,required schema,OK
+2022,Fachgruppe-long,all 95 Fachgruppen per grid-quarter,OK
+2022,Fachgruppe-long,unique keys,OK
+2022,Fachgruppe-long,same_fachgruppe_firms_access_5min numeric,OK
+2022,Fachgruppe-long,same_fachgruppe_firms_access_5min non-negative,OK
+2022,Fachgruppe-long,same_fachgruppe_firms_access_10min numeric,OK
+2022,Fachgruppe-long,same_fachgruppe_firms_access_10min non-negative,OK
+2022,Fachgruppe-long,same_fachgruppe_firms_access_15min numeric,OK
+2022,Fachgruppe-long,same_fachgruppe_firms_access_15min non-negative,OK
+2022,Fachgruppe-long,same_fachgruppe_firms_access_30min numeric,OK
+2022,Fachgruppe-long,same_fachgruppe_firms_access_30min non-negative,OK
+2022,Fachgruppe-long,walk_same_fachgruppe_firms_5min numeric,OK
+2022,Fachgruppe-long,walk_same_fachgruppe_firms_5min non-negative,OK
+2022,Fachgruppe-long,walk_same_fachgruppe_firms_10min numeric,OK
+2022,Fachgruppe-long,walk_same_fachgruppe_firms_10min non-negative,OK
+2022,Fachgruppe-long,same_fachgruppe_firms_access_5min <= same_fachgruppe_firms_access_10min,OK
+2022,Fachgruppe-long,same_fachgruppe_firms_access_10min <= same_fachgruppe_firms_access_15min,OK
+2022,Fachgruppe-long,same_fachgruppe_firms_access_15min <= same_fachgruppe_firms_access_30min,OK
+2022,Fachgruppe-long,walk_same_fachgruppe_firms_5min <= walk_same_fachgruppe_firms_10min,OK
+2022,firm-quarter,required schema,OK
+2022,firm-quarter,same-Fachgruppe 5min matches cumulative long table,OK
+2022,firm-quarter,lagged-total 5min matches cumulative grid table,OK
+2022,firm-quarter,same-Fachgruppe 10min matches cumulative long table,OK
+2022,firm-quarter,lagged-total 10min matches cumulative grid table,OK
+2022,firm-quarter,same-Fachgruppe 15min matches cumulative long table,OK
+2022,firm-quarter,lagged-total 15min matches cumulative grid table,OK
+2022,firm-quarter,same-Fachgruppe 30min matches cumulative long table,OK
+2022,firm-quarter,lagged-total 30min matches cumulative grid table,OK
+2022,firm-quarter,same_fachgruppe_firms_access_5min numeric,OK
+2022,firm-quarter,same_fachgruppe_firms_access_5min non-negative,OK
+2022,firm-quarter,same_fachgruppe_firms_access_10min numeric,OK
+2022,firm-quarter,same_fachgruppe_firms_access_10min non-negative,OK
+2022,firm-quarter,same_fachgruppe_firms_access_15min numeric,OK
+2022,firm-quarter,same_fachgruppe_firms_access_15min non-negative,OK
+2022,firm-quarter,same_fachgruppe_firms_access_30min numeric,OK
+2022,firm-quarter,same_fachgruppe_firms_access_30min non-negative,OK
+2022,firm-quarter,walk_same_fachgruppe_firms_5min numeric,OK
+2022,firm-quarter,walk_same_fachgruppe_firms_5min non-negative,OK
+2022,firm-quarter,walk_same_fachgruppe_firms_10min numeric,OK
+2022,firm-quarter,walk_same_fachgruppe_firms_10min non-negative,OK
+2022,firm-quarter,pop_access_5min <= pop_access_10min,OK
+2022,firm-quarter,pop_access_10min <= pop_access_15min,OK
+2022,firm-quarter,pop_access_15min <= pop_access_30min,OK
+2022,firm-quarter,existing_firms_access_5min <= existing_firms_access_10min,OK
+2022,firm-quarter,existing_firms_access_10min <= existing_firms_access_15min,OK
+2022,firm-quarter,existing_firms_access_15min <= existing_firms_access_30min,OK
+2022,firm-quarter,same_fachgruppe_firms_access_5min <= same_fachgruppe_firms_access_10min,OK
+2022,firm-quarter,same_fachgruppe_firms_access_10min <= same_fachgruppe_firms_access_15min,OK
+2022,firm-quarter,same_fachgruppe_firms_access_15min <= same_fachgruppe_firms_access_30min,OK
+2022,firm-quarter,walk_pop_5min <= walk_pop_10min,OK
+2022,firm-quarter,walk_firms_5min <= walk_firms_10min,OK
+2022,firm-quarter,walk_same_fachgruppe_firms_5min <= walk_same_fachgruppe_firms_10min,OK
+2023,source,yearly destinations exist,OK
+2023,nearest,canonical output exists,OK
+2023,grid-quarter,canonical output exists,OK
+2023,pedestrian-grid-quarter,canonical output exists,OK
+2023,Fachgruppe-long,canonical output exists,OK
+2023,firm-quarter,canonical output exists,OK
+2023,cleanup,no visible routing intermediates,OK
+2023,cleanup,no hidden checkpoint directory,OK
+2023,nearest,one row per active cell,OK
+2023,nearest,grid_id unique,OK
+2023,grid-quarter,required schema,OK
+2023,grid-quarter,year and four quarters complete,OK
+2023,grid-quarter,unique grid-year-quarter keys,OK
+2023,grid-quarter,no contemporaneous or Sparte fields,OK
+2023,grid-quarter,pop_access_5min numeric,OK
+2023,grid-quarter,pop_access_5min non-negative,OK
+2023,grid-quarter,existing_firms_access_5min numeric,OK
+2023,grid-quarter,existing_firms_access_5min non-negative,OK
+2023,grid-quarter,pop_access_10min numeric,OK
+2023,grid-quarter,pop_access_10min non-negative,OK
+2023,grid-quarter,existing_firms_access_10min numeric,OK
+2023,grid-quarter,existing_firms_access_10min non-negative,OK
+2023,grid-quarter,pop_access_15min numeric,OK
+2023,grid-quarter,pop_access_15min non-negative,OK
+2023,grid-quarter,existing_firms_access_15min numeric,OK
+2023,grid-quarter,existing_firms_access_15min non-negative,OK
+2023,grid-quarter,pop_access_30min numeric,OK
+2023,grid-quarter,pop_access_30min non-negative,OK
+2023,grid-quarter,existing_firms_access_30min numeric,OK
+2023,grid-quarter,existing_firms_access_30min non-negative,OK
+2023,grid-quarter,reachable_cells_5min numeric,OK
+2023,grid-quarter,reachable_cells_5min non-negative,OK
+2023,grid-quarter,reachable_cells_10min numeric,OK
+2023,grid-quarter,reachable_cells_10min non-negative,OK
+2023,grid-quarter,reachable_cells_15min numeric,OK
+2023,grid-quarter,reachable_cells_15min non-negative,OK
+2023,grid-quarter,reachable_cells_30min numeric,OK
+2023,grid-quarter,reachable_cells_30min non-negative,OK
+2023,grid-quarter,pop_access_5min <= pop_access_10min,OK
+2023,grid-quarter,pop_access_10min <= pop_access_15min,OK
+2023,grid-quarter,pop_access_15min <= pop_access_30min,OK
+2023,grid-quarter,existing_firms_access_5min <= existing_firms_access_10min,OK
+2023,grid-quarter,existing_firms_access_10min <= existing_firms_access_15min,OK
+2023,grid-quarter,existing_firms_access_15min <= existing_firms_access_30min,OK
+2023,grid-quarter,reachable_cells_5min <= reachable_cells_10min,OK
+2023,grid-quarter,reachable_cells_10min <= reachable_cells_15min,OK
+2023,grid-quarter,reachable_cells_15min <= reachable_cells_30min,OK
+2023,pedestrian-grid-quarter,required schema,OK
+2023,pedestrian-grid-quarter,year and four quarters complete,OK
+2023,pedestrian-grid-quarter,unique grid-year-quarter keys,OK
+2023,pedestrian-grid-quarter,zero-stop flag matches 10-minute stop count,OK
+2023,pedestrian-grid-quarter,walk_pop_5min numeric,OK
+2023,pedestrian-grid-quarter,walk_pop_5min non-negative,OK
+2023,pedestrian-grid-quarter,walk_firms_5min numeric,OK
+2023,pedestrian-grid-quarter,walk_firms_5min non-negative,OK
+2023,pedestrian-grid-quarter,walk_pt_stops_5min numeric,OK
+2023,pedestrian-grid-quarter,walk_pt_stops_5min non-negative,OK
+2023,pedestrian-grid-quarter,walk_pt_departures_5min numeric,OK
+2023,pedestrian-grid-quarter,walk_pt_departures_5min non-negative,OK
+2023,pedestrian-grid-quarter,walk_pt_routes_5min numeric,OK
+2023,pedestrian-grid-quarter,walk_pt_routes_5min non-negative,OK
+2023,pedestrian-grid-quarter,reachable_cells_walk_5min numeric,OK
+2023,pedestrian-grid-quarter,reachable_cells_walk_5min non-negative,OK
+2023,pedestrian-grid-quarter,walk_pop_10min numeric,OK
+2023,pedestrian-grid-quarter,walk_pop_10min non-negative,OK
+2023,pedestrian-grid-quarter,walk_firms_10min numeric,OK
+2023,pedestrian-grid-quarter,walk_firms_10min non-negative,OK
+2023,pedestrian-grid-quarter,walk_pt_stops_10min numeric,OK
+2023,pedestrian-grid-quarter,walk_pt_stops_10min non-negative,OK
+2023,pedestrian-grid-quarter,walk_pt_departures_10min numeric,OK
+2023,pedestrian-grid-quarter,walk_pt_departures_10min non-negative,OK
+2023,pedestrian-grid-quarter,walk_pt_routes_10min numeric,OK
+2023,pedestrian-grid-quarter,walk_pt_routes_10min non-negative,OK
+2023,pedestrian-grid-quarter,reachable_cells_walk_10min numeric,OK
+2023,pedestrian-grid-quarter,reachable_cells_walk_10min non-negative,OK
+2023,pedestrian-grid-quarter,walk_pop_5min <= walk_pop_10min,CHECK
+2023,pedestrian-grid-quarter,walk_firms_5min <= walk_firms_10min,CHECK
+2023,pedestrian-grid-quarter,walk_pt_stops_5min <= walk_pt_stops_10min,OK
+2023,pedestrian-grid-quarter,walk_pt_departures_5min <= walk_pt_departures_10min,OK
+2023,pedestrian-grid-quarter,walk_pt_routes_5min <= walk_pt_routes_10min,OK
+2023,pedestrian-grid-quarter,reachable_cells_walk_5min <= reachable_cells_walk_10min,CHECK
+2023,Fachgruppe-long,required schema,OK
+2023,Fachgruppe-long,all 95 Fachgruppen per grid-quarter,OK
+2023,Fachgruppe-long,unique keys,OK
+2023,Fachgruppe-long,same_fachgruppe_firms_access_5min numeric,OK
+2023,Fachgruppe-long,same_fachgruppe_firms_access_5min non-negative,OK
+2023,Fachgruppe-long,same_fachgruppe_firms_access_10min numeric,OK
+2023,Fachgruppe-long,same_fachgruppe_firms_access_10min non-negative,OK
+2023,Fachgruppe-long,same_fachgruppe_firms_access_15min numeric,OK
+2023,Fachgruppe-long,same_fachgruppe_firms_access_15min non-negative,OK
+2023,Fachgruppe-long,same_fachgruppe_firms_access_30min numeric,OK
+2023,Fachgruppe-long,same_fachgruppe_firms_access_30min non-negative,OK
+2023,Fachgruppe-long,walk_same_fachgruppe_firms_5min numeric,OK
+2023,Fachgruppe-long,walk_same_fachgruppe_firms_5min non-negative,OK
+2023,Fachgruppe-long,walk_same_fachgruppe_firms_10min numeric,OK
+2023,Fachgruppe-long,walk_same_fachgruppe_firms_10min non-negative,OK
+2023,Fachgruppe-long,same_fachgruppe_firms_access_5min <= same_fachgruppe_firms_access_10min,OK
+2023,Fachgruppe-long,same_fachgruppe_firms_access_10min <= same_fachgruppe_firms_access_15min,OK
+2023,Fachgruppe-long,same_fachgruppe_firms_access_15min <= same_fachgruppe_firms_access_30min,OK
+2023,Fachgruppe-long,walk_same_fachgruppe_firms_5min <= walk_same_fachgruppe_firms_10min,CHECK
+2023,firm-quarter,required schema,OK
+2023,firm-quarter,same-Fachgruppe 5min matches cumulative long table,OK
+2023,firm-quarter,lagged-total 5min matches cumulative grid table,OK
+2023,firm-quarter,same-Fachgruppe 10min matches cumulative long table,OK
+2023,firm-quarter,lagged-total 10min matches cumulative grid table,OK
+2023,firm-quarter,same-Fachgruppe 15min matches cumulative long table,OK
+2023,firm-quarter,lagged-total 15min matches cumulative grid table,OK
+2023,firm-quarter,same-Fachgruppe 30min matches cumulative long table,OK
+2023,firm-quarter,lagged-total 30min matches cumulative grid table,OK
+2023,firm-quarter,same_fachgruppe_firms_access_5min numeric,OK
+2023,firm-quarter,same_fachgruppe_firms_access_5min non-negative,OK
+2023,firm-quarter,same_fachgruppe_firms_access_10min numeric,OK
+2023,firm-quarter,same_fachgruppe_firms_access_10min non-negative,OK
+2023,firm-quarter,same_fachgruppe_firms_access_15min numeric,OK
+2023,firm-quarter,same_fachgruppe_firms_access_15min non-negative,OK
+2023,firm-quarter,same_fachgruppe_firms_access_30min numeric,OK
+2023,firm-quarter,same_fachgruppe_firms_access_30min non-negative,OK
+2023,firm-quarter,walk_same_fachgruppe_firms_5min numeric,OK
+2023,firm-quarter,walk_same_fachgruppe_firms_5min non-negative,OK
+2023,firm-quarter,walk_same_fachgruppe_firms_10min numeric,OK
+2023,firm-quarter,walk_same_fachgruppe_firms_10min non-negative,OK
+2023,firm-quarter,pop_access_5min <= pop_access_10min,OK
+2023,firm-quarter,pop_access_10min <= pop_access_15min,OK
+2023,firm-quarter,pop_access_15min <= pop_access_30min,OK
+2023,firm-quarter,existing_firms_access_5min <= existing_firms_access_10min,OK
+2023,firm-quarter,existing_firms_access_10min <= existing_firms_access_15min,OK
+2023,firm-quarter,existing_firms_access_15min <= existing_firms_access_30min,OK
+2023,firm-quarter,same_fachgruppe_firms_access_5min <= same_fachgruppe_firms_access_10min,OK
+2023,firm-quarter,same_fachgruppe_firms_access_10min <= same_fachgruppe_firms_access_15min,OK
+2023,firm-quarter,same_fachgruppe_firms_access_15min <= same_fachgruppe_firms_access_30min,OK
+2023,firm-quarter,walk_pop_5min <= walk_pop_10min,OK
+2023,firm-quarter,walk_firms_5min <= walk_firms_10min,OK
+2023,firm-quarter,walk_same_fachgruppe_firms_5min <= walk_same_fachgruppe_firms_10min,OK
+2024,source,yearly destinations exist,OK
+2024,nearest,canonical output exists,OK
+2024,grid-quarter,canonical output exists,OK
+2024,pedestrian-grid-quarter,canonical output exists,OK
+2024,Fachgruppe-long,canonical output exists,OK
+2024,firm-quarter,canonical output exists,OK
+2024,cleanup,no visible routing intermediates,OK
+2024,cleanup,no hidden checkpoint directory,OK
+2024,nearest,one row per active cell,OK
+2024,nearest,grid_id unique,OK
+2024,grid-quarter,required schema,OK
+2024,grid-quarter,year and four quarters complete,OK
+2024,grid-quarter,unique grid-year-quarter keys,OK
+2024,grid-quarter,no contemporaneous or Sparte fields,OK
+2024,grid-quarter,pop_access_5min numeric,OK
+2024,grid-quarter,pop_access_5min non-negative,OK
+2024,grid-quarter,existing_firms_access_5min numeric,OK
+2024,grid-quarter,existing_firms_access_5min non-negative,OK
+2024,grid-quarter,pop_access_10min numeric,OK
+2024,grid-quarter,pop_access_10min non-negative,OK
+2024,grid-quarter,existing_firms_access_10min numeric,OK
+2024,grid-quarter,existing_firms_access_10min non-negative,OK
+2024,grid-quarter,pop_access_15min numeric,OK
+2024,grid-quarter,pop_access_15min non-negative,OK
+2024,grid-quarter,existing_firms_access_15min numeric,OK
+2024,grid-quarter,existing_firms_access_15min non-negative,OK
+2024,grid-quarter,pop_access_30min numeric,OK
+2024,grid-quarter,pop_access_30min non-negative,OK
+2024,grid-quarter,existing_firms_access_30min numeric,OK
+2024,grid-quarter,existing_firms_access_30min non-negative,OK
+2024,grid-quarter,reachable_cells_5min numeric,OK
+2024,grid-quarter,reachable_cells_5min non-negative,OK
+2024,grid-quarter,reachable_cells_10min numeric,OK
+2024,grid-quarter,reachable_cells_10min non-negative,OK
+2024,grid-quarter,reachable_cells_15min numeric,OK
+2024,grid-quarter,reachable_cells_15min non-negative,OK
+2024,grid-quarter,reachable_cells_30min numeric,OK
+2024,grid-quarter,reachable_cells_30min non-negative,OK
+2024,grid-quarter,pop_access_5min <= pop_access_10min,OK
+2024,grid-quarter,pop_access_10min <= pop_access_15min,OK
+2024,grid-quarter,pop_access_15min <= pop_access_30min,OK
+2024,grid-quarter,existing_firms_access_5min <= existing_firms_access_10min,OK
+2024,grid-quarter,existing_firms_access_10min <= existing_firms_access_15min,OK
+2024,grid-quarter,existing_firms_access_15min <= existing_firms_access_30min,OK
+2024,grid-quarter,reachable_cells_5min <= reachable_cells_10min,OK
+2024,grid-quarter,reachable_cells_10min <= reachable_cells_15min,OK
+2024,grid-quarter,reachable_cells_15min <= reachable_cells_30min,OK
+2024,pedestrian-grid-quarter,required schema,OK
+2024,pedestrian-grid-quarter,year and four quarters complete,OK
+2024,pedestrian-grid-quarter,unique grid-year-quarter keys,OK
+2024,pedestrian-grid-quarter,zero-stop flag matches 10-minute stop count,OK
+2024,pedestrian-grid-quarter,walk_pop_5min numeric,OK
+2024,pedestrian-grid-quarter,walk_pop_5min non-negative,OK
+2024,pedestrian-grid-quarter,walk_firms_5min numeric,OK
+2024,pedestrian-grid-quarter,walk_firms_5min non-negative,OK
+2024,pedestrian-grid-quarter,walk_pt_stops_5min numeric,OK
+2024,pedestrian-grid-quarter,walk_pt_stops_5min non-negative,OK
+2024,pedestrian-grid-quarter,walk_pt_departures_5min numeric,OK
+2024,pedestrian-grid-quarter,walk_pt_departures_5min non-negative,OK
+2024,pedestrian-grid-quarter,walk_pt_routes_5min numeric,OK
+2024,pedestrian-grid-quarter,walk_pt_routes_5min non-negative,OK
+2024,pedestrian-grid-quarter,reachable_cells_walk_5min numeric,OK
+2024,pedestrian-grid-quarter,reachable_cells_walk_5min non-negative,OK
+2024,pedestrian-grid-quarter,walk_pop_10min numeric,OK
+2024,pedestrian-grid-quarter,walk_pop_10min non-negative,OK
+2024,pedestrian-grid-quarter,walk_firms_10min numeric,OK
+2024,pedestrian-grid-quarter,walk_firms_10min non-negative,OK
+2024,pedestrian-grid-quarter,walk_pt_stops_10min numeric,OK
+2024,pedestrian-grid-quarter,walk_pt_stops_10min non-negative,OK
+2024,pedestrian-grid-quarter,walk_pt_departures_10min numeric,OK
+2024,pedestrian-grid-quarter,walk_pt_departures_10min non-negative,OK
+2024,pedestrian-grid-quarter,walk_pt_routes_10min numeric,OK
+2024,pedestrian-grid-quarter,walk_pt_routes_10min non-negative,OK
+2024,pedestrian-grid-quarter,reachable_cells_walk_10min numeric,OK
+2024,pedestrian-grid-quarter,reachable_cells_walk_10min non-negative,OK
+2024,pedestrian-grid-quarter,walk_pop_5min <= walk_pop_10min,CHECK
+2024,pedestrian-grid-quarter,walk_firms_5min <= walk_firms_10min,CHECK
+2024,pedestrian-grid-quarter,walk_pt_stops_5min <= walk_pt_stops_10min,OK
+2024,pedestrian-grid-quarter,walk_pt_departures_5min <= walk_pt_departures_10min,OK
+2024,pedestrian-grid-quarter,walk_pt_routes_5min <= walk_pt_routes_10min,OK
+2024,pedestrian-grid-quarter,reachable_cells_walk_5min <= reachable_cells_walk_10min,CHECK
+2024,Fachgruppe-long,required schema,OK
+2024,Fachgruppe-long,all 95 Fachgruppen per grid-quarter,OK
+2024,Fachgruppe-long,unique keys,OK
+2024,Fachgruppe-long,same_fachgruppe_firms_access_5min numeric,OK
+2024,Fachgruppe-long,same_fachgruppe_firms_access_5min non-negative,OK
+2024,Fachgruppe-long,same_fachgruppe_firms_access_10min numeric,OK
+2024,Fachgruppe-long,same_fachgruppe_firms_access_10min non-negative,OK
+2024,Fachgruppe-long,same_fachgruppe_firms_access_15min numeric,OK
+2024,Fachgruppe-long,same_fachgruppe_firms_access_15min non-negative,OK
+2024,Fachgruppe-long,same_fachgruppe_firms_access_30min numeric,OK
+2024,Fachgruppe-long,same_fachgruppe_firms_access_30min non-negative,OK
+2024,Fachgruppe-long,walk_same_fachgruppe_firms_5min numeric,OK
+2024,Fachgruppe-long,walk_same_fachgruppe_firms_5min non-negative,OK
+2024,Fachgruppe-long,walk_same_fachgruppe_firms_10min numeric,OK
+2024,Fachgruppe-long,walk_same_fachgruppe_firms_10min non-negative,OK
+2024,Fachgruppe-long,same_fachgruppe_firms_access_5min <= same_fachgruppe_firms_access_10min,OK
+2024,Fachgruppe-long,same_fachgruppe_firms_access_10min <= same_fachgruppe_firms_access_15min,OK
+2024,Fachgruppe-long,same_fachgruppe_firms_access_15min <= same_fachgruppe_firms_access_30min,OK
+2024,Fachgruppe-long,walk_same_fachgruppe_firms_5min <= walk_same_fachgruppe_firms_10min,CHECK
+2024,firm-quarter,required schema,OK
+2024,firm-quarter,same-Fachgruppe 5min matches cumulative long table,OK
+2024,firm-quarter,lagged-total 5min matches cumulative grid table,OK
+2024,firm-quarter,same-Fachgruppe 10min matches cumulative long table,OK
+2024,firm-quarter,lagged-total 10min matches cumulative grid table,OK
+2024,firm-quarter,same-Fachgruppe 15min matches cumulative long table,OK
+2024,firm-quarter,lagged-total 15min matches cumulative grid table,OK
+2024,firm-quarter,same-Fachgruppe 30min matches cumulative long table,OK
+2024,firm-quarter,lagged-total 30min matches cumulative grid table,OK
+2024,firm-quarter,same_fachgruppe_firms_access_5min numeric,OK
+2024,firm-quarter,same_fachgruppe_firms_access_5min non-negative,OK
+2024,firm-quarter,same_fachgruppe_firms_access_10min numeric,OK
+2024,firm-quarter,same_fachgruppe_firms_access_10min non-negative,OK
+2024,firm-quarter,same_fachgruppe_firms_access_15min numeric,OK
+2024,firm-quarter,same_fachgruppe_firms_access_15min non-negative,OK
+2024,firm-quarter,same_fachgruppe_firms_access_30min numeric,OK
+2024,firm-quarter,same_fachgruppe_firms_access_30min non-negative,OK
+2024,firm-quarter,walk_same_fachgruppe_firms_5min numeric,OK
+2024,firm-quarter,walk_same_fachgruppe_firms_5min non-negative,OK
+2024,firm-quarter,walk_same_fachgruppe_firms_10min numeric,OK
+2024,firm-quarter,walk_same_fachgruppe_firms_10min non-negative,OK
+2024,firm-quarter,pop_access_5min <= pop_access_10min,OK
+2024,firm-quarter,pop_access_10min <= pop_access_15min,OK
+2024,firm-quarter,pop_access_15min <= pop_access_30min,OK
+2024,firm-quarter,existing_firms_access_5min <= existing_firms_access_10min,OK
+2024,firm-quarter,existing_firms_access_10min <= existing_firms_access_15min,OK
+2024,firm-quarter,existing_firms_access_15min <= existing_firms_access_30min,OK
+2024,firm-quarter,same_fachgruppe_firms_access_5min <= same_fachgruppe_firms_access_10min,OK
+2024,firm-quarter,same_fachgruppe_firms_access_10min <= same_fachgruppe_firms_access_15min,OK
+2024,firm-quarter,same_fachgruppe_firms_access_15min <= same_fachgruppe_firms_access_30min,OK
+2024,firm-quarter,walk_pop_5min <= walk_pop_10min,OK
+2024,firm-quarter,walk_firms_5min <= walk_firms_10min,OK
+2024,firm-quarter,walk_same_fachgruppe_firms_5min <= walk_same_fachgruppe_firms_10min,OK
+2025,source,yearly destinations exist,OK
+2025,nearest,canonical output exists,OK
+2025,grid-quarter,canonical output exists,OK
+2025,pedestrian-grid-quarter,canonical output exists,OK
+2025,Fachgruppe-long,canonical output exists,OK
+2025,firm-quarter,canonical output exists,OK
+2025,cleanup,no visible routing intermediates,OK
+2025,cleanup,no hidden checkpoint directory,OK
+2025,nearest,one row per active cell,OK
+2025,nearest,grid_id unique,OK
+2025,grid-quarter,required schema,OK
+2025,grid-quarter,year and four quarters complete,OK
+2025,grid-quarter,unique grid-year-quarter keys,OK
+2025,grid-quarter,no contemporaneous or Sparte fields,OK
+2025,grid-quarter,pop_access_5min numeric,OK
+2025,grid-quarter,pop_access_5min non-negative,OK
+2025,grid-quarter,existing_firms_access_5min numeric,OK
+2025,grid-quarter,existing_firms_access_5min non-negative,OK
+2025,grid-quarter,pop_access_10min numeric,OK
+2025,grid-quarter,pop_access_10min non-negative,OK
+2025,grid-quarter,existing_firms_access_10min numeric,OK
+2025,grid-quarter,existing_firms_access_10min non-negative,OK
+2025,grid-quarter,pop_access_15min numeric,OK
+2025,grid-quarter,pop_access_15min non-negative,OK
+2025,grid-quarter,existing_firms_access_15min numeric,OK
+2025,grid-quarter,existing_firms_access_15min non-negative,OK
+2025,grid-quarter,pop_access_30min numeric,OK
+2025,grid-quarter,pop_access_30min non-negative,OK
+2025,grid-quarter,existing_firms_access_30min numeric,OK
+2025,grid-quarter,existing_firms_access_30min non-negative,OK
+2025,grid-quarter,reachable_cells_5min numeric,OK
+2025,grid-quarter,reachable_cells_5min non-negative,OK
+2025,grid-quarter,reachable_cells_10min numeric,OK
+2025,grid-quarter,reachable_cells_10min non-negative,OK
+2025,grid-quarter,reachable_cells_15min numeric,OK
+2025,grid-quarter,reachable_cells_15min non-negative,OK
+2025,grid-quarter,reachable_cells_30min numeric,OK
+2025,grid-quarter,reachable_cells_30min non-negative,OK
+2025,grid-quarter,pop_access_5min <= pop_access_10min,OK
+2025,grid-quarter,pop_access_10min <= pop_access_15min,OK
+2025,grid-quarter,pop_access_15min <= pop_access_30min,OK
+2025,grid-quarter,existing_firms_access_5min <= existing_firms_access_10min,OK
+2025,grid-quarter,existing_firms_access_10min <= existing_firms_access_15min,OK
+2025,grid-quarter,existing_firms_access_15min <= existing_firms_access_30min,OK
+2025,grid-quarter,reachable_cells_5min <= reachable_cells_10min,OK
+2025,grid-quarter,reachable_cells_10min <= reachable_cells_15min,OK
+2025,grid-quarter,reachable_cells_15min <= reachable_cells_30min,OK
+2025,pedestrian-grid-quarter,required schema,OK
+2025,pedestrian-grid-quarter,year and four quarters complete,OK
+2025,pedestrian-grid-quarter,unique grid-year-quarter keys,OK
+2025,pedestrian-grid-quarter,zero-stop flag matches 10-minute stop count,OK
+2025,pedestrian-grid-quarter,walk_pop_5min numeric,OK
+2025,pedestrian-grid-quarter,walk_pop_5min non-negative,OK
+2025,pedestrian-grid-quarter,walk_firms_5min numeric,OK
+2025,pedestrian-grid-quarter,walk_firms_5min non-negative,OK
+2025,pedestrian-grid-quarter,walk_pt_stops_5min numeric,OK
+2025,pedestrian-grid-quarter,walk_pt_stops_5min non-negative,OK
+2025,pedestrian-grid-quarter,walk_pt_departures_5min numeric,OK
+2025,pedestrian-grid-quarter,walk_pt_departures_5min non-negative,OK
+2025,pedestrian-grid-quarter,walk_pt_routes_5min numeric,OK
+2025,pedestrian-grid-quarter,walk_pt_routes_5min non-negative,OK
+2025,pedestrian-grid-quarter,reachable_cells_walk_5min numeric,OK
+2025,pedestrian-grid-quarter,reachable_cells_walk_5min non-negative,OK
+2025,pedestrian-grid-quarter,walk_pop_10min numeric,OK
+2025,pedestrian-grid-quarter,walk_pop_10min non-negative,OK
+2025,pedestrian-grid-quarter,walk_firms_10min numeric,OK
+2025,pedestrian-grid-quarter,walk_firms_10min non-negative,OK
+2025,pedestrian-grid-quarter,walk_pt_stops_10min numeric,OK
+2025,pedestrian-grid-quarter,walk_pt_stops_10min non-negative,OK
+2025,pedestrian-grid-quarter,walk_pt_departures_10min numeric,OK
+2025,pedestrian-grid-quarter,walk_pt_departures_10min non-negative,OK
+2025,pedestrian-grid-quarter,walk_pt_routes_10min numeric,OK
+2025,pedestrian-grid-quarter,walk_pt_routes_10min non-negative,OK
+2025,pedestrian-grid-quarter,reachable_cells_walk_10min numeric,OK
+2025,pedestrian-grid-quarter,reachable_cells_walk_10min non-negative,OK
+2025,pedestrian-grid-quarter,walk_pop_5min <= walk_pop_10min,CHECK
+2025,pedestrian-grid-quarter,walk_firms_5min <= walk_firms_10min,CHECK
+2025,pedestrian-grid-quarter,walk_pt_stops_5min <= walk_pt_stops_10min,OK
+2025,pedestrian-grid-quarter,walk_pt_departures_5min <= walk_pt_departures_10min,OK
+2025,pedestrian-grid-quarter,walk_pt_routes_5min <= walk_pt_routes_10min,OK
+2025,pedestrian-grid-quarter,reachable_cells_walk_5min <= reachable_cells_walk_10min,CHECK
+2025,Fachgruppe-long,required schema,OK
+2025,Fachgruppe-long,all 95 Fachgruppen per grid-quarter,OK
+2025,Fachgruppe-long,unique keys,OK
+2025,Fachgruppe-long,same_fachgruppe_firms_access_5min numeric,OK
+2025,Fachgruppe-long,same_fachgruppe_firms_access_5min non-negative,OK
+2025,Fachgruppe-long,same_fachgruppe_firms_access_10min numeric,OK
+2025,Fachgruppe-long,same_fachgruppe_firms_access_10min non-negative,OK
+2025,Fachgruppe-long,same_fachgruppe_firms_access_15min numeric,OK
+2025,Fachgruppe-long,same_fachgruppe_firms_access_15min non-negative,OK
+2025,Fachgruppe-long,same_fachgruppe_firms_access_30min numeric,OK
+2025,Fachgruppe-long,same_fachgruppe_firms_access_30min non-negative,OK
+2025,Fachgruppe-long,walk_same_fachgruppe_firms_5min numeric,OK
+2025,Fachgruppe-long,walk_same_fachgruppe_firms_5min non-negative,OK
+2025,Fachgruppe-long,walk_same_fachgruppe_firms_10min numeric,OK
+2025,Fachgruppe-long,walk_same_fachgruppe_firms_10min non-negative,OK
+2025,Fachgruppe-long,same_fachgruppe_firms_access_5min <= same_fachgruppe_firms_access_10min,OK
+2025,Fachgruppe-long,same_fachgruppe_firms_access_10min <= same_fachgruppe_firms_access_15min,OK
+2025,Fachgruppe-long,same_fachgruppe_firms_access_15min <= same_fachgruppe_firms_access_30min,OK
+2025,Fachgruppe-long,walk_same_fachgruppe_firms_5min <= walk_same_fachgruppe_firms_10min,CHECK
+2025,firm-quarter,required schema,OK
+2025,firm-quarter,same-Fachgruppe 5min matches cumulative long table,OK
+2025,firm-quarter,lagged-total 5min matches cumulative grid table,OK
+2025,firm-quarter,same-Fachgruppe 10min matches cumulative long table,OK
+2025,firm-quarter,lagged-total 10min matches cumulative grid table,OK
+2025,firm-quarter,same-Fachgruppe 15min matches cumulative long table,OK
+2025,firm-quarter,lagged-total 15min matches cumulative grid table,OK
+2025,firm-quarter,same-Fachgruppe 30min matches cumulative long table,OK
+2025,firm-quarter,lagged-total 30min matches cumulative grid table,OK
+2025,firm-quarter,same_fachgruppe_firms_access_5min numeric,OK
+2025,firm-quarter,same_fachgruppe_firms_access_5min non-negative,OK
+2025,firm-quarter,same_fachgruppe_firms_access_10min numeric,OK
+2025,firm-quarter,same_fachgruppe_firms_access_10min non-negative,OK
+2025,firm-quarter,same_fachgruppe_firms_access_15min numeric,OK
+2025,firm-quarter,same_fachgruppe_firms_access_15min non-negative,OK
+2025,firm-quarter,same_fachgruppe_firms_access_30min numeric,OK
+2025,firm-quarter,same_fachgruppe_firms_access_30min non-negative,OK
+2025,firm-quarter,walk_same_fachgruppe_firms_5min numeric,OK
+2025,firm-quarter,walk_same_fachgruppe_firms_5min non-negative,OK
+2025,firm-quarter,walk_same_fachgruppe_firms_10min numeric,OK
+2025,firm-quarter,walk_same_fachgruppe_firms_10min non-negative,OK
+2025,firm-quarter,pop_access_5min <= pop_access_10min,OK
+2025,firm-quarter,pop_access_10min <= pop_access_15min,OK
+2025,firm-quarter,pop_access_15min <= pop_access_30min,OK
+2025,firm-quarter,existing_firms_access_5min <= existing_firms_access_10min,OK
+2025,firm-quarter,existing_firms_access_10min <= existing_firms_access_15min,OK
+2025,firm-quarter,existing_firms_access_15min <= existing_firms_access_30min,OK
+2025,firm-quarter,same_fachgruppe_firms_access_5min <= same_fachgruppe_firms_access_10min,OK
+2025,firm-quarter,same_fachgruppe_firms_access_10min <= same_fachgruppe_firms_access_15min,OK
+2025,firm-quarter,same_fachgruppe_firms_access_15min <= same_fachgruppe_firms_access_30min,OK
+2025,firm-quarter,walk_pop_5min <= walk_pop_10min,OK
+2025,firm-quarter,walk_firms_5min <= walk_firms_10min,OK
+2025,firm-quarter,walk_same_fachgruppe_firms_5min <= walk_same_fachgruppe_firms_10min,OK
+all,manifest,all years completed,OK
+all,manifest,model products use lagged firm stock,OK
+all,manifest,no unresolved failed-origin manifest,OK
+all,manifest,"documented accessibility skips have year, grid, coordinates, and reason",OK
+all,graphs,successful graph manifests recorded for 2015-2025,OK
+all,graphs,pinned graph-builder image recorded,OK
+all,graphs,graph manifests match source PBF hashes,OK

@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from pathlib import Path
-import re
 
 import geopandas as gpd
 import pandas as pd
@@ -13,16 +12,15 @@ from shapely import get_point
 
 CRS_ANALYSIS = "EPSG:3035"
 CRS_ROUTING = "EPSG:4326"
-OBSERVED_PT_YEARS = (2016, 2017, 2018, 2019, 2020, 2022, 2025)
+OBSERVED_PT_YEARS = (2017, 2018, 2019, 2020, 2022, 2025)
 PT_YEAR_SOURCES = {
-    2015: (2016,), 2016: (2016,), 2017: (2017,), 2018: (2018,),
+    # The supplied 2016 school-day export is incomplete, so the first two
+    # analysis years use the complete 2017 public-transport layer.
+    2015: (2017,), 2016: (2017,), 2017: (2017,), 2018: (2018,),
     2019: (2019,), 2020: (2020,), 2021: (2020, 2022), 2022: (2022,),
     2023: (2022,), 2024: (2025,), 2025: (2025,),
 }
 
-# User-supplied train-station name rule. Keep this exact string in exported metadata.
-TRAIN_STATION_NAME_REGEX = r"(?ix)^(?!.*\b(?:BH|WP|AO)\b)(?!.*(?:Busbahnhof|Fernbusbahnhof|Güterbahnhof|Verschiebebahnhof))(?!.*\bAbzw\.?\s+.*Bahnhof\b)(?!.*\bBahnhof(?:straße|str\.?|weg|gürtel)\b)(?!.*\b(?:ehemaliger|ehem\.?|Alter)\s+Bahnhof\b)(?!.*\b(?:Seilbahn|Gondelbahn|Gondlbahn|Sesselbahn|Schloßbergbahn|Autobahn)\b)(?!.*\b(?:Bahndurchlass|Bahnwärterhaus|Bahndamm|Bahnweg)\b)(?!.*(?:\[ALT\]|\(ALT\)|ersetzt\s+durch|\bPLAN\b))(?=.*(?:Bahnhof\b|Bahnhaltestelle\b|\bHbf\b|\bBf\b|\bS[- ]?Bahn\b)).+$"
-TRAIN_STATION_CLUSTER_M = 1_000
 RAMP_ENDPOINT_SNAP_M = 10
 RAMP_CLUSTER_M = 250
 
@@ -124,46 +122,6 @@ def _components_within_distance(frame: gpd.GeoDataFrame, distance_m: float) -> l
     for index in range(len(projected)):
         components.setdefault(find(index), []).append(index)
     return list(components.values())
-
-
-def rail_station_candidates(stops: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
-    names = stops["station_name"].fillna("").astype(str)
-    selected = stops[names.str.contains(re.compile(TRAIN_STATION_NAME_REGEX), na=False)].copy()
-    selected["train_station_name_regex"] = TRAIN_STATION_NAME_REGEX
-    selected["train_station_candidate"] = True
-    return selected
-
-
-def rail_station_destinations(stops: gpd.GeoDataFrame) -> tuple[gpd.GeoDataFrame, gpd.GeoDataFrame]:
-    candidates = rail_station_candidates(stops)
-    rows = []
-    for component_number, member_positions in enumerate(_components_within_distance(candidates, TRAIN_STATION_CLUSTER_M), start=1):
-        members = candidates.iloc[member_positions].copy()
-        representative = members.sort_values(["weekday_avg_departures", "station_id"], ascending=[False, True]).iloc[0]
-        member_ids = sorted(members["station_id"].astype(int).tolist())
-        rows.append({
-            "name": representative["station_name"],
-            "ref": str(int(representative["station_id"])),
-            "year": int(representative["year"]),
-            "poi_type": "rail_station",
-            "source_poi_id": f"rail_cluster_{representative['year']}_{component_number:04d}",
-            "source_file": "public_transport_weekday_stop_frequency.geoparquet",
-            "source_schema": "public_transport_train_station_name_rule",
-            "source_note": "public_transport_derived_train_station",
-            "source_years": _join_values(members["source_years"]),
-            "source_stop_ids": _join_values(members["source_stop_ids"]),
-            "imputation_method": _join_values(members["imputation_method"]),
-            "provenance": "public_transport_train_station_cluster",
-            "train_station_name_regex": TRAIN_STATION_NAME_REGEX,
-            "station_cluster_id": f"rail_station_{representative['year']}_{component_number:04d}",
-            "station_cluster_member_count": len(members),
-            "station_cluster_member_ids": "|".join(map(str, member_ids)),
-            "station_cluster_representative_id": int(representative["station_id"]),
-            "pt_departures_weekday": float(representative["weekday_avg_departures"]),
-            "static_destination": True,
-            "geometry": representative.geometry,
-        })
-    return gpd.GeoDataFrame(rows, geometry="geometry", crs=CRS_ROUTING), candidates
 
 
 def pt_stop_destinations(stops: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
