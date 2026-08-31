@@ -2,6 +2,10 @@
 
 This repository contains the reproducible analysis for a Master's thesis on how spatial location factors affect business formation and survival in Styria. It combines company-level data, open geodata, a 100 m population grid, and GIP-based travel-time and accessibility measures.
 
+## Outputs disclaimer
+
+Generated analytical products stored below `ANAL/data/`; exported figures stored below `FIG/`. Raw `.pbf` and `.gml` files are the results of the synthetic dataset. This results are only provided for public reproducibility they do not contain or refelct real data or results.
+
 ## Repository structure
 
 | Path | Contents |
@@ -9,17 +13,13 @@ This repository contains the reproducible analysis for a Master's thesis on how 
 | `OGD/` | External open-data inputs and source-specific preparation workflows. |
 | `SDG/` | Synthetic company-data generation for the public workflow. |
 | `ANAL/` | The ordered analytical workflow and generated model data. |
-| `ANAL/routing/` | Routing notebooks 02–07, shared helpers, and routing documentation. |
-| `ANAL/data/` | Derived 100 m panels, routing products, status files, and model outputs. |
 | `FIG/` | Descriptive and model-result figure notebooks plus exported figures. |
-| `tests/` | Focused tests for routing feature construction. |
-
-`TOOLS/` is no longer used. Routing, destination construction, and validation are one workflow under `ANAL/`; all external geodata now lives under `OGD/`.
 
 ## Data sources
 
 Large source files are excluded from Git and must be obtained separately.
 
+<<<<<<< HEAD
 | Dataset | Purpose | Location |
 |---|---|---|
 | GIP road-network snapshots, 2015–2025 | Valhalla graphs, travel times, road-network figures, and motorway exits | `OGD/GIP/<year>.osm.pbf` |
@@ -30,8 +30,24 @@ Large source files are excluded from Git and must be obtained separately.
 | Education locations | Higher-education routing destinations | `OGD/Bildungsstandorte.zip` |
 | Public-transport data | Stops and service frequencies | `OGD/Public_Transport/` |
 | WKO membership totals | Sampling weights for synthetic companies | `SDG/fachorganisationen_total_members.csv` |
+=======
+| Dataset | Year | Purpose | Location | Source |
+|---|---|---|---|---|
+| GIP road-network snapshots | 2015–2025 | Valhalla graphs, travel times, road-network figures, and motorway exits | `OGD/GIP/<year>.osm.pbf` | [GIP](https://www.gip.gv.at/) *|
+| Austrian OSM snapshot | 2025 | Building footprints used only to generate synthetic firm locations | `OGD/OpenStreetMap/austria-2025.osm.pbf` | [OSM](https://download.geofabrik.de/europe/austria.html#) **|
+| Austrian 100 m population grid (POPREG)  | 2025 | High-resolution population distribution | `OGD/pd_popreg_100m_*.zip` | [INSPIRE](https://geoportal.inspire.gv.at/metadatensuche/inspire/api/records/7767c33f-302c-11e3-beb4-0000c1ab0db6)|
+| Styrian municipal population | 2002–2025 | Backcasting the 2025 population grid | `OGD/STMK_POP_2002_2025.csv` | [Land Steiermark](https://data.steiermark.at/)|
+| Municipality boundaries | 2025 | Study area, clipping, and aggregation | `OGD/Gemeindegrenzen.zip` | [Land Steiermark](https://data.steiermark.at/)|
+| Education locations | 2025 | Higher-education routing destinations | `OGD/Bildungsstandorte.zip` | [Land Steiermark](https://data.steiermark.at/)|
+| Public-transport data | 2015–2025 | Stops, service frequencies, and rail-station destinations | `OGD/Public_Transport/` | [VERBUND Linie](https://www.verbundlinie.at/de/)|
+| WKO membership totals | 2025 | Sampling weights for synthetic companies | `SDG/fachorganisationen_total_members.csv` | [WKO](https://www.wko.at/stmk/wirtschaft/aktuelle-publikationen-und-statistische-daten) ***|
+>>>>>>> de93961a88ff5dad64c2c70bf5155bfb6cc0a778
 
-GIP files use the OSM PBF container format, but their contents come from GIP. Historical OpenStreetMap snapshots and OSM-derived routing POIs are not part of the routing pipeline. The only remaining OSM input supports the building-based synthetic-data generator; see [`OGD/OpenStreetMap/README.md`](OGD/OpenStreetMap/README.md).
+*GIP files for the use in this pipline need to be in the OSM PBF container format, cenverted using GIP2OSM package with the source files from GIP. 
+
+**OpenStreetMap snapshots are not part of the routing pipeline  but are used for the building-based synthetic-data generator. In case that historic GIP files are not available teh pipline can also be run with OSM-Snapshots.
+
+*** Table data extracted from PDF report.
 
 ## Workflow
 
@@ -71,10 +87,6 @@ Run the focused test suite from the repository root:
 ```bash
 python -m pytest tests/test_routing_features_notebook.py
 ```
-
-## Outputs and version control
-
-Generated analytical products are stored below `ANAL/data/`; exported figures are stored below `FIG/`. Raw `.pbf` and `.gml` files, temporary routing slices, checkpoints, virtual environments, and caches are ignored. Keep confidential company data outside Git; the tracked synthetic dataset is provided for public reproducibility.
 
 ## License
 
