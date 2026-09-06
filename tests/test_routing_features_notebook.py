@@ -28,7 +28,7 @@ from ANAL.routing.routing_utils import (
     fachgruppe_stock_columns,
     main_access_columns,
 )
-from ANAL.routing.destination_builders import PT_YEAR_SOURCES, pt_stop_destinations
+from ANAL.routing.destination_builders import pt_stop_destinations, yearly_transport_stops
 
 
 NOTEBOOK_PATH = Path(__file__).parents[1] / "ANAL" / "routing" / "06_generate_features.ipynb"
@@ -125,10 +125,22 @@ def test_station_named_stops_remain_in_generic_public_transport_pois() -> None:
     assert set(destinations["poi_type"]) == {"pt_stop"}
 
 
-def test_incomplete_2016_transport_source_uses_2017_proxy() -> None:
-    assert PT_YEAR_SOURCES[2015] == (2017,)
-    assert PT_YEAR_SOURCES[2016] == (2017,)
-    assert PT_YEAR_SOURCES[2017] == (2017,)
+def test_yearly_transport_stops_reads_prepared_target_year(tmp_path: Path) -> None:
+    output_dir = tmp_path / "OGD" / "Public_Transport"
+    output_dir.mkdir(parents=True)
+    frame = gpd.GeoDataFrame({
+        "year": [2016], "frequency_source_year": [2017],
+        "imputation_method": ["full_2017_proxy"], "station_id": [1],
+        "station_name": ["Test"], "weekday_school_departures": [10.0],
+        "weekday_holiday_departures": [8.0], "weekday_route_ids": ["R1"],
+    }, geometry=[Point(15.4, 47.1)], crs="EPSG:4326")
+    frame.to_parquet(output_dir / "public_transport_weekday_stop_frequency_2016.geoparquet")
+
+    result = yearly_transport_stops(tmp_path, 2016)
+
+    assert result["year"].tolist() == [2016]
+    assert result["pt_source_year"].tolist() == [2017]
+    assert result["imputation_method"].tolist() == ["full_2017_proxy"]
 
 
 def test_fachgruppe_ids_are_strings(tmp_path: Path) -> None:

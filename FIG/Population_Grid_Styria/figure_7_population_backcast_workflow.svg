@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="520.56pt" height="140.256pt" viewBox="0 0 520.56 140.256" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-09-06T19:13:03.052860</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.1, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 140.256 
+L 520.56 140.256 
+L 520.56 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 11.3004 100.73088 
+L 98.5716 100.73088 
+Q 103.7052 100.73088 103.7052 99.40032 
+L 103.7052 35.53344 
+Q 103.7052 34.20288 98.5716 34.20288 
+L 11.3004 34.20288 
+Q 6.1668 34.20288 6.1668 35.53344 
+L 6.1668 99.40032 
+Q 6.1668 100.73088 11.3004 100.73088 
+z
+" clip-path="url(#p949d113701)" style="fill: #ebebeb; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 113.9724 100.73088 
+L 201.2436 100.73088 
+Q 206.3772 100.73088 206.3772 99.40032 
+L 206.3772 35.53344 
+Q 206.3772 34.20288 201.2436 34.20288 
+L 113.9724 34.20288 
+Q 108.8388 34.20288 108.8388 35.53344 
+L 108.8388 99.40032 
+Q 108.8388 100.73088 113.9724 100.73088 
+z
+" clip-path="url(#p949d113701)" style="fill: #ffffff; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 216.6444 100.73088 
+L 303.9156 100.73088 
+Q 309.0492 100.73088 309.0492 99.40032 
+L 309.0492 35.53344 
+Q 309.0492 34.20288 303.9156 34.20288 
+L 216.6444 34.20288 
+Q 211.5108 34.20288 211.5108 35.53344 
+L 211.5108 99.40032 
+Q 211.5108 100.73088 216.6444 100.73088 
+z
+" clip-path="url(#p949d113701)" style="fill: #ffffff; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 319.3164 100.73088 
+L 406.5876 100.73088 
+Q 411.7212 100.73088 411.7212 99.40032 
+L 411.7212 35.53344 
+Q 411.7212 34.20288 406.5876 34.20288 
+L 319.3164 34.20288 
+Q 314.1828 34.20288 314.1828 35.53344 
+L 314.1828 99.40032 
+Q 314.1828 100.73088 319.3164 100.73088 
+z
+" clip-path="url(#p949d113701)" style="fill: #ffffff; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 421.9884 100.73088 
+L 509.2596 100.73088 
+Q 514.3932 100.73088 514.3932 99.40032 
+L 514.3932 35.53344 
+Q 514.3932 34.20288 509.2596 34.20288 
+L 421.9884 34.20288 
+Q 416.8548 34.20288 416.8548 35.53344 
+L 416.8548 99.40032 
+Q 416.8548 100.73088 421.9884 100.73088 
+z
+" clip-path="url(#p949d113701)" style="fill: #ebebeb; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_1">
+    <text style="font-size: 8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle" x="54.936" y="57.562152" transform="rotate(-0 54.936 57.562152)">Raster 2025</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #404040" transform="translate(31.784047 76.113489)">Bevölkerung je</text>
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #404040" transform="translate(36.265141 83.732278)">100-m-Zelle</text>
+   </g>
+   <g id="patch_7">
+    <path d="M 104.67527 67.46688 
+Q 106.270613 67.46688 106.971529 67.46688 
+" style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linecap: round"/>
+    <path d="M 102.971529 65.46688 
+L 106.971529 67.46688 
+L 102.971529 69.46688 
+" style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linecap: round"/>
+   </g>
+   <g id="text_3">
+    <text style="font-size: 8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle" x="157.608" y="57.562074" transform="rotate(-0 157.608 57.562074)">Gemeindezuordnung</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #404040" transform="translate(134.854172 76.113489)">Zellzentrum →</text>
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #404040" transform="translate(138.542297 83.732141)">Gemeinde g</text>
+   </g>
+   <g id="patch_8">
+    <path d="M 207.34727 67.46688 
+Q 208.942613 67.46688 209.643529 67.46688 
+" style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linecap: round"/>
+    <path d="M 205.643529 65.46688 
+L 209.643529 67.46688 
+L 205.643529 69.46688 
+" style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linecap: round"/>
+   </g>
+   <g id="text_5">
+    <text style="font-size: 8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle" x="260.28" y="57.562074" transform="rotate(-0 260.28 57.562074)">Gemeindebevölkerung</text>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #404040" transform="translate(240.824375 76.113489)">Bevölkerung</text>
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #404040" transform="translate(246.861875 83.732278)">im Jahr t</text>
+   </g>
+   <g id="patch_9">
+    <path d="M 310.01927 67.46688 
+Q 311.614613 67.46688 312.315529 67.46688 
+" style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linecap: round"/>
+    <path d="M 308.315529 65.46688 
+L 312.315529 67.46688 
+L 308.315529 69.46688 
+" style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linecap: round"/>
+   </g>
+   <g id="text_7">
+    <text style="font-size: 8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle" x="362.952" y="57.562074" transform="rotate(-0 362.952 57.562074)">Skalierungsfaktor</text>
+   </g>
+   <g id="text_8">
+    <!-- $F_{g,t}=P_{g,t}/P_{g,2025}^{Raster}$ -->
+    <g style="fill: #404040" transform="translate(334.357 79.79136)">
+     <text>
+      <tspan x="0" y="-0.295313" style="font-style: oblique; font-size: 7px; font-family: 'DejaVu Sans'; fill: #404040">F</tspan>
+      <tspan x="20.354346" y="-0.295313" style="font-style: oblique; font-size: 7px; font-family: 'DejaVu Sans'; fill: #404040">P</tspan>
+      <tspan x="34.669141" y="-0.295313" style="font-style: oblique; font-size: 7px; font-family: 'DejaVu Sans'; fill: #404040">P</tspan>
+      <tspan x="4.026367" y="0.754684" style="font-style: oblique; font-size: 4.9px; font-family: 'DejaVu Sans'; fill: #404040">g</tspan>
+      <tspan x="9.648926" y="0.754684" style="font-style: oblique; font-size: 4.9px; font-family: 'DejaVu Sans'; fill: #404040">t</tspan>
+      <tspan x="24.575537" y="0.754684" style="font-style: oblique; font-size: 4.9px; font-family: 'DejaVu Sans'; fill: #404040">g</tspan>
+      <tspan x="30.198096" y="0.754684" style="font-style: oblique; font-size: 4.9px; font-family: 'DejaVu Sans'; fill: #404040">t</tspan>
+      <tspan x="38.890332" y="2.034375" style="font-style: oblique; font-size: 4.9px; font-family: 'DejaVu Sans'; fill: #404040">g</tspan>
+      <tspan x="39.382337" y="-3.423438" style="font-style: oblique; font-size: 4.9px; font-family: 'DejaVu Sans'; fill: #404040">R</tspan>
+      <tspan x="42.786976" y="-3.423438" style="font-style: oblique; font-size: 4.9px; font-family: 'DejaVu Sans'; fill: #404040">a</tspan>
+      <tspan x="45.789661" y="-3.423438" style="font-style: oblique; font-size: 4.9px; font-family: 'DejaVu Sans'; fill: #404040">s</tspan>
+      <tspan x="48.342542" y="-3.423438" style="font-style: oblique; font-size: 4.9px; font-family: 'DejaVu Sans'; fill: #404040">t</tspan>
+      <tspan x="50.263783" y="-3.423438" style="font-style: oblique; font-size: 4.9px; font-family: 'DejaVu Sans'; fill: #404040">e</tspan>
+      <tspan x="53.278431" y="-3.423438" style="font-style: oblique; font-size: 4.9px; font-family: 'DejaVu Sans'; fill: #404040">r</tspan>
+      <tspan x="7.136719" y="0.754684" style="font-size: 4.9px; font-family: 'DejaVu Sans'; fill: #404040">,</tspan>
+      <tspan x="27.685889" y="0.754684" style="font-size: 4.9px; font-family: 'DejaVu Sans'; fill: #404040">,</tspan>
+      <tspan x="42.000684" y="2.034375" style="font-size: 4.9px; font-family: 'DejaVu Sans'; fill: #404040">,</tspan>
+      <tspan x="44.512891" y="2.034375" style="font-size: 4.9px; font-family: 'DejaVu Sans'; fill: #404040">2</tspan>
+      <tspan x="47.63042" y="2.034375" style="font-size: 4.9px; font-family: 'DejaVu Sans'; fill: #404040">0</tspan>
+      <tspan x="50.747949" y="2.034375" style="font-size: 4.9px; font-family: 'DejaVu Sans'; fill: #404040">2</tspan>
+      <tspan x="53.865479" y="2.034375" style="font-size: 4.9px; font-family: 'DejaVu Sans'; fill: #404040">5</tspan>
+      <tspan x="13.125342" y="-0.295313" style="font-size: 7px; font-family: 'DejaVu Sans'; fill: #404040">=</tspan>
+      <tspan x="32.310742" y="-0.295313" style="font-size: 7px; font-family: 'DejaVu Sans'; fill: #404040">/</tspan>
+     </text>
+    </g>
+   </g>
+   <g id="patch_10">
+    <path d="M 412.69127 67.46688 
+Q 414.286613 67.46688 414.987529 67.46688 
+" style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linecap: round"/>
+    <path d="M 410.987529 65.46688 
+L 414.987529 67.46688 
+L 410.987529 69.46688 
+" style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linecap: round"/>
+   </g>
+   <g id="text_9">
+    <text style="font-size: 8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle" x="465.624" y="57.562152" transform="rotate(-0 465.624 57.562152)">Rasterwert Jahr t</text>
+   </g>
+   <g id="text_10">
+    <!-- $P_{i,t}=P_{i,2025}\times F_{g,t}$ -->
+    <g style="fill: #404040" transform="translate(435.664 79.61636)">
+     <text>
+      <tspan x="0" y="-0.890625" style="font-style: oblique; font-size: 7px; font-family: 'DejaVu Sans'; fill: #404040">P</tspan>
+      <tspan x="18.800195" y="-0.890625" style="font-style: oblique; font-size: 7px; font-family: 'DejaVu Sans'; fill: #404040">P</tspan>
+      <tspan x="48.149268" y="-0.890625" style="font-style: oblique; font-size: 7px; font-family: 'DejaVu Sans'; fill: #404040">F</tspan>
+      <tspan x="4.221191" y="0.159372" style="font-style: oblique; font-size: 4.9px; font-family: 'DejaVu Sans'; fill: #404040">i</tspan>
+      <tspan x="8.094775" y="0.159372" style="font-style: oblique; font-size: 4.9px; font-family: 'DejaVu Sans'; fill: #404040">t</tspan>
+      <tspan x="23.021387" y="0.159372" style="font-style: oblique; font-size: 4.9px; font-family: 'DejaVu Sans'; fill: #404040">i</tspan>
+      <tspan x="52.175635" y="0.159372" style="font-style: oblique; font-size: 4.9px; font-family: 'DejaVu Sans'; fill: #404040">g</tspan>
+      <tspan x="57.798193" y="0.159372" style="font-style: oblique; font-size: 4.9px; font-family: 'DejaVu Sans'; fill: #404040">t</tspan>
+      <tspan x="5.582568" y="0.159372" style="font-size: 4.9px; font-family: 'DejaVu Sans'; fill: #404040">,</tspan>
+      <tspan x="24.382764" y="0.159372" style="font-size: 4.9px; font-family: 'DejaVu Sans'; fill: #404040">,</tspan>
+      <tspan x="26.894971" y="0.159372" style="font-size: 4.9px; font-family: 'DejaVu Sans'; fill: #404040">2</tspan>
+      <tspan x="30.0125" y="0.159372" style="font-size: 4.9px; font-family: 'DejaVu Sans'; fill: #404040">0</tspan>
+      <tspan x="33.130029" y="0.159372" style="font-size: 4.9px; font-family: 'DejaVu Sans'; fill: #404040">2</tspan>
+      <tspan x="36.247559" y="0.159372" style="font-size: 4.9px; font-family: 'DejaVu Sans'; fill: #404040">5</tspan>
+      <tspan x="55.285986" y="0.159372" style="font-size: 4.9px; font-family: 'DejaVu Sans'; fill: #404040">,</tspan>
+      <tspan x="11.571191" y="-0.890625" style="font-size: 7px; font-family: 'DejaVu Sans'; fill: #404040">=</tspan>
+      <tspan x="40.920264" y="-0.890625" style="font-size: 7px; font-family: 'DejaVu Sans'; fill: #404040">×</tspan>
+     </text>
+    </g>
+   </g>
+   <g id="text_11">
+    <text style="font-size: 8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #4c4c4c" x="260.28" y="125.420634" transform="rotate(-0 260.28 125.420634)">Die räumliche Verteilung innerhalb jeder Gemeinde bleibt konstant.</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p949d113701">
+   <rect x="3.6" y="3.6" width="513.36" height="133.056"/>
+  </clipPath>
+ </defs>
+</svg>

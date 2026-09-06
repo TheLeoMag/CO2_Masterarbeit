@@ -12,15 +12,6 @@ from shapely import get_point
 
 CRS_ANALYSIS = "EPSG:3035"
 CRS_ROUTING = "EPSG:4326"
-OBSERVED_PT_YEARS = (2017, 2018, 2019, 2020, 2022, 2025)
-PT_YEAR_SOURCES = {
-    # The supplied 2016 school-day export is incomplete, so the first two
-    # analysis years use the complete 2017 public-transport layer.
-    2015: (2017,), 2016: (2017,), 2017: (2017,), 2018: (2018,),
-    2019: (2019,), 2020: (2020,), 2021: (2020, 2022), 2022: (2022,),
-    2023: (2022,), 2024: (2025,), 2025: (2025,),
-}
-
 RAMP_ENDPOINT_SNAP_M = 10
 RAMP_CLUSTER_M = 250
 
@@ -33,12 +24,12 @@ def _transport_path(project_dir: Path, year: int) -> Path:
     return project_dir / "OGD" / "Public_Transport" / f"public_transport_weekday_stop_frequency_{year}.geoparquet"
 
 
-def _read_observed_transport(project_dir: Path, year: int) -> gpd.GeoDataFrame:
+def _read_transport(project_dir: Path, year: int) -> gpd.GeoDataFrame:
     path = _transport_path(project_dir, year)
     if not path.exists():
         raise FileNotFoundError(f"Missing public-transport GeoParquet: {path}")
     stops = gpd.read_parquet(path).to_crs(CRS_ROUTING)
-    required = {"station_id", "station_name", "weekday_school_departures", "weekday_holiday_departures", "weekday_route_ids", "geometry"}
+    required = {"year", "frequency_source_year", "imputation_method", "station_id", "station_name", "weekday_school_departures", "weekday_holiday_departures", "weekday_route_ids", "geometry"}
     missing = sorted(required - set(stops.columns))
     if missing:
         raise ValueError(f"{path.name} is missing columns: {missing}")
@@ -47,55 +38,17 @@ def _read_observed_transport(project_dir: Path, year: int) -> gpd.GeoDataFrame:
     return stops
 
 
-def _join_values(values: pd.Series) -> str:
-    return "|".join(sorted({str(value) for value in values.dropna() if str(value)}))
-
-
-def _join_pipe_delimited_values(values: pd.Series) -> str:
-    items = {
-        item.strip()
-        for value in values.dropna()
-        for item in str(value).split("|")
-        if item.strip()
-    }
-    return "|".join(sorted(items))
-
-
 def yearly_transport_stops(project_dir: Path, year: int) -> gpd.GeoDataFrame:
-    """Return the assigned stop layer for a routing year with explicit provenance."""
-    if year not in PT_YEAR_SOURCES:
-        raise ValueError(f"No public-transport source assignment for {year}")
-    source_years = PT_YEAR_SOURCES[year]
-    frames = []
-    for source_year in source_years:
-        frame = _read_observed_transport(project_dir, source_year).copy()
-        frame["pt_source_year"] = source_year
-        frame["source_stop_id"] = frame["station_id"].astype(str)
-        frames.append(frame)
-
-    if len(frames) == 1:
-        stops = frames[0].copy()
-        stops["source_years"] = str(source_years[0])
-        stops["source_stop_ids"] = stops["source_stop_id"]
-        stops["imputation_method"] = "observed" if year == source_years[0] else f"nearest_observed_year_{source_years[0]}"
-    else:
-        combined = pd.concat(frames, ignore_index=True)
-        rows = []
-        for station_id, group in combined.groupby("station_id", sort=True):
-            group = group.sort_values("pt_source_year")
-            row = group.iloc[0].copy()
-            row["station_id"] = station_id
-            row["weekday_school_departures"] = pd.to_numeric(group["weekday_school_departures"], errors="coerce").mean()
-            row["weekday_holiday_departures"] = pd.to_numeric(group["weekday_holiday_departures"], errors="coerce").mean()
-            row["weekday_avg_departures"] = (row["weekday_school_departures"] + row["weekday_holiday_departures"]) / 2
-            row["weekday_route_ids"] = _join_pipe_delimited_values(group["weekday_route_ids"])
-            row["source_years"] = _join_values(group["pt_source_year"])
-            row["source_stop_ids"] = _join_values(group.apply(lambda r: f"{r.pt_source_year}:{r.station_id}", axis=1))
-            row["imputation_method"] = "mean_2020_2022_matching_station_id" if len(group) == 2 else "2021_one_sided_stop_retained"
-            rows.append(row)
-        stops = gpd.GeoDataFrame(rows, geometry="geometry", crs=CRS_ROUTING)
-
-    stops["year"] = int(year)
+    """Read the already assigned annual stop layer produced by PT preparation."""
+    stops = _read_transport(project_dir, year).copy()
+    stored_years = set(pd.to_numeric(stops["year"], errors="raise").astype(int))
+    if stored_years != {int(year)}:
+        raise ValueError(f"Public-transport file for {year} contains years {sorted(stored_years)}")
+    source_year = pd.to_numeric(stops["frequency_source_year"], errors="raise").astype(int)
+    stops["pt_source_year"] = source_year
+    stops["source_stop_id"] = stops["station_id"].astype(str)
+    stops["source_years"] = source_year.astype(str)
+    stops["source_stop_ids"] = stops["source_stop_id"]
     stops["weekday_school_departures"] = pd.to_numeric(stops["weekday_school_departures"], errors="coerce").fillna(0.0)
     stops["weekday_holiday_departures"] = pd.to_numeric(stops["weekday_holiday_departures"], errors="coerce").fillna(0.0)
     stops["weekday_avg_departures"] = (stops["weekday_school_departures"] + stops["weekday_holiday_departures"]) / 2

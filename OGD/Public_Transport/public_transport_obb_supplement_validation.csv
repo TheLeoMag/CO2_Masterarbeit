@@ -1,0 +1,6 @@
+target_year,obb_source_year,is_proxy,mvo_station_ids,obb_active_station_ids,obb_new_station_ids,obb_school_departures_added,obb_holiday_departures_added,obb_average_departures_added
+2021,2023,True,7065,118,45,5466.2,5464.75,5465.475
+2022,2023,True,6990,118,42,5466.2,5464.75,5465.475
+2023,2023,False,6978,118,42,5466.2,5464.75,5465.475
+2024,2024,False,6988,118,41,5680.8,5674.75,5677.775
+2025,2025,False,7045,118,40,5690.200000000001,5689.0,5689.6
