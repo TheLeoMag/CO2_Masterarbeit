@@ -99,10 +99,21 @@ def _add_scale_bar(
 
 def load_inputs(project_dir: Path) -> dict[str, object]:
     project_dir = Path(project_dir)
-    population = gpd.read_parquet(
-        project_dir / "OGD" / "population_grid_styria.geoparquet"
-    ).to_crs(CRS)
-    population["population"] = pd.to_numeric(population["population"], errors="raise").astype(float)
+    population_by_year = {}
+    for year in (2019, 2025):
+        population_year = gpd.read_parquet(
+            project_dir
+            / "OGD"
+            / "Popreg_100m"
+            / f"population_grid_styria_{year}.geoparquet"
+        ).to_crs(CRS)
+        population_year["population"] = pd.to_numeric(
+            population_year["population"], errors="raise"
+        ).astype(float)
+        population_by_year[year] = population_year
+
+    # Compatibility alias for Figures 1–6, which describe the current grid.
+    population = population_by_year[2025]
 
     raster_table = pd.read_parquet(
         project_dir / "ANAL" / "data" / "raster_100m_styria.geoparquet",
@@ -162,6 +173,9 @@ def load_inputs(project_dir: Path) -> dict[str, object]:
     return {
         "project_dir": project_dir,
         "population": population,
+        "population_by_year": population_by_year,
+        "population_2019": population_by_year[2019],
+        "population_2025": population_by_year[2025],
         "raster_table": raster_table,
         "firm_counts": firm_counts,
         "municipalities": municipalities,
@@ -642,3 +656,273 @@ def plot_municipal_growth_map(data: dict[str, object], output_dir: Path) -> None
     _add_scale_bar(ax, 25_000, "25 km")
     _save_pair(fig, output_dir, "figure_10_municipal_population_growth_2015_2025")
     plt.show()
+
+
+def build_population_cell_comparison(data: dict[str, object]) -> pd.DataFrame:
+    """Return a cell-ID comparison of the two observed POPREG grids."""
+    population_2019 = data["population_2019"]
+    population_2025 = data["population_2025"]
+    comparison = (
+        population_2019[["cell_id", "population"]]
+        .rename(columns={"population": "population_2019"})
+        .merge(
+            population_2025[["cell_id", "population", "easting", "northing", "geometry"]]
+            .rename(columns={"population": "population_2025"}),
+            on="cell_id",
+            how="outer",
+            indicator=True,
+        )
+    )
+    comparison[["population_2019", "population_2025"]] = comparison[
+        ["population_2019", "population_2025"]
+    ].fillna(0.0)
+    comparison["cell_status"] = comparison["_merge"].map(
+        {
+            "left_only": "Nur 2019 besiedelt",
+            "right_only": "2025 neu besiedelt",
+            "both": "In beiden Jahren besiedelt",
+        }
+    )
+    return comparison
+
+
+def plot_population_year_comparison(
+    data: dict[str, object], output_dir: Path
+) -> pd.DataFrame:
+    """Compare 2019 and 2025 with one shared logarithmic colour scale."""
+    population_by_year = data["population_by_year"]
+    municipalities = data["municipalities"]
+    pooled_values = pd.concat(
+        [population_by_year[year]["population"] for year in (2019, 2025)],
+        ignore_index=True,
+    )
+    norm = LogNorm(vmin=1, vmax=float(pooled_values.quantile(0.995)))
+    fig, axes = plt.subplots(1, 2, figsize=(10.5, 5.2), sharex=True, sharey=True)
+
+    for ax, year in zip(axes, (2019, 2025)):
+        population_by_year[year].plot(
+            ax=ax,
+            column="population",
+            cmap="viridis",
+            norm=norm,
+            linewidth=0,
+            rasterized=True,
+        )
+        municipalities.boundary.plot(ax=ax, color="0.2", linewidth=0.18)
+        ax.set_title(f"Bevölkerungsraster {year}")
+        _style_map_axis(ax)
+
+    # One common distance scale and one common population scale; deliberately no
+    # north arrow, as requested for the two-year comparison.
+    _add_scale_bar(axes[0], 25_000, "25 km")
+    scalar = plt.cm.ScalarMappable(norm=norm, cmap="viridis")
+    colorbar = fig.colorbar(scalar, ax=axes, fraction=0.028, pad=0.02, shrink=0.80)
+    colorbar.set_label("Bevölkerung je bewohnter 100-m-Zelle (logarithmisch)")
+    _save_pair(fig, output_dir, "figure_10b_population_grid_2019_2025_comparison")
+    plt.show()
+
+    comparison = build_population_cell_comparison(data)
+    return (
+        comparison.groupby("cell_status", observed=True)
+        .size()
+        .rename("Zellen")
+        .reset_index()
+        .rename(columns={"cell_status": "Kategorie"})
+    )
+
+
+def _plot_newly_populated_cells(
+    data: dict[str, object],
+    output_dir: Path,
+    *,
+    graz_zoom: bool,
+) -> int:
+    population_2025 = data["population_2025"]
+    population_2019_ids = set(data["population_2019"]["cell_id"])
+    newly_populated = population_2025.loc[
+        ~population_2025["cell_id"].isin(population_2019_ids)
+    ].copy()
+    municipalities = data["municipalities"]
+    boundary = data["styria_boundary"]
+
+    if graz_zoom:
+        centre = _projected_point(15.4395, 47.0707)
+        half_width = 8_000
+        xmin, xmax = centre.x - half_width, centre.x + half_width
+        ymin, ymax = centre.y - half_width, centre.y + half_width
+        context = population_2025.cx[xmin:xmax, ymin:ymax]
+        highlighted = newly_populated.cx[xmin:xmax, ymin:ymax]
+        stem = "figure_11b_newly_populated_cells_2025_graz"
+        scale_length, scale_label = 2_000, "2 km"
+        figsize = (7.2, 6.2)
+        basemap_zoom = 13
+    else:
+        context = population_2025
+        highlighted = newly_populated
+        stem = "figure_11_newly_populated_cells_2025_styria"
+        scale_length, scale_label = 25_000, "25 km"
+        figsize = (7.2, 5.3)
+        basemap_zoom = 9
+
+    fig, ax = new_figure(*figsize)
+    context.plot(
+        ax=ax,
+        color="0.87",
+        linewidth=0,
+        alpha=0.62,
+        rasterized=True,
+        zorder=1,
+    )
+    highlighted.plot(
+        ax=ax,
+        color="#b2182b",
+        linewidth=0,
+        rasterized=True,
+        zorder=3,
+    )
+    municipalities.boundary.plot(ax=ax, color="0.28", linewidth=0.22, zorder=4)
+    if graz_zoom:
+        ax.set(xlim=(xmin, xmax), ylim=(ymin, ymax))
+    else:
+        gpd.GeoSeries([boundary], crs=CRS).boundary.plot(
+            ax=ax, color="black", linewidth=0.75, zorder=5
+        )
+    cx.add_basemap(
+        ax,
+        crs=CRS,
+        source=BASEMAP_AT_GRAY,
+        zoom=basemap_zoom,
+        attribution=False,
+        zorder=0,
+    )
+    ax.legend(
+        handles=[
+            Patch(facecolor="0.87", edgecolor="none", label="2025 besiedelt"),
+            Patch(
+                facecolor="#b2182b",
+                edgecolor="none",
+                label=f"2025 neu besiedelt ({len(highlighted):,} Zellen)",
+            ),
+        ],
+        loc="upper left",
+        bbox_to_anchor=(0, -0.025),
+        ncol=2,
+        frameon=False,
+        fontsize=7,
+        borderaxespad=0,
+    )
+    _style_map_axis(ax)
+    _add_scale_bar(
+        ax,
+        scale_length,
+        scale_label,
+        x_fraction=0.79 if not graz_zoom else 0.80,
+        y_fraction=-0.065,
+        clip_on=False,
+    )
+    _save_pair(fig, output_dir, stem)
+    plt.show()
+    return len(highlighted)
+
+
+def plot_newly_populated_cells_styria(
+    data: dict[str, object], output_dir: Path
+) -> int:
+    return _plot_newly_populated_cells(data, output_dir, graz_zoom=False)
+
+
+def plot_newly_populated_cells_graz(
+    data: dict[str, object], output_dir: Path
+) -> int:
+    return _plot_newly_populated_cells(data, output_dir, graz_zoom=True)
+
+
+def plot_newly_populated_cells_graz_by_population(
+    data: dict[str, object], output_dir: Path
+) -> pd.Series:
+    """Map newly populated Graz cells by their observed 2025 population."""
+    population_2025 = data["population_2025"]
+    population_2019_ids = set(data["population_2019"]["cell_id"])
+    newly_populated = population_2025.loc[
+        ~population_2025["cell_id"].isin(population_2019_ids)
+    ].copy()
+    municipalities = data["municipalities"]
+
+    centre = _projected_point(15.4395, 47.0707)
+    half_width = 8_000
+    xmin, xmax = centre.x - half_width, centre.x + half_width
+    ymin, ymax = centre.y - half_width, centre.y + half_width
+    context = population_2025.cx[xmin:xmax, ymin:ymax]
+    highlighted = newly_populated.cx[xmin:xmax, ymin:ymax]
+    if highlighted.empty:
+        raise ValueError("Keine 2025 neu besiedelten Zellen im Grazer Kartenausschnitt gefunden.")
+
+    norm = LogNorm(
+        vmin=max(1.0, float(highlighted["population"].min())),
+        vmax=float(highlighted["population"].max()),
+    )
+    fig, ax = new_figure(7.8, 6.2)
+    context.plot(
+        ax=ax,
+        color="0.87",
+        linewidth=0,
+        alpha=0.62,
+        rasterized=True,
+        zorder=1,
+    )
+    highlighted.plot(
+        ax=ax,
+        column="population",
+        cmap="viridis",
+        norm=norm,
+        linewidth=0,
+        rasterized=True,
+        zorder=3,
+    )
+    municipalities.boundary.plot(ax=ax, color="0.28", linewidth=0.22, zorder=4)
+    ax.set(xlim=(xmin, xmax), ylim=(ymin, ymax))
+    cx.add_basemap(
+        ax,
+        crs=CRS,
+        source=BASEMAP_AT_GRAY,
+        zoom=13,
+        attribution=False,
+        zorder=0,
+    )
+    ax.legend(
+        handles=[Patch(facecolor="0.87", edgecolor="none", label="2025 besiedelt")],
+        loc="upper left",
+        bbox_to_anchor=(0, -0.025),
+        frameon=False,
+        fontsize=7,
+        borderaxespad=0,
+    )
+    scalar = plt.cm.ScalarMappable(norm=norm, cmap="viridis")
+    colorbar = fig.colorbar(scalar, ax=ax, fraction=0.035, pad=0.02, shrink=0.82)
+    colorbar.set_label(
+        "Bevölkerung 2025 je neu besiedelter 100-m-Zelle (logarithmisch)"
+    )
+    _style_map_axis(ax)
+    _add_scale_bar(
+        ax,
+        2_000,
+        "2 km",
+        x_fraction=0.78,
+        y_fraction=-0.065,
+        clip_on=False,
+    )
+    _save_pair(
+        fig,
+        output_dir,
+        "figure_11c_newly_populated_cells_2025_graz_population",
+    )
+    plt.show()
+
+    return pd.Series(
+        {
+            "Zellen": len(highlighted),
+            "Bevölkerung insgesamt": highlighted["population"].sum(),
+            "Median je Zelle": highlighted["population"].median(),
+            "Maximum je Zelle": highlighted["population"].max(),
+        }
+    )

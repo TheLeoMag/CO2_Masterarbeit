@@ -3,6 +3,7 @@
 OGD/Public_Transport/Verbund_Daten/*
 OGD/Public_Transport/Verbund_Daten_work/*
 OGD/Public_Transport/Verbund_Linie_GTFS/*
+OGD/Popreg_100m/GMLs/*
 *.log
 *.tmp
 *.temp
