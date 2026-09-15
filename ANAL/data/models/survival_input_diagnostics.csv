@@ -1,0 +1,12 @@
+,value
+n_intervals,364843.0
+n_locations,9744.0
+n_events,1460.0
+n_cells,9255.0
+n_fachgruppe_strata,94.0
+strata_without_events,18.0
+strata_below_30_events,81.0
+left_truncated_location_share,0.9166666666666666
+events_per_covariate,146.0
+standardized_condition_number,5.797004876324771
+ambiguous_fachgruppe_sector_mappings,0.0

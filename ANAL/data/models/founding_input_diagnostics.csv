@@ -1,0 +1,12 @@
+,value
+n_observations,5016672.0
+n_cells,125431.0
+n_quarters,40.0
+n_births,812.0
+outcome_mean,0.0001618602930388911
+outcome_variance,0.00016183412654368856
+variance_to_mean,0.9998383390100729
+zero_share,0.9998381397069611
+births_with_zero_lagged_stock,746.0
+n_clusters,125431.0
+standardized_condition_number,7.458668572151305

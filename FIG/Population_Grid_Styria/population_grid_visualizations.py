@@ -356,6 +356,60 @@ def plot_concentration_curve(data: dict[str, object], output_dir: Path) -> pd.Da
     )
 
 
+def plot_concentration_curve_comparison(
+    data: dict[str, object], output_dir: Path
+) -> pd.DataFrame:
+    """Compare population concentration in the occupied cells of 2019 and 2025."""
+    styles = {
+        2019: {"color": "0.45", "linestyle": "--"},
+        2025: {"color": "black", "linestyle": "-"},
+    }
+    summary_rows = []
+
+    fig, ax = new_figure(6.5, 4.2)
+    for year in (2019, 2025):
+        values = np.sort(
+            data[f"population_{year}"]["population"].to_numpy(dtype=float)
+        )[::-1]
+        cumulative_population = np.cumsum(values) / values.sum()
+        cell_share = np.arange(1, len(values) + 1) / len(values)
+
+        ax.plot(
+            np.r_[0, cell_share],
+            np.r_[0, cumulative_population],
+            linewidth=1.6,
+            label=str(year),
+            **styles[year],
+        )
+
+        for population_share in (0.50, 0.80, 0.90):
+            minimum_cell_share = cell_share[
+                np.searchsorted(cumulative_population, population_share)
+            ]
+            summary_rows.append(
+                {
+                    "year": year,
+                    "population_share": population_share,
+                    "minimum_share_of_populated_cells": minimum_cell_share,
+                }
+            )
+
+    ax.plot([0, 1], [0, 1], color="0.75", linewidth=0.8, linestyle=":")
+    ax.set(
+        xlim=(0, 1),
+        ylim=(0, 1),
+        xlabel="Anteil der bewohnten 100-m-Zellen (absteigend sortiert)",
+        ylabel="Kumulierter Bevölkerungsanteil",
+    )
+    ax.xaxis.set_major_formatter(PercentFormatter(1))
+    ax.yaxis.set_major_formatter(PercentFormatter(1))
+    ax.legend(title="Rasterjahr", frameon=False, loc="lower right")
+    _save_pair(fig, output_dir, "figure_4b_population_concentration_curve_2019_2025")
+    plt.show()
+
+    return pd.DataFrame(summary_rows)
+
+
 def build_risk_cells(data: dict[str, object]) -> gpd.GeoDataFrame:
     raster = data["raster_table"]
     firm_counts = data["firm_counts"]
@@ -750,7 +804,9 @@ def _plot_newly_populated_cells(
         half_width = 8_000
         xmin, xmax = centre.x - half_width, centre.x + half_width
         ymin, ymax = centre.y - half_width, centre.y + half_width
-        context = population_2025.cx[xmin:xmax, ymin:ymax]
+        context = population_2025.loc[
+            population_2025["cell_id"].isin(population_2019_ids)
+        ].cx[xmin:xmax, ymin:ymax]
         highlighted = newly_populated.cx[xmin:xmax, ymin:ymax]
         stem = "figure_11b_newly_populated_cells_2025_graz"
         scale_length, scale_label = 2_000, "2 km"
@@ -767,9 +823,9 @@ def _plot_newly_populated_cells(
     fig, ax = new_figure(*figsize)
     context.plot(
         ax=ax,
-        color="0.87",
+        color="0.30" if graz_zoom else "0.87",
         linewidth=0,
-        alpha=0.62,
+        alpha=0.82 if graz_zoom else 0.62,
         rasterized=True,
         zorder=1,
     )
@@ -795,31 +851,63 @@ def _plot_newly_populated_cells(
         attribution=False,
         zorder=0,
     )
-    ax.legend(
-        handles=[
-            Patch(facecolor="0.87", edgecolor="none", label="2025 besiedelt"),
-            Patch(
-                facecolor="#b2182b",
-                edgecolor="none",
-                label=f"2025 neu besiedelt ({len(highlighted):,} Zellen)",
-            ),
-        ],
-        loc="upper left",
-        bbox_to_anchor=(0, -0.025),
-        ncol=2,
-        frameon=False,
-        fontsize=7,
-        borderaxespad=0,
-    )
+    if graz_zoom:
+        ax.legend(
+            handles=[
+                Patch(
+                    facecolor="0.30",
+                    edgecolor="none",
+                    label="2019 und 2025 besiedelt",
+                ),
+                Patch(
+                    facecolor="#b2182b",
+                    edgecolor="none",
+                    label="2025 neu besiedelt",
+                ),
+            ],
+            loc="center left",
+            bbox_to_anchor=(1.01, 0.5),
+            ncol=1,
+            frameon=False,
+            fontsize=7,
+            borderaxespad=0,
+        )
+    else:
+        ax.legend(
+            handles=[
+                Patch(facecolor="0.87", edgecolor="none", label="2025 besiedelt"),
+                Patch(
+                    facecolor="#b2182b",
+                    edgecolor="none",
+                    label=f"2025 neu besiedelt ({len(highlighted):,} Zellen)",
+                ),
+            ],
+            loc="upper left",
+            bbox_to_anchor=(0, -0.025),
+            ncol=2,
+            frameon=False,
+            fontsize=7,
+            borderaxespad=0,
+        )
     _style_map_axis(ax)
-    _add_scale_bar(
-        ax,
-        scale_length,
-        scale_label,
-        x_fraction=0.79 if not graz_zoom else 0.80,
-        y_fraction=-0.065,
-        clip_on=False,
-    )
+    if graz_zoom:
+        _add_scale_bar(
+            ax,
+            scale_length,
+            scale_label,
+            x_fraction=0.06,
+            y_fraction=0.06,
+        )
+        add_north_arrow(ax, x=0.94, y=0.06, length=0.08)
+    else:
+        _add_scale_bar(
+            ax,
+            scale_length,
+            scale_label,
+            x_fraction=0.79,
+            y_fraction=-0.065,
+            clip_on=False,
+        )
     _save_pair(fig, output_dir, stem)
     plt.show()
     return len(highlighted)
@@ -833,8 +921,46 @@ def plot_newly_populated_cells_styria(
 
 def plot_newly_populated_cells_graz(
     data: dict[str, object], output_dir: Path
-) -> int:
-    return _plot_newly_populated_cells(data, output_dir, graz_zoom=True)
+) -> pd.DataFrame:
+    """Plot Figure 11b and summarize population change inside its map extent."""
+    _plot_newly_populated_cells(data, output_dir, graz_zoom=True)
+
+    centre = _projected_point(15.4395, 47.0707)
+    half_width = 8_000
+    xmin, xmax = centre.x - half_width, centre.x + half_width
+    ymin, ymax = centre.y - half_width, centre.y + half_width
+    population_2019 = data["population_2019"].cx[xmin:xmax, ymin:ymax]
+    population_2025 = data["population_2025"].cx[xmin:xmax, ymin:ymax]
+    population_2019_ids = set(data["population_2019"]["cell_id"])
+    newly_populated = population_2025.loc[
+        ~population_2025["cell_id"].isin(population_2019_ids)
+    ]
+
+    cells_2019 = len(population_2019)
+    cells_2025 = len(population_2025)
+    people_2019 = float(population_2019["population"].sum())
+    people_2025 = float(population_2025["population"].sum())
+    cell_change = cells_2025 - cells_2019
+    population_change = people_2025 - people_2019
+
+    return pd.DataFrame(
+        [
+            {
+                "cells_2019": cells_2019,
+                "cells_2025": cells_2025,
+                "new_cells_2025": len(newly_populated),
+                "cell_change": cell_change,
+                "cell_change_pct": cell_change / cells_2019 * 100,
+                "population_2019": people_2019,
+                "population_2025": people_2025,
+                "population_in_new_cells_2025": float(
+                    newly_populated["population"].sum()
+                ),
+                "population_change": population_change,
+                "population_change_pct": population_change / people_2019 * 100,
+            }
+        ]
+    )
 
 
 def plot_newly_populated_cells_graz_by_population(

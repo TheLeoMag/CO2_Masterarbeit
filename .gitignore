@@ -22,3 +22,5 @@ ANAL/data/routing/**/*_sample_parts/
 **/*accessibility_parts*/
 ANAL/data/routing/work/
 ANAL/data/routing/features/*/fachgruppe_accessibility_quarter_100m.parquet/
+
+AIRGAPPED_RESULTS/*
