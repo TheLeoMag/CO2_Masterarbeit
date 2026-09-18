@@ -801,7 +801,7 @@ def _plot_newly_populated_cells(
 
     if graz_zoom:
         centre = _projected_point(15.4395, 47.0707)
-        half_width = 8_000
+        half_width = 3_000
         xmin, xmax = centre.x - half_width, centre.x + half_width
         ymin, ymax = centre.y - half_width, centre.y + half_width
         context = population_2025.loc[
@@ -809,9 +809,9 @@ def _plot_newly_populated_cells(
         ].cx[xmin:xmax, ymin:ymax]
         highlighted = newly_populated.cx[xmin:xmax, ymin:ymax]
         stem = "figure_11b_newly_populated_cells_2025_graz"
-        scale_length, scale_label = 2_000, "2 km"
+        scale_length, scale_label = 1_000, "1 km"
         figsize = (7.2, 6.2)
-        basemap_zoom = 13
+        basemap_zoom = 14
     else:
         context = population_2025
         highlighted = newly_populated
@@ -926,7 +926,7 @@ def plot_newly_populated_cells_graz(
     _plot_newly_populated_cells(data, output_dir, graz_zoom=True)
 
     centre = _projected_point(15.4395, 47.0707)
-    half_width = 8_000
+    half_width = 3_000
     xmin, xmax = centre.x - half_width, centre.x + half_width
     ymin, ymax = centre.y - half_width, centre.y + half_width
     population_2019 = data["population_2019"].cx[xmin:xmax, ymin:ymax]
