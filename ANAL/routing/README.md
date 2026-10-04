@@ -15,6 +15,8 @@ Run each notebook once, in order, from a clean kernel:
 
 The notebooks locate the project root by looking for `ANAL/` and `OGD/`, so they can be launched from the repository root or a subdirectory. `destination_builders.py` contains destination-construction helpers; `routing_utils.py` contains shared output-schema helpers.
 
+Steps 03 and 06–10 have a manual `CELL_SIZE` setting. Use the same value in each of those notebooks and in step 01. Resolution-dependent routing products are written below `ANAL/data/<resolution>/routing/`; destinations and Valhalla graphs remain shared below `ANAL/data/routing/`.
+
 ## Required inputs
 
 - `OGD/GIP/2015.osm.pbf` through `OGD/GIP/2025.osm.pbf`
@@ -42,17 +44,17 @@ Step 06 processes 2015–2025 with resumable checkpoints below `ANAL/data/routin
 
 ## Canonical outputs
 
-- `ANAL/data/routing/inputs/active_routing_cells_100m.parquet`
+- `ANAL/data/<resolution>/routing/inputs/active_routing_cells_<resolution>.parquet`
 - `ANAL/data/routing/destinations/austria-<year>-pois.geoparquet`
-- `ANAL/data/routing/features/<year>/nearest_infrastructure_100m.parquet`
-- `ANAL/data/routing/features/<year>/accessibility_potentials_100m.parquet`
-- `ANAL/data/routing/features/<year>/pedestrian_accessibility_quarter_100m.parquet`
-- `ANAL/data/routing/features/<year>/fachgruppe_accessibility_quarter_100m.parquet/`
-- `ANAL/data/routing/features/<year>/firm_accessibility_quarter_100m.parquet`
-- `ANAL/data/routing/status/graph_build_status.csv`
-- `ANAL/data/routing/status/routing_feature_status.csv`
-- `ANAL/data/routing/status/accessibility_skipped_origins.csv`
-- `ANAL/data/routing/reports/routing_validation_summary.csv`
+- `ANAL/data/<resolution>/routing/features/<year>/nearest_infrastructure_<resolution>.parquet`
+- `ANAL/data/<resolution>/routing/features/<year>/accessibility_potentials_<resolution>.parquet`
+- `ANAL/data/<resolution>/routing/features/<year>/pedestrian_accessibility_quarter_<resolution>.parquet`
+- `ANAL/data/<resolution>/routing/features/<year>/fachgruppe_accessibility_quarter_<resolution>.parquet/`
+- `ANAL/data/<resolution>/routing/features/<year>/firm_accessibility_quarter_<resolution>.parquet`
+- `ANAL/data/routing/status/graph_build_status.csv` (shared)
+- `ANAL/data/<resolution>/routing/status/routing_feature_status.csv`
+- `ANAL/data/<resolution>/routing/status/accessibility_skipped_origins.csv`
+- `ANAL/data/<resolution>/routing/reports/routing_validation_summary.csv`
 
 Car accessibility is cumulative at 5, 10, 15, and 30 minutes. Pedestrian accessibility is cumulative at 5 and 10 minutes and includes parent-station-deduplicated stops, weekday departures, and route counts. Public-transport stops are handled by pedestrian isochrones and are not included in nearest-infrastructure routing.
 

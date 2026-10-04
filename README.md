@@ -61,6 +61,12 @@ Then run the numbered analysis in order:
 
 Detailed routing requirements, inputs, and outputs are documented in [`ANAL/routing/README.md`](ANAL/routing/README.md).
 
+## Resolution-specific runs
+
+Steps 01, 03, and 06–10 have a clearly marked `CELL_SIZE` setting near the top of each notebook. Set the same integer value in every relevant notebook, restart each kernel, and run steps 01 → 03 → 06 → 07 → 08 → 09 → 10. Supported values are 100 m or larger multiples of 100 m, such as 200 m, 500 m, and 1000 m.
+
+Each run is stored separately below `ANAL/data/<resolution>/`, for example `ANAL/data/500m/`. The shared routing destination catalogue and Valhalla road graphs remain below `ANAL/data/routing/`. Existing outputs in the former flat `ANAL/data/` layout are not reused or changed.
+
 ## Environment
 
 Create a Python environment and install the shared dependencies:

@@ -116,7 +116,7 @@ def load_inputs(project_dir: Path) -> dict[str, object]:
     population = population_by_year[2025]
 
     raster_table = pd.read_parquet(
-        project_dir / "ANAL" / "data" / "raster_100m_styria.geoparquet",
+        project_dir / "ANAL" / "data" / "100m" / "raster_100m_styria.geoparquet",
         columns=[
             "grid_id",
             "easting",
@@ -129,10 +129,10 @@ def load_inputs(project_dir: Path) -> dict[str, object]:
     raster_table["municipality_id"] = _normalise_id(raster_table["municipality_id"])
 
     firms = pd.read_parquet(
-        project_dir / "ANAL" / "data" / "firms_assigned_100m.geoparquet",
-        columns=["grid_id_100m"],
+        project_dir / "ANAL" / "data" / "100m" / "firms_assigned_100m.geoparquet",
+        columns=["grid_id"],
     )
-    firm_counts = firms.groupby("grid_id_100m").size().rename("firm_count")
+    firm_counts = firms.groupby("grid_id").size().rename("firm_count")
 
     municipalities = gpd.read_file(
         project_dir / "OGD" / "Gemeindegrenzen.zip",
