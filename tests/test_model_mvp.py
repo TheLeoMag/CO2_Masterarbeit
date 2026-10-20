@@ -128,6 +128,90 @@ def test_all_notebooks_compile_and_are_self_contained():
                 assert not c.outputs
 
 
+def survival_preparation_namespace(tmp_path, size, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    nb = notebook(size)
+    ns = {'display': lambda value: None}
+    exec(config_source(nb, {'make_plots': False}), ns)
+    for identifier in ['runtime-helpers', 'prepare-founding-function', 'prepare-survival-function']:
+        exec(source(nb, identifier), ns)
+    return ns
+
+
+@pytest.mark.parametrize('size', [100, 200, 500])
+def test_unrouted_invalid_metadata_does_not_block_survival(size, tmp_path, monkeypatch):
+    make_inputs(tmp_path, size)
+    ns = survival_preparation_namespace(tmp_path, size, monkeypatch)
+    expected = ns['prepare_survival']()
+    firms = pd.read_parquet(ns['FIRMS_PATH'])
+    extra = firms.iloc[[0]].copy()
+    extra['firm_id'] = 999
+    extra['founding_date'] = pd.NaT
+    # Invalid metadata outside routing must not change the model sample.
+    extra['exit_observed'] = 2
+    firms['exit_observed'] = firms.exit_observed.astype(int)
+    pd.concat([firms, extra], ignore_index=True).to_parquet(ns['FIRMS_PATH'], index=False)
+    actual = ns['prepare_survival']()
+    pd.testing.assert_frame_equal(actual, expected)
+    audit = json.loads(next(row['detail'] for row in reversed(ns['diagnostic_rows'])
+                            if row['check'] == 'source_date_coverage'))
+    assert audit['source_firms'] == 101
+    assert audit['unrouted_source_firms'] == 1
+    assert audit['source_missing_founding_dates'] == 1
+    assert audit['source_invalid_exit_flags'] == 1
+    assert audit['routed_missing_founding_dates'] == 0
+    assert audit['routed_invalid_exit_flags'] == 0
+    ns['con'].close()
+
+
+@pytest.mark.parametrize(('defect', 'message'), [
+    ('missing_founding', 'missing_founding_dates=1; invalid_exit_flags=0'),
+    ('invalid_flag', 'missing_founding_dates=0; invalid_exit_flags=1'),
+    ('missing_flag', 'missing_founding_dates=0; invalid_exit_flags=1'),
+    ('missing_exit', 'observed_exits_without_dates=1; exits_before_founding=0'),
+    ('reversed_dates', 'observed_exits_without_dates=0; exits_before_founding=1'),
+    ('missing_metadata', 'Routed firms missing source metadata: firms=1'),
+])
+def test_invalid_routed_metadata_still_fails_before_interval_join(defect, message, tmp_path, monkeypatch, capsys):
+    make_inputs(tmp_path, 500)
+    ns = survival_preparation_namespace(tmp_path, 500, monkeypatch)
+    firms = pd.read_parquet(ns['FIRMS_PATH'])
+    if defect == 'missing_founding':
+        firms.loc[1, 'founding_date'] = pd.NaT
+    elif defect in ['invalid_flag', 'missing_flag']:
+        firms['exit_observed'] = firms.exit_observed.astype(float)
+        firms.loc[1, 'exit_observed'] = 2. if defect == 'invalid_flag' else np.nan
+    elif defect == 'missing_exit':
+        firms.loc[1, 'exit_date'] = pd.NaT
+    elif defect == 'reversed_dates':
+        firms.loc[1, 'exit_date'] = pd.Timestamp('2000-01-01')
+    else:
+        firms = firms.drop(index=1)
+    firms.to_parquet(ns['FIRMS_PATH'], index=False)
+    with pytest.raises(ValueError, match=message):
+        ns['prepare_survival']()
+    assert ns['diagnostic_rows'][-1]['status'] == 'FAIL'
+    assert 'Joined survival data:' not in capsys.readouterr().out
+    ns['con'].close()
+
+
+def test_unrouted_missing_dates_pipeline_and_cached_audit(tmp_path, monkeypatch):
+    make_inputs(tmp_path, 500)
+    path = tmp_path/'ANAL/data/500m/firms_assigned_500m.geoparquet'
+    firms = pd.read_parquet(path)
+    extra = firms.iloc[[0]].copy()
+    extra['firm_id'], extra['founding_date'] = 999, pd.NaT
+    pd.concat([firms, extra], ignore_index=True).to_parquet(path, index=False)
+    first = execute(tmp_path, 500, monkeypatch)
+    assert first['manifest']['status'] == 'completed'
+    second = execute(tmp_path, 500, monkeypatch, {'run_nb2': False, 'run_cox': False})
+    assert second['cox_fit']['loaded_from_cache']
+    manifest = json.loads((second['BUNDLE_DIR']/'model_run_manifest.json').read_text(encoding='utf-8'))
+    audit = next(row for row in manifest['diagnostics'] if row['check'] == 'source_date_coverage')
+    assert json.loads(audit['detail'])['source_missing_founding_dates'] == 1
+    assert json.loads(audit['detail'])['routed_missing_founding_dates'] == 0
+
+
 def test_contrasts_use_full_covariance_and_joint_tests_have_no_fake_effect(tmp_path, monkeypatch):
     ns = namespace(tmp_path, monkeypatch)
     fit = {'names': ['a', 'b'], 'params': [1., .4], 'covariance': [[.09, .03], [.03, .04]]}
