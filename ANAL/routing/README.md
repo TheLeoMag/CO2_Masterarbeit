@@ -29,6 +29,19 @@ Steps 03 and 06–10 have a manual `CELL_SIZE` setting. Use the same value in ea
 
 The annual destination catalogs are written to `ANAL/data/routing/destinations/`. They combine all generic public-transport stops, GIP-derived motorway exits, higher-education sites, and curated regional/urban centres. Railway stations are not extracted or routed as a separate destination type; stops located at railway stations remain available as ordinary `pt_stop` records.
 
+Step 02 defaults to `OVERWRITE=True`, so rerunning it rebuilds all requested
+destination catalogs from the prepared sources. Step 06 resumes existing feature
+files/checkpoints: after changing company, population or destination inputs, use
+a fresh resolution-specific feature/work folder for the final run. Preserve an
+earlier run in ARCHIVE if needed; resume only with the same inputs and settings.
+
+Nearest-infrastructure travel times use a Euclidean candidate prefilter to keep
+runtime feasible. They are minima among the examined destinations; the global
+minimum over every destination is not guaranteed. Motorway connections represent
+GIP ramp clusters with entry and/or exit connections, using representative cluster
+points. The methodology draft describes this operationalisation. Disconnected
+matrix batches are split so valid pairs remain available.
+
 ## Valhalla setup
 
 Steps 05 and 06 require WSL2 and Docker in the configured WSL distribution (`Ubuntu` by default). Import and tag the pinned Valhalla image before disconnecting an air-gapped machine:
@@ -59,3 +72,31 @@ Step 06 processes 2015–2025 with resumable checkpoints below `ANAL/data/routin
 Car accessibility is cumulative at 5, 10, 15, and 30 minutes. Pedestrian accessibility is cumulative at 5 and 10 minutes and includes parent-station-deduplicated stops, weekday departures, and route counts. Public-transport stops are handled by pedestrian isochrones and are not included in nearest-infrastructure routing.
 
 Do not start model estimation until step 07 completes without a `CHECK` result.
+
+Step 07 scans Parquet with DuckDB, with a 2 GB memory limit and disk spilling if
+needed. It checks exact origin/quarter and firm-event coverage, each Fachgruppe
+partition, finite non-negative masses, contour nesting, route statuses and full
+matching of firm and grid reference values. Documented isochrone exclusions remain
+explicit. The report keeps the existing CSV format; no new dependencies are added.
+
+Step 01 accepts complete ISO and Austrian day-first event dates. Genuine blank
+dates remain missing; malformed dates, numeric serials, partial dates and reversed
+founding/exit dates stop preparation. `DATE_DAYFIRST` makes the local date convention
+explicit. Steps 01 and 06 use the full quarter end, including events later on its
+last calendar day. Rerun 01 before generating features from changed source dates.
+
+## Notebook progress
+
+Notebook 06 uses a native HTML progress bar with IPython display-ID updates.
+It requires no widgets, JupyterLab extensions or terminal cursor control.
+Each stage retains one output showing count, percentage, elapsed time and ETA;
+`PROGRESS_UPDATE_SECONDS = 2.0` limits refreshes to once every two seconds.
+Resumed stages include their previous completed count and calculate their rate
+from newly processed origins. Checkpoint messages remain separate.
+
+If rich display is unavailable, the same counter falls back to a text bar logged
+at most once per minute, plus start/end summaries. A display error cannot stop
+routing. Copying this update requires only notebook 06; retain the real machine's
+existing path, image, year and routing settings. Restart the kernel before the
+next run/resume to load the new helper. Feature calculations and checkpoint
+handling are unchanged.

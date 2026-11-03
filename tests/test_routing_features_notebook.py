@@ -8,7 +8,9 @@ import json
 import math
 from pathlib import Path
 import shutil
+import threading
 import time
+from types import SimpleNamespace
 
 import duckdb
 import geopandas as gpd
@@ -19,7 +21,6 @@ import pyarrow.parquet as pq
 import pytest
 import requests
 from shapely.geometry import Point, box, shape
-from tqdm.auto import tqdm
 
 from ANAL.routing.routing_utils import (
     ACCESS_MINUTES,
@@ -41,6 +42,8 @@ def notebook_namespace(fachgruppe_ids_for_test: list[str] | None = None) -> dict
         "FACHGRUPPE_IDS": fachgruppe_ids_for_test or ["101", "102"],
         "START_YEAR": 2015,
         "END_YEAR": 2025,
+        "CELL_SIZE": 100,
+        "RESOLUTION": "100m",
         "ROUTING_DATA": Path("."),
         "FEATURE_ROOT": Path("."),
         "POPULATION_ACCESS_CONTOURS_MIN": list(ACCESS_MINUTES),
@@ -48,12 +51,121 @@ def notebook_namespace(fachgruppe_ids_for_test: list[str] | None = None) -> dict
         "NEAREST_INFRA_DESTINATION_STEP_SHARE": 0.10,
         "DESTINATION_CHUNK_SIZE": 100,
     })
-    for cell_index in (3, 7, 8):
-        source = "".join(notebook["cells"][cell_index]["source"])
-        exec(compile(source, f"notebook-cell-{cell_index}", "exec"), namespace)
-    orchestration = "".join(notebook["cells"][11]["source"])
+    cells = {cell.get("id"): "".join(cell["source"]) for cell in notebook["cells"]}
+    for cell_id in ("progress-display", "48ba6cda", "433c477a", "8b608cd1"):
+        exec(compile(cells[cell_id], f"notebook-cell-{cell_id}", "exec"), namespace)
+    orchestration = cells["30e73ef1"]
     exec(compile(orchestration.split("if RUN_MODE not in")[0], "notebook-orchestration-definitions", "exec"), namespace)
     return namespace
+
+
+def progress_namespace(kernel=True):
+    """Capture display protocol calls without requiring a browser or sleeping."""
+    notebook = json.loads(NOTEBOOK_PATH.read_text(encoding="utf-8"))
+    source = next("".join(c["source"]) for c in notebook["cells"] if c.get("id") == "progress-display")
+    namespace = dict(math=math, threading=threading, time=time)
+    exec(compile(source, "progress-display", "exec"), namespace)
+    clock, displays, updates = [0.0], [], []
+    namespace["time"] = SimpleNamespace(monotonic=lambda: clock[0])
+    namespace["get_ipython"] = lambda: SimpleNamespace(kernel=object()) if kernel else None
+    handle = SimpleNamespace(update=lambda bundle, **kwargs: updates.append(bundle))
+    def show(bundle, **kwargs):
+        assert kwargs == {"raw": True, "display_id": True}
+        displays.append(bundle)
+        return handle
+    namespace["display"] = show
+    return namespace, clock, displays, updates, handle
+
+
+def test_progress_updates_one_display_and_throttles_origin_events():
+    namespace, clock, displays, updates, _ = progress_namespace()
+    progress = namespace["NotebookProgress"](2000, "Routing <example>")
+    for _ in range(1000):
+        progress.update()
+    assert len(displays) == 1 and not updates
+    assert "&lt;example&gt;" in displays[0]["text/html"]
+    clock[0] = 2.1
+    progress.update(detail="12 matrix requests")
+    assert len(updates) == 1
+    assert "1,001/2,000" in updates[0]["text/plain"]
+    assert "12 matrix requests" in updates[0]["text/plain"]
+    progress.close()
+    progress.close()
+    assert len(displays) == 1 and len(updates) == 2
+    assert "Stopped" in updates[-1]["text/plain"]
+
+
+def test_progress_resume_eta_uses_only_newly_processed_origins():
+    namespace, clock, _, updates, _ = progress_namespace()
+    progress = namespace["NotebookProgress"](100, "Resume", initial=90)
+    clock[0] = 2.0
+    progress.update()
+    assert "ETA 00:00:18" in updates[-1]["text/plain"]
+    progress.update(9)
+    progress.close()
+    assert "100/100" in updates[-1]["text/plain"]
+    assert "Complete" in updates[-1]["text/plain"]
+
+
+def test_progress_concurrent_updates_preserve_counts():
+    namespace, _, displays, updates, _ = progress_namespace()
+    progress = namespace["NotebookProgress"](1000, "Parallel routing")
+    with ThreadPoolExecutor(max_workers=8) as executor:
+        list(executor.map(lambda _: progress.update(), range(1000)))
+    progress.close()
+    assert progress.n == 1000
+    assert len(displays) == 1 and len(updates) == 1
+    assert "100.0%" in updates[-1]["text/plain"]
+
+
+def test_progress_falls_back_to_coarse_logs_if_display_fails(capsys):
+    namespace, clock, displays, _, handle = progress_namespace()
+    progress = namespace["NotebookProgress"](1000, "Routing")
+    def broken_display(*args, **kwargs):
+        raise RuntimeError("Display transport unavailable")
+    handle.update = broken_display
+    clock[0] = 2.0
+    progress.update()
+    assert not progress.rich
+    for _ in range(100):
+        progress.update()
+    assert len(capsys.readouterr().out.splitlines()) == 1
+    clock[0] = 62.0
+    progress.update()
+    progress.close()
+    assert len(capsys.readouterr().out.splitlines()) == 2
+    assert len(displays) == 1 and progress.n == 102
+
+
+def test_progress_without_a_notebook_does_not_print_per_origin(capsys):
+    namespace, clock, displays, updates, _ = progress_namespace(kernel=False)
+    progress = namespace["NotebookProgress"](1000, "Terminal")
+    for _ in range(1000):
+        progress.update()
+    progress.close()
+    assert not displays and not updates
+    assert len(capsys.readouterr().out.splitlines()) == 2
+
+
+@pytest.mark.parametrize("threaded", [False, True])
+def test_progress_real_kernel_keeps_one_saved_output(threaded):
+    import nbformat
+    from nbclient import NotebookClient
+    notebook = json.loads(NOTEBOOK_PATH.read_text(encoding="utf-8"))
+    source = next("".join(c["source"]) for c in notebook["cells"] if c.get("id") == "progress-display")
+    work = "progress = NotebookProgress(2000, 'Kernel test')\nfor _ in range(2000): progress.update()\nprogress.close()\n"
+    if threaded:
+        work = ("from concurrent.futures import ThreadPoolExecutor\ndef stage():\n"
+                + "\n".join("    "+line for line in work.splitlines())
+                + "\nwith ThreadPoolExecutor(max_workers=1) as pool: pool.submit(stage).result()\n")
+    source = "import math, threading, time\n"+source+"\n"+work
+    fixture = nbformat.v4.new_notebook(cells=[nbformat.v4.new_code_cell(source)])
+    executed = NotebookClient(fixture, timeout=60, kernel_name="python3").execute()
+    outputs = executed.cells[0].outputs
+    assert len(outputs) == 1 and outputs[0].output_type == "display_data"
+    assert "2,000/2,000" in outputs[0].data["text/plain"]
+    assert "Complete" in outputs[0].data["text/plain"]
+    assert "<progress" in outputs[0].data["text/html"]
 
 
 def accessibility_frame(namespace: dict, year: int = 2015) -> pd.DataFrame:
@@ -477,7 +589,7 @@ def test_firm_output_keeps_diagonal_and_rejects_zero_same_fachgruppe(tmp_path: P
     cells.to_parquet(cell_path, index=False)
     firm_panel = pd.DataFrame({
         "firm_id": ["f1", "f2"],
-        "grid_id_100m": ["g1", "g1"],
+        "grid_id": ["g1", "g1"],
         "Fachgruppe_ID": pd.Series(["101", "102"], dtype="string"),
         "Fachgruppe_ID_normalized": pd.Series(["101", "102"], dtype="string"),
         "year": [2015, 2015],
@@ -621,3 +733,180 @@ def test_partitioned_writer_coalesces_batches_into_128k_row_groups(tmp_path: Pat
     metadata = pq.ParquetFile(files[0]).metadata
     assert metadata.num_row_groups == 2
     assert [metadata.row_group(index).num_rows for index in range(2)] == [128_000, 1]
+
+
+@pytest.mark.parametrize("source_ids,target_ids", [([0], [0, 1]), ([0, 1], [0]), ([0, 1, 2], [0, 1, 2]), ([0, 2], [4, 6])])
+def test_disconnected_matrix_batches_preserve_valid_pairs_and_order(tmp_path, monkeypatch, source_ids, target_ids):
+    monkeypatch.chdir(tmp_path)
+    namespace = notebook_namespace()
+    namespace["valhalla_endpoint"] = lambda: "http://mock"
+    calls = []
+    def post(url, json, timeout):
+        sources = [int(row["lon"]) for row in json["sources"]]
+        targets = [int(row["lon"]) for row in json["targets"]]
+        calls.append((sources, targets))
+        if len({i % 2 for i in sources + targets}) != 1:
+            return SimpleNamespace(ok=False, status_code=400, text="Locations are in unconnected regions.")
+        matrix = [[{"time": 100 * i + j + 1, "distance": 1.} for j in targets] for i in sources]
+        return SimpleNamespace(ok=True, json=lambda: {"sources_to_targets": matrix})
+    namespace["requests"] = SimpleNamespace(post=post, RequestException=requests.RequestException)
+    sources = pd.DataFrame({"lat": 47., "lon": source_ids})
+    targets = pd.DataFrame({"lat": 47., "lon": target_ids})
+    actual = namespace["route_matrix"](sources, targets)
+    expected = [[{"time": 100 * i + j + 1, "distance": 1.} if i % 2 == j % 2 else {"status": 1}
+                 for j in target_ids] for i in source_ids]
+    assert actual == expected
+    if len({i % 2 for i in source_ids + target_ids}) == 1:
+        assert len(calls) == 1
+
+
+@pytest.mark.parametrize("matrix", [[], [[None]], [[{}, {}]]])
+def test_matrix_rejects_truncated_or_malformed_results(tmp_path, monkeypatch, matrix):
+    monkeypatch.chdir(tmp_path)
+    namespace = notebook_namespace()
+    namespace["valhalla_endpoint"] = lambda: "http://mock"
+    namespace["requests"] = SimpleNamespace(post=lambda *a, **k: SimpleNamespace(
+        ok=True, json=lambda: {"sources_to_targets": matrix}), RequestException=requests.RequestException)
+    frame = pd.DataFrame({"lat": [47.], "lon": [15.]})
+    with pytest.raises(RuntimeError, match="incomplete or malformed"):
+        namespace["route_matrix"](frame, frame)
+
+
+@pytest.mark.parametrize("column,value", [("founding_date", "not-a-date"), ("exit_date", "NaT"), ("exit_date", "2020-13-10"), ("exit_date", 44205)])
+def test_routing_rejects_corrupt_normalized_dates(tmp_path, monkeypatch, column, value):
+    monkeypatch.chdir(tmp_path)
+    namespace=notebook_namespace()
+    frame=pd.DataFrame({"firm_id":[1],"grid_id":["g1"],"Fachgruppe_ID":["101"],
+        "founding_date":["2020-05-04"],"exit_date":["2021-01-01"]})
+    frame[column]=[value]
+    path=tmp_path/'firms.parquet'
+    frame.to_parquet(path,index=False)
+    namespace['FIRMS_PATH']=path
+    with pytest.raises(ValueError,match='Invalid normalized'):
+        namespace['load_firm_accessibility_source']()
+
+
+def validation_inputs(tmp_path, monkeypatch):
+    """Use the actual 06 writers, including partitioned long output, as 07 inputs."""
+    import hashlib
+    monkeypatch.chdir(tmp_path)
+    namespace = notebook_namespace()
+    data = tmp_path / "data"
+    features = data / "routing/features/2015"
+    features.mkdir(parents=True)
+    panel_path = data / "panel.parquet"
+    wide = accessibility_frame(namespace)
+    pd.DataFrame({"grid_id": ["g1", "g2"]}).to_parquet(panel_path, index=False)
+    active_path = data / "active.parquet"
+    pd.DataFrame({"grid_id": ["g1", "g2"]}).to_parquet(active_path, index=False)
+    firms_path = data / "firms_assigned_100m.geoparquet"
+    pd.DataFrame({"firm_id": [1, 2], "grid_id": ["g1", "g2"], "Fachgruppe_ID": ["101", "102"],
+        "founding_date": pd.to_datetime(["2014-01-01", "2015-12-31 12:00"], format="mixed"),
+        "exit_date": pd.to_datetime(["2015-06-30 12:00", None]), "exit_observed": [True, False]}).to_parquet(firms_path, index=False)
+    namespace["FIRMS_PATH"] = firms_path
+    main = features / "accessibility_potentials_100m.parquet"
+    walk = features / "pedestrian_accessibility_quarter_100m.parquet"
+    long = features / "fachgruppe_accessibility_quarter_100m.parquet"
+    firm = features / "firm_accessibility_quarter_100m.parquet"
+    namespace["output_paths"] = lambda _: {"firm_accessibility": firm}
+    wide.to_parquet(main, index=False)
+    namespace["generate_firm_accessibility_output"](2015, main)
+    # These boundaries used to omit firm 2 and add a spurious Q3 to firm 1.
+    output = pd.read_parquet(firm)
+    assert list(zip(output.firm_id, output.quarter)) == [(1, 1), (1, 2), (2, 4)]
+    assert output.included_in_lagged_stock.tolist() == [True, True, False]
+    namespace["split_fachgruppe_accessibility"](main, walk, long)
+    types = namespace["DESTINATION_TYPES"]
+    nearest = pd.DataFrame({"grid_id": ["g1", "g2"], "year": [2015, 2015]})
+    for kind in types:
+        nearest[f"tt_{kind}_min"] = [2., 3.]
+        nearest[f"km_{kind}"] = [1., 2.]
+        nearest[f"nearest_{kind}_id"] = kind + "_target"
+        nearest[f"routing_status_{kind}"] = "ok"
+    nearest_path = features / "nearest_infrastructure_100m.parquet"
+    nearest.to_parquet(nearest_path, index=False)
+    poi_dir = data / "pois"
+    poi_dir.mkdir()
+    pd.DataFrame({"poi_id": [t + "_target" for t in types], "poi_type": types, "year": 2015}).to_parquet(poi_dir / "austria-2015-pois.geoparquet", index=False)
+    status_path = data / "status.csv"
+    pd.DataFrame({"year": [2015], "status": ["done"], "firm_mass_source": ["active_firms_tminus1"]}).to_csv(status_path, index=False)
+    skip_path = data / "skips.csv"
+    pd.DataFrame(columns=["year", "grid_id", "lat", "lon", "reason"]).to_csv(skip_path, index=False)
+    pbf_dir = data / "pbf"
+    pbf_dir.mkdir()
+    (pbf_dir / "2015.osm.pbf").write_bytes(b"software fixture")
+    graph_path = data / "graphs.csv"
+    pd.DataFrame({"year": [2015], "status": ["done"], "manifest_path_wsl": ["fixture"],
+        "valhalla_image": ["fixture"], "valhalla_image_id": ["fixture"],
+        "gip_snapshot_sha256": [hashlib.sha256(b"software fixture").hexdigest()]}).to_csv(graph_path, index=False)
+    scope = dict(Path=Path, hashlib=hashlib, json=json, duckdb=duckdb, np=np, pd=pd,
+        ACCESS_MINUTES=ACCESS_MINUTES, main_access_columns=main_access_columns,
+        PANEL_PATH=panel_path, ACTIVE_CELLS_PATH=active_path, ANAL_DATA=data,
+        ROUTING_DATA=data / "routing", STATUS_PATH=status_path, SKIPPED_ACCESSIBILITY_PATH=skip_path,
+        GRAPH_STATUS_PATH=graph_path, POI_DIR=poi_dir, PBF_DIR=pbf_dir, REPORT_PATH=data / "report.csv",
+        WORK_ROOT=data / "routing/work/routing_features", YEARS=[2015], RESOLUTION="100m",
+        FACHGRUPPE_IDS=["101", "102"], GRAPH_VALHALLA_IMAGE="fixture", GRAPH_VALHALLA_IMAGE_ID="fixture")
+    return scope, dict(nearest=nearest_path, main=main, walk=walk, long=long, firm=firm)
+
+
+def execute_validation(scope):
+    path = NOTEBOOK_PATH.with_name("07_validate_outputs.ipynb")
+    nb = json.loads(path.read_text(encoding="utf-8"))
+    source = "".join(next(c["source"] for c in nb["cells"] if c.get("id") == "8dfe46ec"))
+    exec(compile(source, "actual-notebook-07", "exec"), scope)
+
+
+def test_07_accepts_actual_writer_outputs_without_pandas_parquet_loads(tmp_path, monkeypatch):
+    scope, _ = validation_inputs(tmp_path, monkeypatch)
+    def forbidden(*args, **kwargs):
+        raise AssertionError("07 must not materialize the large products in Pandas")
+    monkeypatch.setattr(pd, "read_parquet", forbidden)
+    execute_validation(scope)
+    assert scope["validation"].status.eq("OK").all()
+
+
+@pytest.mark.parametrize("defect", ["nearest_grid", "nearest_year", "nearest_nan", "main_grid", "main_period",
+    "infinity", "missing_schema", "missing_long_quarter", "duplicate_long_key", "unmatched_firm", "missing_firm_quarter", "wrong_long_mass"])
+def test_07_rejects_incomplete_or_inconsistent_products(tmp_path, monkeypatch, defect):
+    scope, paths = validation_inputs(tmp_path, monkeypatch)
+    if defect in {"missing_long_quarter", "duplicate_long_key", "wrong_long_mass"}:
+        for i, path in enumerate(sorted(paths["long"].rglob("*.parquet"))):
+            frame = pq.ParquetFile(path).read().to_pandas()
+            if defect == "missing_long_quarter": frame = frame.loc[frame.quarter.ne(4)]
+            if defect == "duplicate_long_key" and i == 0: frame = pd.concat([frame, frame.iloc[:1]], ignore_index=True)
+            if defect == "wrong_long_mass" and i == 0: frame.loc[0, "same_fachgruppe_firms_access_30min"] = 999.
+            frame.to_parquet(path, index=False)
+    else:
+        product = "nearest" if defect.startswith("nearest") else "firm" if defect in {"unmatched_firm", "missing_firm_quarter"} else "main"
+        path = paths[product]
+        frame = pd.read_parquet(path)
+        if defect in {"nearest_grid", "main_grid", "unmatched_firm"}: frame.loc[0, "grid_id"] = "unmatched_grid"
+        elif defect == "nearest_year": frame.loc[0, "year"] = 1900
+        elif defect == "nearest_nan": frame.loc[0, "tt_motorway_exit_min"] = np.nan
+        elif defect == "main_period": frame.loc[0, "period"] = "wrong"
+        elif defect == "infinity": frame.loc[0, "pop_access_15min"] = np.inf
+        elif defect == "missing_schema": frame = frame.drop(columns="own_cell_pop")
+        elif defect == "missing_firm_quarter": frame = frame.iloc[1:]
+        frame.to_parquet(path, index=False)
+    with pytest.raises(AssertionError, match="Routing validation failed"):
+        execute_validation(scope)
+    assert scope["validation"].status.eq("CHECK").any()
+
+
+def test_07_allows_only_documented_missing_isochrone_masses(tmp_path, monkeypatch):
+    scope, paths = validation_inputs(tmp_path, monkeypatch)
+    pd.DataFrame({"year": [2015], "grid_id": ["g1"], "lat": [47.], "lon": [15.], "reason": ["fixture skip"]}).to_csv(scope["SKIPPED_ACCESSIBILITY_PATH"], index=False)
+    for name in ["main", "walk", "firm"]:
+        frame = pd.read_parquet(paths[name])
+        for column in frame:
+            if "min" in column and pd.api.types.is_numeric_dtype(frame[column]):
+                frame[column] = frame[column].astype(float)
+                frame.loc[frame.grid_id.eq("g1"), column] = np.nan
+        frame.to_parquet(paths[name], index=False)
+    for path in paths["long"].rglob("*.parquet"):
+        frame = pq.ParquetFile(path).read().to_pandas()
+        for column in frame:
+            if "min" in column: frame.loc[frame.grid_id.eq("g1"), column] = np.nan
+        frame.to_parquet(path, index=False)
+    execute_validation(scope)
+    assert scope["validation"].status.eq("OK").all()

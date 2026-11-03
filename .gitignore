@@ -23,7 +23,11 @@ ANAL/data/routing/**/*_sample_parts/
 ANAL/data/routing/work/
 ANAL/data/routing/features/*/fachgruppe_accessibility_quarter_100m.parquet/
 tests/*
-!tests/test_model_mvp.py
+!tests/test_analysis_pipeline.py
+!tests/test_routing_features_notebook.py
+/ARCHIVE/
+/RESULTS/
+/FIG/outputs/
 work/*
 ANAL/data/*
 AIRGAPPED_RESULTS/*
