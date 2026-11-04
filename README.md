@@ -1,53 +1,76 @@
 # CO2 Master Thesis
 
-Analysis of spatial location factors, business formation and survival in Styria.
-The public company input and its example results are synthetic, not confidential
-companies or empirical thesis findings.
+This repository contains the reproducible analysis for a Master's thesis on how spatial location factors affect business formation and survival in Styria. It combines company-level data, open geodata, a 100 m population grid, and GIP-based travel-time and accessibility measures.
 
-## Structure
+## Outputs disclaimer
 
-| Folder | Purpose |
+Generated analytical products stored below `ANAL/data/`; exported figures stored below `FIG/`. Raw `.pbf` and `.gml` files are the results of the synthetic dataset. This results are only provided for public reproducibility they do not contain or refelct real data or results.
+
+## Repository structure
+
+| Path | Contents |
 |---|---|
-| `OGD/` | External inputs and source-specific preparation |
-| `SDG/` | Public synthetic company data and generator |
-| `ANAL/` | Data preparation and estimation, steps 01–09 |
-| `ANAL/routing/` | Destinations, graphs and routing notebooks |
-| `ANAL/data/100m/` | Canonical data for the fresh 100 m run |
-| `RESULTS/100m/final/` | Seven aggregate result files |
-| `FIG/` | Descriptive figures and the model-results notebook |
-| `FIG/outputs/100m/final/` | Model figures and results overview |
-| `ARCHIVE/` | Earlier variants and result states; ignored by Git |
+| `OGD/` | External open-data inputs and source-specific preparation workflows. |
+| `SDG/` | Synthetic company-data generation for the public workflow. |
+| `ANAL/` | The ordered analytical workflow and generated model data. |
+| `FIG/` | Descriptive and model-result figure notebooks plus exported figures. |
 
-Use one 08 notebook and one 09 notebook. Set CELL_SIZE consistently for another
-resolution; separate notebook copies are no longer required. The old flat 100 m
-layout is not selected implicitly.
+## Data sources
 
-## Source data
+Large source files are excluded from Git and must be obtained separately.
 
-Required local sources: annual GIP PBFs for 2015–2025 under `OGD/GIP/`, observed
-population grids for 2019/2025 under `OGD/Popreg_100m/`, municipal population in
-`OGD/STMK_POP_2002_2025.csv`, `OGD/Gemeindegrenzen.zip`,
-`OGD/Bildungsstandorte.zip`, legacy/GTFS transport sources under
-`OGD/Public_Transport/`, and company records with official Sparte/Fachgruppe labels.
+| Dataset | Year | Purpose | Location | Source |
+|---|---|---|---|---|
+| GIP road-network snapshots | 2015–2025 | Valhalla graphs, travel times, road-network figures, and motorway exits | `OGD/GIP/<year>.osm.pbf` | [GIP](https://www.gip.gv.at/) *|
+| Austrian OSM snapshot | 2025 | Building footprints used only to generate synthetic firm locations | `OGD/OpenStreetMap/austria-2025.osm.pbf` | [OSM](https://download.geofabrik.de/europe/austria.html#) **|
+| Austrian 100 m population grid (POPREG)  | 2019,2025 | High-resolution population distribution | `OGD/pd_popreg_100m_*.zip` | [INSPIRE](https://geoportal.inspire.gv.at/metadatensuche/inspire/api/records/7767c33f-302c-11e3-beb4-0000c1ab0db6) ***|
+| Styrian municipal population | 2002–2025 | Backcasting the 2025 population grid | `OGD/STMK_POP_2002_2025.csv` | [Land Steiermark](https://data.steiermark.at/)|
+| Municipality boundaries | 2025 | Study area, clipping, and aggregation | `OGD/Gemeindegrenzen.zip` | [Land Steiermark](https://data.steiermark.at/)|
+| Education locations | 2025 | Higher-education routing destinations | `OGD/Bildungsstandorte.zip` | [Land Steiermark](https://data.steiermark.at/)|
+| Public-transport data | 2015–2025 | Stops, service frequencies, and rail-station destinations | `OGD/Public_Transport/` | [VERBUND Linie](https://www.verbundlinie.at/de/), [ Mobilitätsverbünde Österreich](https://data.mobilitaetsverbuende.at/de/data-sets)|
+| WKO membership totals | 2025 | Sampling weights for synthetic companies | `SDG/fachorganisationen_total_members.csv` | [WKO](https://www.wko.at/stmk/wirtschaft/aktuelle-publikationen-und-statistische-daten) ****|
 
-Sources include [GIP](https://www.gip.gv.at/),
-[Statistik Austria INSPIRE](https://geoportal.inspire.gv.at/),
-[Land Steiermark](https://data.steiermark.at/),
-[VERBUND Linie](https://www.verbundlinie.at/de/) and
-[Mobilitätsverbünde Österreich](https://data.mobilitaetsverbuende.at/de/data-sets).
-Geofabrik building footprints and WKO membership totals support the public
-synthetic-data generator. Large files must be obtained separately.
+*GIP files for the use in this pipline need to be in the OSM PBF container format, cenverted using GIP2OSM package with the source files from GIP. 
 
+**OpenStreetMap snapshots are not part of the routing pipeline  but are used for the building-based synthetic-data generator. In case that historic GIP files are not available teh pipline can also be run with OSM-Snapshots.
 
+*** 2019 Dataset recovered from: [The Wayback Machine](https://web.archive.org/web/20191117185226id_/https://www.statistik.at/gs-inspire/www/inspire2/download/daten/pd_popreg_100m_7767c33f-302c-11e3-beb4-0000c1ab0db6.gml)
 
-## Environment and verification
+**** Table data extracted from PDF report.
 
-```powershell
+## Workflow
+
+Prepare source-specific inputs first when they need to be regenerated:
+
+- [`OGD/extract_glm.py`](OGD/extract_glm.py) converts the downloaded POPREG GML to GeoParquet.
+- [`OGD/Public_Transport/Public_Transport_preparation.ipynb`](OGD/Public_Transport/Public_Transport_preparation.ipynb) prepares annual stop-frequency products.
+- [`SDG/Generation.ipynb`](SDG/Generation.ipynb) creates the public synthetic company dataset.
+
+Then run the numbered analysis in order:
+
+1. [`ANAL/01_build_data_foundation.ipynb`](ANAL/01_build_data_foundation.ipynb) creates the 100 m raster, assigns firms, backcasts population, and builds the quarterly panel.
+2. [`ANAL/routing/02_build_yearly_destinations.ipynb`](ANAL/routing/02_build_yearly_destinations.ipynb) combines GIP exits, public transport, higher education, and curated centres.
+3. [`ANAL/routing/03_prepare_inputs.ipynb`](ANAL/routing/03_prepare_inputs.ipynb) creates active routing origins.
+4. [`ANAL/routing/04_verify_destinations.ipynb`](ANAL/routing/04_verify_destinations.ipynb) validates annual destination catalogs.
+5. [`ANAL/routing/05_build_valhalla_graphs.ipynb`](ANAL/routing/05_build_valhalla_graphs.ipynb) builds annual Valhalla graphs from GIP.
+6. [`ANAL/routing/06_generate_features.ipynb`](ANAL/routing/06_generate_features.ipynb) generates travel-time and accessibility features.
+7. [`ANAL/routing/07_validate_outputs.ipynb`](ANAL/routing/07_validate_outputs.ipynb) checks routing products before modelling.
+8. [`ANAL/08_test_model_assumptions.ipynb`](ANAL/08_test_model_assumptions.ipynb) validates the founding and survival samples, transformations, collinearity, and event support.
+9. [`ANAL/09_estimate_and_save_models.ipynb`](ANAL/09_estimate_and_save_models.ipynb) estimates both models and exports a portable CSV/JSON result bundle.
+10. [`ANAL/10_visualize_model_results.ipynb`](ANAL/10_visualize_model_results.ipynb) loads a saved result bundle without raw data and creates the model figures.
+
+Detailed routing requirements, inputs, and outputs are documented in [`ANAL/routing/README.md`](ANAL/routing/README.md).
+
+## Environment
+
+Create a Python environment and install the shared dependencies:
+
+```bash
 python -m venv .venv
-.venv/Scripts/python -m pip install -r requirements.txt
-.venv/Scripts/python -m pytest tests
+python -m pip install -r requirements.txt
 ```
 
-Software fixtures check preparation, inference, compact exports, failure recovery
-and figure generation. Confidential-data convergence and empirical assumptions
-still require verification on the real-data machine.
+
+## License
+
+This repository is licensed under the MIT License. See [LICENSE](LICENSE).
