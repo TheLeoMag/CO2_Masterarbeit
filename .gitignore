@@ -25,9 +25,20 @@ ANAL/data/routing/features/*/fachgruppe_accessibility_quarter_100m.parquet/
 tests/*
 !tests/test_analysis_pipeline.py
 !tests/test_routing_features_notebook.py
+!tests/test_descriptive_stats.py
 /ARCHIVE/
 /RESULTS/
 /FIG/outputs/
+/FIG/Model results/**/*.png
+/FIG/Model results/**/*.svg
+/FIG/Model results/**/*.csv
+/FIG/Model results/**/ergebnisuebersicht.md
+/FIG/Model results/begleitprotokoll.txt
+/FIG/Model results/bildunterschriften.md
+/FIG/Descriptive stats/*.png
+/FIG/Descriptive stats/*.svg
+/FIG/Descriptive stats/*.csv
+/FIG/Descriptive stats/kurzprotokoll.txt
 work/*
 ANAL/data/*
 AIRGAPPED_RESULTS/*
