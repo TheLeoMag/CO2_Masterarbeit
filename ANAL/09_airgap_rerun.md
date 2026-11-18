@@ -12,8 +12,11 @@ notebook variants and notes are preserved in ARCHIVE/2026-11-03_before_update/.
    ANAL/data/100m/modelldaten/; no content or notebook hashes are calculated.
 5. Run the single 09 notebook. Existing results with the chosen run_name are
    archived. Read RESULTS/100m/final/laufinfo.json and diagnostik.csv afterwards.
-6. Run FIG/10_visualize_model_results.ipynb. Seven aggregate files supply all
-   model figures, without raw-data reconstruction or model fitting.
+6. Run `FIG/Model results/10_visualize_model_results.ipynb`. Seven aggregate files
+   per resolution supply the chapter and diagnostic figures without raw-data
+   reconstruction or model fitting. Individual-resolution outputs go into
+   `FIG/Model results/{100,200,500}m/`; comparison figures, CSVs and the missing-run
+   protocol sit beside the notebook. Rerun after adding 200 m and 500 m exports.
 
 The earlier attachments stopped in Cox fitting before export: 100 m completed
 the main fit and was interrupted in its age sensitivity; 200 m did not converge

@@ -57,7 +57,7 @@ Then run the numbered analysis in order:
 7. [`ANAL/routing/07_validate_outputs.ipynb`](ANAL/routing/07_validate_outputs.ipynb) checks routing products before modelling.
 8. [`ANAL/08_test_model_assumptions.ipynb`](ANAL/08_test_model_assumptions.ipynb) validates the founding and survival samples, transformations, collinearity, and event support.
 9. [`ANAL/09_estimate_and_save_models.ipynb`](ANAL/09_estimate_and_save_models.ipynb) estimates both models and exports a portable CSV/JSON result bundle.
-10. [`ANAL/10_visualize_model_results.ipynb`](ANAL/10_visualize_model_results.ipynb) loads a saved result bundle without raw data and creates the model figures.
+10. [`FIG/Model results/10_visualize_model_results.ipynb`](<FIG/Model results/10_visualize_model_results.ipynb>) creates figures from the saved model results.
 
 Detailed routing requirements, inputs, and outputs are documented in [`ANAL/routing/README.md`](ANAL/routing/README.md).
 

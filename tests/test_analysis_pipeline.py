@@ -139,6 +139,9 @@ def make_inputs(root, size):
     pd.concat([firms,extra],ignore_index=True).to_parquet(path,index=False)
     (root/'FIG').mkdir(exist_ok=True)
     shutil.copytree(ROOT/'FIG/plotting',root/'FIG/plotting',dirs_exist_ok=True)
+    helper=root/'FIG/Model results/model_results_visualizations.py'
+    helper.parent.mkdir(parents=True,exist_ok=True)
+    shutil.copy2(ROOT/'FIG/Model results/model_results_visualizations.py',helper)
     return data
 
 def prepare(root,size,monkeypatch):
@@ -229,7 +232,7 @@ def test_active_notebooks_compile_and_do_not_hash_model_inputs_or_refit_figures(
     for stage in [8,9]:
         text='\n'.join(''.join(c['source']) for c in read_notebook(stage)['cells'])
         assert 'hashlib' not in text and 'file_hash' not in text and 'legacy_100m' not in text
-    figure=json.loads((ROOT/'FIG/10_visualize_model_results.ipynb').read_text(encoding='utf-8'))
+    figure=json.loads((ROOT/'FIG/Model results/10_visualize_model_results.ipynb').read_text(encoding='utf-8'))
     assert all('PHReg' not in ''.join(c['source']) and '.fit(' not in ''.join(c['source']) for c in figure['cells'])
 
 @pytest.mark.parametrize('size',[100,200,500])
@@ -315,10 +318,16 @@ def test_all_seven_outputs_sensitivities_failure_recovery_and_figures(tmp_path,m
     matrix=cov.loc[cov.model.eq('survival_cox')&cov.covariance.eq('cell')].pivot(index='term_i',columns='term_j',values='value')
     np.testing.assert_allclose(matrix,matrix.T)
     plotting={'display':lambda _:None}
-    figure=json.loads((ROOT/'FIG/10_visualize_model_results.ipynb').read_text(encoding='utf-8'))
+    figure=json.loads((ROOT/'FIG/Model results/10_visualize_model_results.ipynb').read_text(encoding='utf-8'))
     for c in figure['cells']:
         if c['cell_type']=='code':exec(compile(''.join(c['source']),c['id'],'exec'),plotting)
-    assert len(list(plotting['OUTPUT_DIR'].glob('*.png')))==7
+    assert len(list(plotting['OUTPUT_DIR'].glob('*.png')))==12
+    assert (plotting['MODEL_FIGURE_DIR']/'figure_kompakter_rastervergleich.svg').is_file()
+    plotted=plotting['chapter_data']
+    h1=plotted.loc[plotted.figure.eq('R1')&plotted.key.eq('H1')].iloc[0]
+    exported=tests.loc[tests.model.eq('founding_nb2')&tests.hypothesis_id.eq('H1')&tests.covariance.eq('cell')].iloc[0]
+    np.testing.assert_allclose([h1.estimate,h1.lower,h1.upper],np.exp([exported.estimate,exported.ci_lower,exported.ci_upper]))
+    assert '200 m fehlt' in (plotting['MODEL_FIGURE_DIR']/'begleitprotokoll.txt').read_text(encoding='utf-8')
     assert 'H4' in (plotting['OUTPUT_DIR']/'ergebnisuebersicht.md').read_text(encoding='utf-8')
     # The next explicit run preserves the previous results in ARCHIVE.
     exec(code(read_notebook(9),'config'),{'display':lambda _:None})
@@ -333,6 +342,83 @@ def foundation_dates():
     scope=dict(pd=pd,np=np,DATE_DAYFIRST=True)
     exec(compile(tree,'foundation-date-helpers','exec'),scope)
     return nb,scope
+
+
+def test_chapter_figures_use_exported_cell_contrasts_and_skip_failed_models(tmp_path):
+    """A failed Cox fit must not hide valid counts or borrow an older result."""
+    import importlib.util
+    import matplotlib.pyplot as plt
+    module_path=ROOT/'FIG/Model results/model_results_visualizations.py'
+    spec=importlib.util.spec_from_file_location('chapter_figures',module_path)
+    mrv=importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mrv)
+    models=['founding_nb2','survival_cox','h3_A','h3_C','h5_1']
+    terms={'founding_nb2':['log_own_pop','log_tt_motorway_exit','walk_pt_routes_10min',
+                          'log_walk_pt_departures_10min','pt_ohne_haltestelle'],
+           'survival_cox':['log_own_same','log_own_other'],
+           'h3_A':['unused'],'h3_C':['unused'],'h5_1':['log_tt_motorway_exit']}
+    coefficients=pd.DataFrame([dict(model=model,term=term,specification='main',
+        coefficient=.1,ci_lower=-.1,ci_upper=.3) for model in models for term in terms[model]])
+    hypotheses=pd.DataFrame([dict(model=model,hypothesis_id=identifier,specification='main',
+        covariance='cell',estimate=estimate,ci_lower=estimate-.12,ci_upper=estimate+.12)
+        for model,identifier,estimate in [('founding_nb2','H1',-.4),('founding_nb2','H2a',.3),
+            ('founding_nb2','H4_routes',-.002),('founding_nb2','H4_frequency',.01),
+            ('founding_nb2','H4_no_stop',-.2),('h3_A_vs_C','H3',-.1),
+            ('survival_cox','H2b',.04),('survival_cox','H2c',-.07)]])
+    # A conflicting block interval must never enter a chapter figure.
+    block=hypotheses.iloc[[0]].assign(covariance='block',estimate=8,ci_lower=7,ci_upper=9)
+    hypotheses=pd.concat([hypotheses,block],ignore_index=True)
+    diagnostics=pd.DataFrame([dict(model=model,check='fit',status='estimated',
+        specification='main',detail='[]',sparte=np.nan,births_retained=np.nan)
+        for model in models])
+    plotdata=pd.DataFrame([dict(plot_type='h3_population',group=group,population_effect=effect,
+        ci_lower=effect-.3,ci_upper=effect+.3,births=count)
+        for group,effect,count in [('A',.1,120),('C',.2,80)]])
+    covariances=pd.DataFrame([dict(model=model,covariance='cell',term_i='x',term_j='x',value=.01)
+        for model in models])
+    for size in [100,200,500]:
+        folder=tmp_path/'RESULTS'/f'{size}m'/'final'
+        folder.mkdir(parents=True)
+        info=dict(status='completed' if size!=500 else 'failed',resolution_m=size,run_name='final',
+                  created_at='2026-11-06T12:00:00+00:00',pipeline_version='final-specification')
+        (folder/'laufinfo.json').write_text(json.dumps(info),encoding='utf-8')
+        diag=diagnostics.copy()
+        if size==200:
+            diag.loc[diag.model.eq('survival_cox'),'status']='FAILED'
+        for filename,frame in [('koeffizienten.csv',coefficients),('hypothesentests.csv',hypotheses),
+                               ('diagnostik.csv',diag),('stichprobe.csv',pd.DataFrame({'rows':[100]}))]:
+            frame.to_csv(folder/filename,index=False)
+        plotdata.to_parquet(folder/'plotdaten.parquet',index=False)
+        covariances.to_parquet(folder/'kovarianzen.parquet',index=False)
+    bundles,notes=mrv.load_bundles(tmp_path,{100:'final',200:'final',500:'final'})
+    assert set(bundles)=={100,200} and any('500 m ausgelassen' in note for note in notes)
+    data=mrv.prepare_chapter_data(bundles,notes)
+    h1=data.loc[data.figure.eq('R1')&data.key.eq('H1')]
+    np.testing.assert_allclose(h1.estimate,np.exp(-.4))
+    routes=data.loc[data.key.eq('H4_routes')].iloc[0]
+    np.testing.assert_allclose([routes.estimate,routes.lower,routes.upper],
+                              np.exp(10*np.array([-.002,-.122,.118])))
+    difference=data.loc[data.figure.eq('R2')&data.key.eq('H3')].iloc[0]
+    np.testing.assert_allclose([difference.lower,difference.upper],np.exp([-.22,.02]))
+    cox=data.loc[data.figure.eq('R5')&data.resolution.eq(200)]
+    assert cox.estimate.isna().all() and cox.status.eq('nicht schätzbar').all()
+    sectors=data.loc[data.figure.eq('R4')&data.role.eq('Punkt')]
+    assert sectors.key.tolist()==list('1234567')
+    assert sectors.loc[sectors.key.eq('2'),'status'].item()=='nicht schätzbar'
+    assert data.loc[data.figure.eq('R4'),'resolution'].eq(100).all()
+    # A third successful run adds triangles below the other grids, with the same data sources.
+    bundles[500]=dict(bundles[100],run_id='500m/final@fixture')
+    data=mrv.prepare_chapter_data(bundles,[])
+    fig=mrv.draw_forest(data.loc[data.figure.eq('R1')],'R1',tmp_path)
+    plot=fig.axes[1]
+    markers={line.get_marker() for line in plot.lines}
+    assert {'o','s','^'}.issubset(markers)
+    np.testing.assert_allclose(fig.get_size_inches()[0]*2.54,16)
+    assert plot.get_xscale()=='log'
+    csv=pd.read_csv(tmp_path/(mrv.FIGURE_NAMES['R1']+'.csv'))
+    assert set(csv.Rasterweite)=={100,200,500}
+    assert not csv['Lauf-ID'].isna().any()
+    plt.close(fig)
 
 
 def test_event_dates_accept_mixed_complete_dates_and_preserve_real_blanks():
@@ -403,3 +489,183 @@ def test_foundation_keeps_last_day_events_and_excludes_exited_firms_from_later_s
     assert panel.loc[('g1',2),'active_firms_t']==0
     assert panel.loc[('g1',3),'active_firms_tminus1']==0
     assert panel.loc[('g3',1),'births']==panel.loc[('g3',1),'exits']==1
+
+
+def regional_notebook():
+    return json.loads((ROOT/'ANAL/09b_estimate_graz_vs_rest.ipynb').read_text(encoding='utf-8'))
+
+
+def regional_functions():
+    nb = regional_notebook()
+    namespace = {'display': lambda _: None}
+    for identifier in ['config', 'reuse-functions', 'region-helpers', 'regional-count',
+                       'regional-cox', 'regional-comparisons']:
+        exec(compile(code(nb, identifier), identifier, 'exec'), namespace)
+    return namespace
+
+
+def test_regional_assignment_preserves_rows_and_whole_location_histories():
+    ns = regional_functions()
+    municipality_map = ns['municipality_ids'](pd.Series([60101., 60608.], index=['g1', 'g2']))
+    frame = pd.DataFrame({'standort_id': [1, 1, 2], 'grid_id': ['g1', 'g1', 'g2'],
+                          'period': ['2016Q1', '2016Q2', '2016Q1'], 'event': [0, 1, 0]})
+    result = ns['assign_regions'](frame, municipality_map)
+    pd.testing.assert_frame_equal(result.drop(columns='region'), frame)
+    assert result.region.tolist() == ['graz', 'graz', 'rest_styria']
+    assert result.groupby('standort_id').region.nunique().eq(1).all()
+    with pytest.raises(ValueError, match='beide Regionen'):
+        ns['assign_regions'](frame.assign(standort_id=[1, 1, 1]), municipality_map)
+    with pytest.raises(ValueError, match='ohne eindeutige Gemeindezuordnung'):
+        ns['assign_regions'](frame.assign(grid_id=['unknown', 'g1', 'g2']), municipality_map)
+    with pytest.raises(ValueError, match='widerspricht'):
+        ns['assign_regions'](frame.assign(municipality_id='60608'), municipality_map)
+
+
+def test_regional_differences_use_full_h1_covariance_and_joint_h4_covariance():
+    ns = regional_functions()
+    names = ['log_pop_access_ring_0_15', 'log_firms_relative_car_ring_0_15',
+             *ns['H4_TERMS'], 'log_tt_motorway_exit']
+    covariance_graz = np.eye(len(names)) * .04
+    covariance_graz[0, 1] = covariance_graz[1, 0] = .015
+    covariance_rest = np.eye(len(names)) * .09
+    covariance_rest[2, 3] = covariance_rest[3, 2] = .02
+    params_graz = np.array([.4, .1, .2, -.1, .3, -.2])
+    params_rest = np.array([.1, .2, -.1, .2, .1, -.1])
+    # Different column order exercises matching by term name.
+    order = np.arange(len(names))[::-1]
+    fits = {
+        'founding_graz': dict(names=names, params=params_graz, covariance=covariance_graz, family='poisson'),
+        'founding_rest_styria': dict(names=np.array(names)[order].tolist(), params=params_rest[order],
+                                   covariance=covariance_rest[np.ix_(order, order)], family='nb2'),
+    }
+    comparisons = ns['regional_comparisons'](fits).set_index('hypothesis_id')
+    h1 = comparisons.loc['H1']
+    weights = np.array([1, -1, 0, 0, 0, 0])
+    expected_variance = weights @ (covariance_graz + covariance_rest) @ weights
+    assert h1.estimate == pytest.approx(.4)
+    assert h1.std_error == pytest.approx(np.sqrt(expected_variance))
+    assert h1.ci_lower == pytest.approx(.4 - 1.96 * np.sqrt(expected_variance))
+    assert h1.effect_ratio == pytest.approx(np.exp(.4))
+    assert h1.p_value == pytest.approx(2 * stats.norm.sf(abs(.4 / np.sqrt(expected_variance))))
+    assert h1.family_graz == 'poisson'
+    difference = params_graz[2:5] - params_rest[2:5]
+    joint_covariance = (covariance_graz + covariance_rest)[2:5, 2:5]
+    assert comparisons.loc['H4_joint', 'statistic'] == pytest.approx(
+        difference @ np.linalg.solve(joint_covariance, difference))
+    assert comparisons.loc['H4_joint', 'df'] == 3
+    assert comparisons.loc['H2b', 'coverage'] == 'unavailable'
+    unavailable = ns['regional_comparisons']({})
+    assert unavailable.coverage.eq('unavailable').all()
+    assert unavailable[['estimate', 'std_error', 'ci_lower', 'ci_upper', 'p_value']].isna().all().all()
+
+
+def test_regional_constant_terms_and_graz_poisson_fallback_are_explicit():
+    ns = regional_functions()
+    rng = np.random.default_rng(91)
+    frame = pd.DataFrame(rng.normal(size=(160, len(ns['FOUNDING_TERMS']))),
+                         columns=ns['FOUNDING_TERMS'])
+    frame['grid_id'] = np.repeat(np.arange(40), 4)
+    frame['period'] = np.tile(['2016Q1', '2016Q2', '2016Q3', '2016Q4'], 40)
+    frame['births'] = rng.poisson(2, len(frame))
+    frame['pt_ohne_haltestelle'] = 0
+    calls = []
+
+    def fail_nb2(family, X, y, groups, scale, poisson=None):
+        calls.append((family, list(X.columns)))
+        if family == 'nb2':
+            raise RuntimeError('Injected NB2 nonconvergence')
+        return dict(family='poisson', names=list(X.columns), params=np.zeros(X.shape[1]),
+                    covariance=np.eye(X.shape[1]))
+
+    ns['count_estimate'] = fail_nb2
+    fit = ns['estimate_regional_count'](frame, 'graz')
+    assert fit['family'] == 'poisson'
+    assert fit['fallback_reason'] == 'Injected NB2 nonconvergence'
+    assert fit['excluded_terms'] == ['population_growth_yoy']
+    assert 'population_growth_yoy' not in calls[0][1]
+    assert fit['constant_terms'] == ['pt_ohne_haltestelle']
+    tests = ns['hypothesis_table'](fit, ns['COUNT_TESTS']).set_index('hypothesis_id')
+    assert tests.loc['H4_no_stop', 'coverage'] == 'unidentified'
+    comparisons = ns['regional_comparisons']({'founding_graz': fit, 'founding_rest_styria': fit})
+    assert comparisons.loc[comparisons.hypothesis_id.isin(['H4_no_stop', 'H4_joint']),
+                           'coverage'].eq('unidentified').all()
+    with pytest.raises(RuntimeError, match='Injected NB2 nonconvergence'):
+        ns['estimate_regional_count'](frame, 'rest_styria')
+    assert 'population_growth_yoy' in calls[-1][1]
+
+
+@pytest.mark.parametrize('failed_region', [None, 'graz', 'rest_styria'])
+def test_regional_notebook_exports_four_models_and_continues_after_failure(tmp_path, monkeypatch, failed_region):
+    data = make_inputs(tmp_path, 100)
+    grid_path = data/'raster_100m_styria.geoparquet'
+    grid = pd.read_parquet(grid_path)
+    # Each region contains different founding cohorts within every Fachgruppe.
+    grid['municipality_id'] = np.where(np.arange(len(grid)) < len(grid) // 2, '60101', '60608')
+    grid.to_parquet(grid_path, index=False)
+    municipality_map = grid.set_index('grid_id').municipality_id
+    panel_path = data/'raster_quarter_panel_100m.parquet'
+    panel = pd.read_parquet(panel_path)
+    panel['municipality_id'] = panel.grid_id.map(municipality_map)
+    panel.to_parquet(panel_path, index=False)
+    prepare(tmp_path, 100, monkeypatch)
+    # Municipality IDs suffice for 9b, even with no projected coordinates available.
+    grid[['grid_id', 'municipality_id']].to_parquet(grid_path, index=False)
+    shutil.copy2(ROOT/'ANAL/09_estimate_and_save_models.ipynb', tmp_path/'ANAL')
+    main_folder = tmp_path/'RESULTS/100m/final'
+    main_folder.mkdir(parents=True)
+    (main_folder/'existing_result.csv').write_bytes(b'preserved main result\n')
+    namespace = {'display': lambda _: None}
+    nb = regional_notebook()
+    for cell in nb['cells']:
+        if cell['cell_type'] != 'code':
+            continue
+        exec(compile(''.join(cell['source']), cell['id'], 'exec'), namespace)
+        if cell['id'] == 'reuse-functions' and failed_region is not None:
+            original_count_estimate = namespace['count_estimate']
+            failed_code = '60101' if failed_region == 'graz' else '60608'
+            failed_cells = set(grid.loc[grid.municipality_id.eq(failed_code), 'grid_id'])
+
+            def fail_regional_nb2(family, X, y, groups, scale, poisson=None, start=None):
+                if family == 'nb2' and set(groups).issubset(failed_cells):
+                    raise RuntimeError('Injected regional NB2 failure')
+                return original_count_estimate(family, X, y, groups, scale, poisson=poisson, start=start)
+
+            namespace['count_estimate'] = fail_regional_nb2
+    folder = tmp_path/'RESULTS/graz_vs_rest/100m/final'
+    expected = {'koeffizienten.csv', 'hypothesentests.csv', 'diagnostik.csv', 'stichprobe.csv',
+                'plotdaten.parquet', 'kovarianzen.parquet', 'laufinfo.json', 'regionalvergleiche.csv'}
+    assert {path.name for path in folder.iterdir()} == expected
+    manifest = json.loads((folder/'laufinfo.json').read_text(encoding='utf-8'))
+    assert set(manifest['outputs']) == expected
+    assert (main_folder/'existing_result.csv').read_bytes() == b'preserved main result\n'
+    assert set(namespace['regional_fits']) >= {'survival_graz', 'survival_rest_styria'}
+    assert pd.read_parquet(folder/'kovarianzen.parquet').covariance.eq('cell').all()
+    samples = pd.read_csv(folder/'stichprobe.csv')
+    regional_samples = samples.loc[samples.region.isin(['graz', 'rest_styria'])]
+    for model_type in ['founding', 'survival']:
+        selected = regional_samples.loc[regional_samples.model.str.startswith(model_type + '_')]
+        assert selected.rows.sum() == namespace['prepared']['tables'][model_type]['rows']
+        assert selected.events.sum() == sum(
+            row['events'] for row in namespace['prepared']['sample_description']
+            if row['model'] == model_type and row['stage'] == 'model_sample')
+    assert 'population_growth_yoy' not in namespace['regional_fits']['founding_graz']['names']
+    comparisons = pd.read_csv(folder/'regionalvergleiche.csv')
+    assert comparisons.loc[comparisons.model_type.eq('survival'), 'coverage'].eq('tested').all()
+    if failed_region == 'rest_styria':
+        assert manifest['status'] == 'partially_completed'
+        assert manifest['models']['founding_rest_styria']['status'] == 'failed'
+        assert comparisons.loc[comparisons.model_type.eq('founding'), 'coverage'].eq('unavailable').all()
+    else:
+        assert manifest['status'] == 'completed'
+        assert len(namespace['regional_fits']) == 4
+        assert 'population_growth_yoy' in namespace['regional_fits']['founding_rest_styria']['names']
+        if failed_region == 'graz':
+            assert manifest['models']['founding_graz']['family'] == 'poisson'
+            assert manifest['models']['founding_graz']['fallback_reason'] == 'Injected regional NB2 failure'
+    if failed_region is None:
+        previous_coefficients = (folder/'koeffizienten.csv').read_bytes()
+        exec(code(nb, 'initialize-results'), namespace)
+        archived = list((tmp_path/'ARCHIVE/results/graz_vs_rest/100m').glob('final_*'))
+        assert len(archived) == 1
+        assert (archived[0]/'koeffizienten.csv').read_bytes() == previous_coefficients
+        assert folder.is_dir() and not any(folder.iterdir())

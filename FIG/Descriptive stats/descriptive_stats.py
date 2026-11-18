@@ -13,6 +13,7 @@ from matplotlib import font_manager
 from matplotlib.colors import LinearSegmentedColormap
 from matplotlib.ticker import FuncFormatter, MaxNLocator
 from IPython.display import HTML
+from statsmodels.duration.survfunc import SurvfuncRight
 
 from FIG.plotting.apa7 import apa7_axes, set_apa7_style
 
@@ -47,6 +48,7 @@ ORDER = {
 }
 CENTRES = {"km_urban_centre": "Urban\nkm", "km_regional_centre": "Regional\nkm",
            "tt_urban_centre_min": "Urban\nMinuten", "tt_regional_centre_min": "Regional\nMinuten"}
+KM_GROUPS = ["Gesamt", "Graz", "Übrige Steiermark"]
 
 
 def german(value, digits=1):
@@ -189,6 +191,96 @@ def centre_correlations(connection, files, model):
     return matrix, counts
 
 
+def survival_locations(connection):
+    """Recover one complete (entry, exit] history per location from Cox rows."""
+    invalid = connection.execute("""
+        SELECT count(*) FROM model WHERE standort_id IS NULL OR grid_id IS NULL
+        OR period IS NULL OR NOT coalesce(isfinite(start) AND isfinite(stop), false)
+        OR start < 0 OR stop != start + 1 OR event IS NULL OR event NOT IN (0, 1)
+    """).fetchone()[0]
+    if invalid:
+        raise ValueError("Kaplan-Meier: ungültige Standortschlüssel, Quartalsintervalle oder Ereignisse.")
+    interrupted = connection.execute("""
+        SELECT count(*) FROM (
+            SELECT start,
+                   lag(stop) OVER (PARTITION BY standort_id ORDER BY start, stop) AS previous_stop,
+                   lag(event) OVER (PARTITION BY standort_id ORDER BY start, stop) AS previous_event,
+                   count(*) OVER (PARTITION BY standort_id, period) AS period_rows
+            FROM model
+        ) WHERE (previous_stop IS NOT NULL AND start != previous_stop)
+          OR previous_event = 1 OR period_rows > 1
+    """).fetchone()[0]
+    if interrupted:
+        raise ValueError("Kaplan-Meier: unterbrochene oder doppelte Verläufe beziehungsweise Zeilen nach Austritt.")
+    return connection.execute("""
+        SELECT standort_id, min(start) AS entry, max(stop) AS exit, max(event) AS event
+        FROM model GROUP BY standort_id
+    """).df()
+
+
+def survival_regions(connection, locations, raster_path):
+    grid = pd.read_parquet(raster_path, columns=["grid_id", "municipality_id"])
+    if grid.grid_id.isna().any() or grid.grid_id.duplicated().any():
+        raise ValueError("Kaplan-Meier: Rasterzellen sind nicht eindeutig zugeordnet.")
+    municipalities = (grid.municipality_id.astype("string").str.strip()
+                      .str.replace(r"\.0$", "", regex=True).str.zfill(5))
+    if municipalities.isna().any() or not municipalities.str.fullmatch(r"\d{5}").all():
+        raise ValueError("Kaplan-Meier: fehlende oder ungültige Gemeindekennziffer.")
+    grid["region"] = np.where(municipalities.eq("60101"), "Graz", "Übrige Steiermark")
+    cells = connection.execute("SELECT DISTINCT standort_id, grid_id FROM model").df()
+    cells["region"] = cells.grid_id.map(grid.set_index("grid_id").region)
+    if cells.region.isna().any():
+        raise ValueError("Kaplan-Meier: Modellstandorte ohne Gemeindezuordnung.")
+    if cells.groupby("standort_id").region.nunique().gt(1).any():
+        raise ValueError("Kaplan-Meier: ein Standort gehört im Verlauf zu beiden Regionen.")
+    return locations.merge(cells[["standort_id", "region"]].drop_duplicates(),
+                           on="standort_id", validate="one_to_one")
+
+
+def kaplan_meier_tables(locations):
+    """Delayed-entry product limits on the founding-age scale, in quarters."""
+    curves, rates, samples = [], [], []
+    groups = [("Gesamt", locations)]
+    if "region" in locations:
+        groups += [(label, locations.loc[locations.region.eq(label)]) for label in KM_GROUPS[1:]]
+    for label, group in groups:
+        entry, end = group.entry.to_numpy(), group.exit.to_numpy()
+        support_end = 0.
+        if len(group) and entry.min() == 0:
+            order = np.argsort(entry)
+            covered = np.maximum.accumulate(end[order])
+            gaps = np.flatnonzero(entry[order][1:] > covered[:-1])
+            support_end = float(covered[gaps[0]] if len(gaps) else covered[-1])
+        samples.append(dict(Gruppe=label, Standorte=len(group), Linkstrunkiert=int(group.entry.gt(0).sum()),
+                            Austritte=int(group.event.sum()), Rechtszensiert=int(group.event.eq(0).sum()),
+                            **{"Beobachtung ab Gründung bis (Jahre)": support_end / 4}))
+        times, probabilities = np.array([]), np.array([])
+        if support_end:
+            fitted = SurvfuncRight(end, group.event.to_numpy(), entry=entry)
+            retained = fitted.surv_times <= support_end
+            times, probabilities = fitted.surv_times[retained], fitted.surv_prob[retained]
+            points = [(0., 1., 0, 0)]
+            points += list(zip(times, probabilities, fitted.n_risk[retained], fitted.n_events[retained]))
+            if not len(times) or times[-1] < support_end:
+                points.append((support_end, probabilities[-1] if len(times) else 1.,
+                               int(((entry < support_end) & (end >= support_end)).sum()), 0))
+            for age, probability, n_risk, events in points:
+                curves.append(dict(Gruppe=label, **{"Alter (Quartale)": age, "Alter (Jahre)": age / 4,
+                    "Überlebensquote (%)": 100 * probability, "Risikomenge": int(n_risk), "Austritte": int(events)}))
+        for years in [1, 3, 5]:
+            age = 4 * years
+            position = np.searchsorted(times, age, side="right") - 1
+            probability = probabilities[position] if position >= 0 else 1.
+            supported = age <= support_end
+            rates.append(dict(Gruppe=label, Jahre=years,
+                **{"Überlebensquote (%)": 100 * probability if supported else np.nan,
+                   "Risikomenge": int(((entry < age) & (end >= age)).sum()),
+                   "Status": "geschätzt" if supported else "außerhalb Beobachtung ab Gründung"}))
+    return dict(curves=pd.DataFrame(curves, columns=["Gruppe", "Alter (Quartale)", "Alter (Jahre)",
+                                                   "Überlebensquote (%)", "Risikomenge", "Austritte"]),
+                rates=pd.DataFrame(rates), sample=pd.DataFrame(samples))
+
+
 def analyse(project, size, run, output):
     output = Path(output)
     output.mkdir(parents=True, exist_ok=True)
@@ -199,9 +291,10 @@ def analyse(project, size, run, output):
     diagnostics = pd.read_csv(bundle / "diagnostik.csv")
     sample = pd.read_csv(bundle / "stichprobe.csv")
     sample = sample.loc[sample.model.isin(MODELS) & sample.stage.eq("model_sample")].copy()
-    result = dict(sample=sample, stats={}, correlations={}, centres={}, vif=pd.DataFrame(), missing=[])
+    result = dict(sample=sample, stats={}, correlations={}, centres={}, vif=pd.DataFrame(), missing=[],
+                  kaplan_meier=dict(curves=pd.DataFrame(), rates=pd.DataFrame(), sample=pd.DataFrame()))
     report = [f"{size} m / {run} / {info['created_at']}",
-              "Exakte Modellstichproben; kein Aggregieren oder zusätzliches Filtern.",
+              "Exakte Modellstichproben; deskriptive Variablen auf den gespeicherten Modellzeilen.",
               "Pearson: Modelltransformationen, ohne Zeitkontrollen; keine p-Werte.",
               "Umfeldbestände ohne eigene Zelle. Absolute Werte aus den gespeicherten Log-Variablen rückgerechnet.",
               "Nullanteil: |Wert|<1e-9 als numerische Null; Dichten nur bei P>0."]
@@ -241,6 +334,32 @@ def analyse(project, size, run, output):
                 raise ValueError(f"{model}: fehlende Modellwerte; keine zusätzlichen Filter erlaubt.")
             result["stats"][model] = descriptive_table(connection, model)
             result["correlations"][model] = correlation_matrix(connection, model)
+            if model == "survival":
+                km_required = {"standort_id", "grid_id", "period", "start", "stop", "event"}
+                missing_columns = km_required - set(connection.table("model").columns)
+                if missing_columns:
+                    report.append("Kaplan-Meier ausstehend; fehlende Spalten: " + ", ".join(sorted(missing_columns)))
+                else:
+                    locations = survival_locations(connection)
+                    if len(locations) != int(row.units) or int(locations.event.sum()) != int(row.events):
+                        raise ValueError("Kaplan-Meier: Standorte oder Austritte passen nicht zum Ergebnislauf.")
+                    counts = dict(locations=len(locations), exits=int(locations.event.sum()),
+                                  right_censored=int(locations.event.eq(0).sum()),
+                                  left_truncated=int(locations.entry.gt(0).sum()))
+                    for key, value in info.get("sample_summary", {}).items():
+                        if key in counts and value != counts[key]:
+                            raise ValueError(f"Kaplan-Meier: {key} passt nicht zum Ergebnislauf.")
+                    raster_path = data / f"raster_{size}m_styria.geoparquet"
+                    if raster_path.is_file():
+                        locations = survival_regions(connection, locations, raster_path)
+                    else:
+                        result["missing"].append(str(raster_path.relative_to(project)))
+                        report.append("Kaplan-Meier Graz/Rest ausstehend; Raster-Gemeinde-Zuordnung fehlt.")
+                    result["kaplan_meier"] = kaplan_meier_tables(locations)
+                    report += ["Kaplan-Meier: ein Verlauf je Standort; Alter seit Gründung; entry=min(start), exit=max(stop).",
+                               "Risikomenge bei t: entry < t <= exit; Auswertung nach 4, 12 und 20 Quartalen.",
+                               f"Kaplan-Meier: {counts['locations']} Standorte, davon {counts['left_truncated']} linkstrunkiert.",
+                               "Quoten nur bei durchgehender Beobachtung ab Alter 0; danach fehlend. Punktwerte ohne Kovariatenadjustierung."]
             if all(p.is_file() for p in nearest):
                 result["centres"][model], counts = centre_correlations(connection, nearest, model)
                 counts.to_csv(output / f"zentren_n_{model}.csv", sep=";", decimal=",", encoding="utf-8-sig")
@@ -272,15 +391,27 @@ def analyse(project, size, run, output):
         matrix.rename(index=LABELS).to_csv(output / f"zentren_korrelationen_{model}.csv", sep=";", decimal=",", encoding="utf-8-sig")
     for name, frame in [("stichprobe", sample), ("vif", result["vif"])]:
         frame.to_csv(output / f"{name}.csv", index=False, sep=";", decimal=",", encoding="utf-8-sig")
+    for key, filename in [("curves", "kaplan_meier_kurven"), ("rates", "kaplan_meier_quoten"),
+                          ("sample", "kaplan_meier_stichprobe")]:
+        frame = result["kaplan_meier"][key]
+        if not frame.empty:
+            frame.to_csv(output / f"{filename}.csv", index=False, sep=";", decimal=",", encoding="utf-8-sig")
+        else:
+            (output / f"{filename}.csv").unlink(missing_ok=True)
+    if result["kaplan_meier"]["curves"].empty:
+        for extension in ["png", "svg"]:
+            (output / f"figure_6_kaplan_meier.{extension}").unlink(missing_ok=True)
     for model, group in result["vif"].groupby("Modell", sort=False):
         good = group.dropna(subset=["VIF"])
         if not good.empty:
             row = good.loc[good.VIF.idxmax()]
             report.append(f"{model} – höchster VIF: {row.Variable} = {german(row.VIF,2)} ({row.Quelle}).")
     if result["missing"]:
-        report += ["Nicht berechnet: Deskriptivwerte/Korrelationen ohne gespeicherte Modelltabellen.", *result["missing"]]
+        report += ["Lokal fehlende Eingaben für einzelne Auswertungen:", *result["missing"]]
     if not result["centres"]:
         report.append("Zentrenvergleich ausstehend: Modelltabellen und jährliche nearest_infrastructure-Dateien erforderlich.")
+    if result["kaplan_meier"]["sample"].empty:
+        report.append("Kaplan-Meier ausstehend: gespeicherte Überlebensintervalle mit start, stop und event erforderlich.")
     report.append("Zentren: Gemeinde-Repräsentativpunkte; km der nach Fahrzeit gewählten Route. Zentrenkorrelationen paarweise, ohne Veränderung der Modellstichprobe.")
     (output / "kurzprotokoll.txt").write_text("\n".join(report)+"\n", encoding="utf-8")
     return result
@@ -288,6 +419,29 @@ def analyse(project, size, run, output):
 
 def lower_triangle(matrix):
     return matrix.where(np.tril(np.ones(matrix.shape, dtype=bool), k=-1))
+
+
+def kaplan_meier_plot(curves, folder):
+    style()
+    fig, ax = plt.subplots(figsize=(16 / 2.54, 10.5 / 2.54))
+    fig.subplots_adjust(left=.14, right=.97, bottom=.22, top=.96)
+    for label, colour, linestyle in [("Gesamt", "#222222", "-"), ("Graz", "#245477", "--"),
+                                     ("Übrige Steiermark", "#7895a9", ":")]:
+        group = curves.loc[curves.Gruppe.eq(label)]
+        if not group.empty:
+            ax.step(group["Alter (Jahre)"], group["Überlebensquote (%)"], where="post",
+                    label=label, color=colour, linestyle=linestyle)
+    ax.set_xlabel("Alter seit Gründung (Jahre)")
+    ax.set_ylabel("Überlebensquote (%)")
+    ax.set_ylim(0, 101)
+    ax.set_xlim(left=0)
+    ax.set_yticks([0, 25, 50, 75, 100])
+    ax.xaxis.set_major_locator(MaxNLocator(nbins=6, integer=True))
+    ax.xaxis.set_major_formatter(FuncFormatter(lambda value, position: german(value, 0)))
+    ax.legend(loc="upper center", bbox_to_anchor=(.5, -.2), ncol=3, columnspacing=1.1)
+    apa7_axes(ax)
+    save(fig, folder, "figure_6_kaplan_meier")
+    return fig
 
 
 def heatmap(matrix, folder, name, triangular=False):

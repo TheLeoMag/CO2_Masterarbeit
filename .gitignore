@@ -39,6 +39,8 @@ tests/*
 /FIG/Descriptive stats/*.svg
 /FIG/Descriptive stats/*.csv
 /FIG/Descriptive stats/kurzprotokoll.txt
+/FIG/Map results/exports/
+/FIG/Map results/preview/
 work/*
 ANAL/data/*
 AIRGAPPED_RESULTS/*
